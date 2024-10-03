@@ -16,7 +16,7 @@ public class PlayerMovement : NetworkBehaviour
 
     [Header("Settings")]
     [SerializeField] private float movementSpeed = 4f;
-    [SerializeField] private float turningRate = 100f; // per second
+    [SerializeField] private float turningRate = 300f; // per second
     //[SerializeField] private float emissionRate = 10f;
 
     private ParticleSystem.EmissionModule emissionModule;
@@ -36,35 +36,29 @@ public class PlayerMovement : NetworkBehaviour
             return;
         }
 
-        // Check if the bodyTransform contains the ClientNetworkTransform component
+        // Check if bodyTransform contains the ClientNetworkTransform component
         ClientNetworkTransform clientNetworkTransform = bodyTransform.GetComponent<ClientNetworkTransform>();
 
         if (clientNetworkTransform == null)
         {
             Debug.LogError($"{bodyTransform.name} does not contain a ClientNetworkTransform component.");
         }
-        else
-        {
-            Debug.Log($"{bodyTransform.name} contains the ClientNetworkTransform component.");
-        }
 
-        // Check if the bodyTransform has a Rigidbody2D component
-        Rigidbody2D rigidbody2D = bodyTransform.GetComponent<Rigidbody2D>();
+
+        // Check if  PREFAB has a Rigidbody2D 
+        Rigidbody2D rigidbody2D = bodyTransform.GetComponentInParent<Rigidbody2D>();
         if (rigidbody2D == null)
         {
-            Debug.LogError($"{bodyTransform.name} does not contain a Rigidbody2D component.");
+            Debug.LogError($"{bodyTransform.name} or any of its parents not contain a Rigidbody2D component.");
         }
         else
         {
             // Check if Z-axis rotation is frozen (Freeze Rotation Z axis)
             if ((rigidbody2D.constraints & RigidbodyConstraints2D.FreezeRotation) == 0)
             {
-                Debug.LogError($"{bodyTransform.name}'s Rigidbody2D does not have the Z-axis rotation frozen.");
+                Debug.LogError($"{bodyTransform.name}parent's Rigidbody2D does not have the Z-axis rotation frozen.");
             }
-            else
-            {
-                Debug.Log($"{bodyTransform.name}'s Rigidbody2D has the Z-axis rotation frozen.");
-            }
+
         }
 
     }
@@ -95,23 +89,28 @@ public class PlayerMovement : NetworkBehaviour
         bodyTransform.Rotate(0f, 0f, zRotation);
     }
 
-    //private void FixedUpdate()
-    //{
-    //if ((transform.position - previousPos).sqrMagnitude > ParticleStopThreshhold)
-    //{
-    //    emissionModule.rateOverTime = emissionRate;
-    //}
-    //else
-    //{
-    //    emissionModule.rateOverTime = 0;
-    //}
+    private void FixedUpdate()
+    {
+        //   * Time.deltaTime is included in FixedUpdate
 
-    //previousPos = transform.position;
+        //if ((transform.position - previousPos).sqrMagnitude > ParticleStopThreshhold)
+        //{
+        //    emissionModule.rateOverTime = emissionRate;
+        //}
+        //else
+        //{
+        //    emissionModule.rateOverTime = 0;
+        //}
 
-    //    if (!IsOwner) { return; }
+        //previousPos = transform.position;
 
-    //    rb.linearVelocity = (Vector2)bodyTransform.up * previousMovementInput.y * movementSpeed;
-    //}
+        if (!IsOwner) { return; }
+
+
+        //  MOVEMENT (W & S keys)
+        // cast to 2d fwd movement (x) . (y) = (A/D keys)
+        rb.linearVelocity = (Vector2)bodyTransform.up * previousMovementInput.y * movementSpeed; 
+    }
 
     private void HandleMove(Vector2 movementInput)
     {
