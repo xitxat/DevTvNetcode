@@ -234,7 +234,7 @@ Rigidbody2D:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
@@ -250,7 +250,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 3497915201
+  GlobalObjectIdHash: 4130735069
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -276,7 +276,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  NetworkTransformExpanded: 1
+  NetworkTransformExpanded: 0
   AuthorityMode: 0
   TickSyncChildren: 0
   UseUnreliableDeltas: 0
@@ -315,8 +315,8 @@ MonoBehaviour:
   inputReader: {fileID: 11400000, guid: ad3991ec657e55747981b799ecef4291, type: 2}
   bodyTransform: {fileID: 1127866828773146448}
   rb: {fileID: 3480034870280590461}
-  movementSpeed: 4
-  turningRate: 30
+  movementSpeed: 5
+  turningRate: 270
 --- !u!1 &7795541814640561098
 GameObject:
   m_ObjectHideFlags: 0

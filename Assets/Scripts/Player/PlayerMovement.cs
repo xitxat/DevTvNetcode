@@ -15,8 +15,8 @@ public class PlayerMovement : NetworkBehaviour
     //[SerializeField] private ParticleSystem dustTrail;
 
     [Header("Settings")]
-    [SerializeField] private float movementSpeed = 4f;
-    [SerializeField] private float turningRate = 300f; // per second
+    [SerializeField] private float movementSpeed = 10f;
+    [SerializeField] private float turningRate = 360f; // per second
     //[SerializeField] private float emissionRate = 10f;
 
     private ParticleSystem.EmissionModule emissionModule;
@@ -57,6 +57,13 @@ public class PlayerMovement : NetworkBehaviour
             if ((rigidbody2D.constraints & RigidbodyConstraints2D.FreezeRotation) == 0)
             {
                 Debug.LogError($"{bodyTransform.name}parent's Rigidbody2D does not have the Z-axis rotation frozen.");
+            }
+
+            // Check if the Rigidbody2D's Interpolation is set to Interpolate
+            if (rigidbody2D.interpolation != RigidbodyInterpolation2D.Interpolate)
+            {
+                Debug.LogWarning($"{rigidbody2D.name}'s Rigidbody2D interpolation is not set to Interpolate. " +
+                    $"This may cause stuttery movement.");
             }
 
         }
