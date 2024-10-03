@@ -3,15 +3,19 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using static Controls;
 
+// TODO: assigned in a Scene Manager
+// NODO: place in Resources folder  & Awake() inputReader = Resources.Load<InputReader>("InputReader");
 //  TUTORIAL: Primary fire == Attack
 
 [CreateAssetMenu(fileName = "New Input Reader", menuName = "Input/Input Reader")]
 
 public class InputReader : ScriptableObject, IPlayerActions
 {
-    // enables button hold down
-    public event Action<bool> AttactEvent;
-    public event Action<Vector2> MoveEvent;
+    //  EVENTS: INFREQUENT USE
+    public event Action<bool> AttactEvent;      // enables button hold down
+    public event Action<Vector2> MoveEvent;     // continious hold = 1 event
+
+    public Vector2 AimPosition { get; private set; }
 
     private Controls controls;
 
@@ -32,6 +36,7 @@ public class InputReader : ScriptableObject, IPlayerActions
     }
 
     // Context holds data re the event
+    //  PRIMARY FIRE
     public void OnAttack(InputAction.CallbackContext context)
     {
         // null check + bool assignment
@@ -47,6 +52,13 @@ public class InputReader : ScriptableObject, IPlayerActions
     {
         MoveEvent?.Invoke(context.ReadValue<Vector2>());
     }
+
+    public void OnAim(InputAction.CallbackContext context)
+    {
+        AimPosition = context.ReadValue<Vector2>();
+    }
+
+
 
 
 
@@ -79,4 +91,6 @@ public class InputReader : ScriptableObject, IPlayerActions
     public void OnSprint(InputAction.CallbackContext context)
     {
     }
+
+
 }
