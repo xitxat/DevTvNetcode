@@ -10,12 +10,19 @@ public class ProjectileLauncher : NetworkBehaviour
     [SerializeField] private Transform projectileSpawnPoint;
     [SerializeField] private GameObject clientProjectilePrefab;
     [SerializeField] private GameObject serverProjectilePrefab;
+    [SerializeField] private GameObject muzzleFlash;
+    [SerializeField] private Collider2D playerCollider;
+
 
     private InputReader inputReader;
     private bool shouldFire;
+    private float previousFireTime;
+    private float muzzleFlashTimer;
 
     [Header("Settings")]
     [SerializeField] private float projectileSpeed;
+    [SerializeField] private float fireRate;
+    [SerializeField] private float muzzleFlashDuration;
 
 
     private void Start()
@@ -56,8 +63,27 @@ public class ProjectileLauncher : NetworkBehaviour
 
     void Update()
     {
+        // everyone can see muzflash
+        if(muzzleFlashTimer > 0f)
+        {
+            muzzleFlashTimer -= Time.deltaTime;
+
+            if(muzzleFlashTimer <= 0f)
+            {
+                muzzleFlash.SetActive(false);
+            }
+        }
+
         if (!IsOwner) { return; }
         if (!shouldFire) { return; } // !LMB
+
+        // fire rate cooldown before updating server
+        float timeBetweenShots = 1 / fireRate;
+        if (Time.time < previousFireTime + timeBetweenShots)
+            // Can't fire yet, still in cooldown
+            { return; }
+
+            previousFireTime = Time.time;
 
         //  make visable THIS clients projectiles to all other clients
         PrimaryFireServerRpc(projectileSpawnPoint.position, projectileSpawnPoint.up);
@@ -66,15 +92,29 @@ public class ProjectileLauncher : NetworkBehaviour
 
     }
 
+    // Visuals
     private void SpawnDummyProjectile(Vector3 spawnPos, Vector3 direction)
     {
+        muzzleFlash.SetActive(true);
+        muzzleFlashTimer = muzzleFlashDuration;
+
         GameObject projectileInstance = Instantiate(
             clientProjectilePrefab, 
             spawnPos, 
             Quaternion.identity);
 
         projectileInstance.transform.up = direction; // same as barrel
-     }
+
+        // Dont shoot self
+        Physics2D.IgnoreCollision(playerCollider, projectileInstance.GetComponent<Collider2D>());
+
+        // Move Projectile / access via out. 2D:.up, 3D:forward
+        if(projectileInstance.TryGetComponent<Rigidbody2D>(out Rigidbody2D rb))
+        {
+            rb.linearVelocity = rb.transform.up * projectileSpeed;
+        }
+
+    }
 
     private void HandlePrimaryFire(bool shouldFireInput)
     {
@@ -93,6 +133,15 @@ public class ProjectileLauncher : NetworkBehaviour
             Quaternion.identity);
 
         projectileInstance.transform.up = direction; // same as barrel
+
+        // Dont shoot self
+        Physics2D.IgnoreCollision(playerCollider, projectileInstance.GetComponent<Collider2D>());
+
+        // Move Projectile / access via out
+        if (projectileInstance.TryGetComponent<Rigidbody2D>(out Rigidbody2D rb))
+        {
+            rb.linearVelocity = rb.transform.up * projectileSpeed;
+        }
 
         SpawnDummyProjectileClientRpc( spawnPos,  direction);
     }
