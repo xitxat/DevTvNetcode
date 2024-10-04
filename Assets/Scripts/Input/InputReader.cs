@@ -12,8 +12,8 @@ using static Controls;
 public class InputReader : ScriptableObject, IPlayerActions
 {
     //  EVENTS: INFREQUENT USE
-    public event Action<bool> AttactEvent;      // enables button hold down
-    public event Action<Vector2> MoveEvent;     // continious hold = 1 event
+    public event Action<bool> PrimaryFireEvent;      // enables button hold down
+    public event Action<Vector2> MoveEvent;     // continious hold = 1 event. LMB
 
     public Vector2 AimPosition { get; private set; }
 
@@ -36,11 +36,11 @@ public class InputReader : ScriptableObject, IPlayerActions
     }
 
     // Context holds data re the event
-    //  PRIMARY FIRE
-    public void OnAttack(InputAction.CallbackContext context)
+    //  PRIMARY FIRE::: AttactEvent;
+    public void OnPrimaryFire(InputAction.CallbackContext context)
     {
         // null check + bool assignment
-        AttactEvent?.Invoke(context.performed);
+        PrimaryFireEvent?.Invoke(context.performed);
 
         //AttactEvent.Invoke(context.performed ? true : context.canceled ? false : default);
         // rfkt to
