@@ -374,7 +374,8 @@ MonoBehaviour:
   note: "1. Prefab Variants: drag base prefab into hierarchy, then drag back to Prefab
     folder.\r\n2. Access the InputReader through the GameManager\r\n        inputReader
     = GameManager.Instance.inputReader;\r\n3. Assign inputReader in OnNetworkSpawn
-    to avoid timing issues\n5.\n6.\n\r\n\n\n\n\n"
+    to avoid timing issues\n5. {get, private set;} properties can be made visible
+    in inspector with: \n\t [field: SerializeField] \n6.\n\r\n\n\n\n\n\n\n\n\n\n"
 --- !u!4 &601007118
 Transform:
   m_ObjectHideFlags: 0
