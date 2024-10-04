@@ -83,12 +83,13 @@ public class ProjectileLauncher : NetworkBehaviour
             // Can't fire yet, still in cooldown
             { return; }
 
-            previousFireTime = Time.time;
-
+        //  FIRE
         //  make visable THIS clients projectiles to all other clients
         PrimaryFireServerRpc(projectileSpawnPoint.position, projectileSpawnPoint.up);
         //   This client see's its proj
         SpawnDummyProjectile(projectileSpawnPoint.position, projectileSpawnPoint.up);
+
+            previousFireTime = Time.time;
 
     }
 
