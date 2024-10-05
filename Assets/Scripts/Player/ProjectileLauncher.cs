@@ -138,7 +138,16 @@ public class ProjectileLauncher : NetworkBehaviour
         // Dont shoot self
         Physics2D.IgnoreCollision(playerCollider, projectileInstance.GetComponent<Collider2D>());
 
-        // Move Projectile / access via out
+
+        //  DEAL DAMAGE
+        if (projectileInstance.TryGetComponent<DealDamageOnContact>(out DealDamageOnContact dealDamage))
+        {
+            // this scripts owner Id / ie; Parent
+            dealDamage.SetOwner(OwnerClientId);
+        }
+
+
+        // MOVE PROJECTILE / access via out
         if (projectileInstance.TryGetComponent<Rigidbody2D>(out Rigidbody2D rb))
         {
             rb.linearVelocity = rb.transform.up * projectileSpeed;
