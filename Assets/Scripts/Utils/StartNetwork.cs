@@ -16,7 +16,7 @@ public class StartNetwork : MonoBehaviour
         if (Application.isEditor)
         {
             Debug.Log("<color=orange>+++ Running in Multiplayer Play Mode +++</color>");
-            Debug.Log("<color=cyan>Press 'H' to Start as Host,'C' as Client,'S' as Server</color>");
+            Debug.Log("<color=cyan>Press 'H' to Start as Host,'C' as Client or NB: 'V' as Server</color>");
         }
     }
 
@@ -33,7 +33,7 @@ public class StartNetwork : MonoBehaviour
             {
                 StartClient();
             }
-            else if (Input.GetKeyDown(KeyCode.S))
+            else if (Input.GetKeyDown(KeyCode.V))
             {
                 StartServer();
             }
