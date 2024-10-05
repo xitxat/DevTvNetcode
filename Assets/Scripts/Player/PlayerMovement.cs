@@ -115,8 +115,18 @@ public class PlayerMovement : NetworkBehaviour
 
 
         //  MOVEMENT (W & S keys)
-        // cast to 2d fwd movement (x) . (y) = (A/D keys)
-        rb.linearVelocity = (Vector2)bodyTransform.up * previousMovementInput.y * movementSpeed; 
+        //  cast to 2d fwd movement (x) . (y) = (A/D keys)
+        rb.linearVelocity = (Vector2)bodyTransform.up * previousMovementInput.y * movementSpeed;
+
+
+        //  CHARACTER WASD MOVEMENT
+        //  remove ad body rotation in Update()
+        //  Forward (W/S) and Lateral (A/D) movement combined
+        //Vector2 forwardMovement = (Vector2)bodyTransform.up * previousMovementInput.y * movementSpeed;
+        //Vector2 lateralMovement = (Vector2)bodyTransform.right * previousMovementInput.x * movementSpeed;
+
+        //  Apply combined velocity
+        //rb.velocity = forwardMovement + lateralMovement;
     }
 
     private void HandleMove(Vector2 movementInput)
