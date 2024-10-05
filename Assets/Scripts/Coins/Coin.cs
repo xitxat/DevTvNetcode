@@ -9,11 +9,12 @@ public abstract class Coin : NetworkBehaviour
     [SerializeField] private SpriteRenderer spriteRenderer;
 
     //  Inheritable / semi public
-    protected int coinValue;
+    protected int coinValue = 10;
     protected bool isAlreadyCollected;
 
 
-    // abstract forces implimentation of method on inheritance
+    //  abstract forces implimentation of method on inheritance
+    //  RespawningCoin
     public abstract int Collect();
 
     public void SetValue(int value)
