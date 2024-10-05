@@ -11,7 +11,7 @@ public class HealthDisplay : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-        if (!IsOwner) { return; }
+        if (!IsClient) { return; }
 
         //  sub
         health.CurrentHealth.OnValueChanged += HandleHealthChanged;
@@ -21,7 +21,7 @@ public class HealthDisplay : NetworkBehaviour
 
     public override void OnNetworkDespawn()
     {
-        if (!IsOwner) { return; }
+        if (!IsClient) { return; }
 
         //  unsub 
         health.CurrentHealth.OnValueChanged -= HandleHealthChanged;

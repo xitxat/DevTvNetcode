@@ -1,6 +1,10 @@
 using Unity.Netcode.Components;
 using UnityEngine;
 
+
+//   https://github.com/Unity-Technologies/com.unity.multiplayer.samples.coop/blob/main/Packages/com.unity.multiplayer.samples.coop/Utilities/Net/ClientAuthority/ClientNetworkTransform.cs
+
+
 [DisallowMultipleComponent]
 public class ClientNetworkTransform : NetworkTransform
 {
