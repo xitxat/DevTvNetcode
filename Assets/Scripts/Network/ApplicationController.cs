@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using UnityEngine;
 
+// On Client Auth GoTo Menu scene
 public class ApplicationController : MonoBehaviour
 {
 
@@ -26,15 +27,17 @@ public class ApplicationController : MonoBehaviour
         else
         {
             ClientSingleton clientSingleton =  Instantiate(clientPrefab);
-            await clientSingleton.CreateClient();
+            bool authenticated = await clientSingleton.CreateClient();
 
             HostSingleton hostSingleton =  Instantiate(hostPrefab);
             hostSingleton.CreateHost();
-
-
-                //  wait for Auth, then:
+            //  wait for Auth, then:
 
             // Go to menu
+            if (authenticated)
+            {
+                clientSingleton.GameManager.GoToMenu();
+            }
         }
     }
 }

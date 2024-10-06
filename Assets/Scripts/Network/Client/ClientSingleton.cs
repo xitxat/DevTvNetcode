@@ -1,11 +1,13 @@
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class ClientSingleton : MonoBehaviour
 {
 
+    public ClientGameManager GameManager { get; private set; }
+
     private static ClientSingleton instance;
-    private ClientGameManager gameManager;
 
     public static ClientSingleton Instance
     {
@@ -32,12 +34,14 @@ public class ClientSingleton : MonoBehaviour
 
     }
 
-    public async Task CreateClient()
+    //  Client creator knows who has been sucessful thru returned bool
+    //  then ApplicationController LaunchInMode triggers MENU scene
+    public async Task<bool> CreateClient()
     {
-        gameManager = new ClientGameManager();
+        GameManager = new ClientGameManager();
 
         // Go Authenticate before running other code
-        await gameManager.InitAsync();
+        return await GameManager.InitAsync();
     }
 
 
