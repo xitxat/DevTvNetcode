@@ -66,9 +66,9 @@ public static class AuthenticationWrapper
                 }
             }
             // Fail to Auth
-            catch(AuthenticationException ex)
+            catch(AuthenticationException exA)
             {
-                Debug.LogError(ex);
+                Debug.LogError(exA);
                 AuthState = AuthState.Error;
             }
             // Fail to Connect
