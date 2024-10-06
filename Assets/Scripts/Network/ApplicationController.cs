@@ -1,18 +1,22 @@
 using System;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class ApplicationController : MonoBehaviour
 {
-    void Start()
+
+    [SerializeField] private ClientSingleton clientPrefab;
+
+    async void  Start()
     {
         DontDestroyOnLoad(gameObject);
 
         // Headless server (bool)
-        LaunchInMode(SystemInfo.graphicsDeviceType == UnityEngine.Rendering.GraphicsDeviceType.Null);
+       await LaunchInMode(SystemInfo.graphicsDeviceType == UnityEngine.Rendering.GraphicsDeviceType.Null);
 
     }
 
-    private void LaunchInMode(bool isDedicatedServer)
+    private async Task LaunchInMode(bool isDedicatedServer)
     {
         if (isDedicatedServer)
         {
@@ -20,7 +24,12 @@ public class ApplicationController : MonoBehaviour
         }
         else
         {
+            ClientSingleton clientSingleton =  Instantiate(clientPrefab);
 
+            await clientSingleton.CreateClient();
+                //  wait for Auth, then:
+
+            // Go to menu
         }
     }
 }
