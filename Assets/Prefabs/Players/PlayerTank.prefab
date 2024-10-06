@@ -598,6 +598,7 @@ MonoBehaviour:
   projectileSpeed: 30
   fireRate: 1
   muzzleFlashDuration: 0.1
+  costToFire: 2
 --- !u!114 &7614312315832765601
 MonoBehaviour:
   m_ObjectHideFlags: 0
