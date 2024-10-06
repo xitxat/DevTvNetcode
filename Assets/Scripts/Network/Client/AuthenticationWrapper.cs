@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using Unity.Services.Authentication;
+using Unity.Services.Core;
 using UnityEngine;
 
 
@@ -33,14 +34,33 @@ public static class AuthenticationWrapper
         int tries = 0;
         while (AuthState == AuthState.Authenticating && tries < maxTries)
         {
-            //  Straight in, no 3rd party auth, ie Google, FB
-            await AuthenticationService.Instance.SignInAnonymouslyAsync();
-
-            if (AuthenticationService.Instance.IsSignedIn && AuthenticationService.Instance.IsAuthorized)
+            // Error Handeling
+            try
             {
-                AuthState = AuthState.Authenticated;
-                break;
+                //  Straight in, no 3rd party auth, ie Google, FB
+                await AuthenticationService.Instance.SignInAnonymouslyAsync();
+
+                if (AuthenticationService.Instance.IsSignedIn && AuthenticationService.Instance.IsAuthorized)
+                {
+                    AuthState = AuthState.Authenticated;
+                    break;
+                }
             }
+            // Fail to Auth
+            catch(AuthenticationException ex)
+            {
+                Debug.LogError(ex);
+                AuthState = AuthState.Error;
+            }
+            // Fail to Connect
+            catch(RequestFailedException exFRE)
+            {
+                Debug.LogError(exFRE);
+                AuthState = AuthState.Error;
+            }
+
+
+
 
             // On Fail
             Debug.LogError("<color=orange>Retrying Authentication Service, ¦|</color>");
