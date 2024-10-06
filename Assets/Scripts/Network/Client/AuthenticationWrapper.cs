@@ -12,20 +12,31 @@ public static class AuthenticationWrapper
     //  Authenticate Player via UGS & Client Game Manager returns T/F
     public static async Task<AuthState> DoAuth(int maxTries = 5)
     {
+        //  Check if Authenticated
         if(AuthState == AuthState.Authenticated)
         {
             return AuthState;
         }
 
+        await SignInAnonymouslyAsync(maxTries);
+
+
+
+        return AuthState;
+    }
+
+    //  Try Authenticate
+    private static async Task SignInAnonymouslyAsync(int maxTries)
+    {
         AuthState = AuthState.Authenticating;
 
         int tries = 0;
-        while(AuthState == AuthState.Authenticating && tries < maxTries)
+        while (AuthState == AuthState.Authenticating && tries < maxTries)
         {
             //  Straight in, no 3rd party auth, ie Google, FB
             await AuthenticationService.Instance.SignInAnonymouslyAsync();
 
-            if(AuthenticationService.Instance.IsSignedIn && AuthenticationService.Instance.IsAuthorized)
+            if (AuthenticationService.Instance.IsSignedIn && AuthenticationService.Instance.IsAuthorized)
             {
                 AuthState = AuthState.Authenticated;
                 break;
@@ -37,8 +48,6 @@ public static class AuthenticationWrapper
             tries++;
             await Task.Delay(1000);
         }
-
-        return AuthState;
     }
 
 }
