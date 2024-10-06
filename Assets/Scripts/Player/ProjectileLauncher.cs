@@ -15,6 +15,7 @@ public class ProjectileLauncher : NetworkBehaviour
 
 
     private InputReader inputReader;
+    private CoinWallet wallet;
     private bool shouldFire;
     private float shotTimer;
     private float muzzleFlashTimer;
@@ -24,15 +25,25 @@ public class ProjectileLauncher : NetworkBehaviour
     [SerializeField] private float projectileSpeed;
     [SerializeField] private float fireRate;
     [SerializeField] private float muzzleFlashDuration;
+    [SerializeField] private int costToFire; // Spend coins to fire
+
+    private float timeBetweenShots; // Fire Rate cooldown  
 
 
     private void Start()
     {
-        inputReader = GameManager.Instance.inputReader;
+        timeBetweenShots = 1 / fireRate;
 
+        inputReader = GameManager.Instance.inputReader;
         if (inputReader == null)
         {
-            Debug.LogError("InputReader not found in GameManager.");
+            Debug.LogError("<color=orange>InputReader not found in GameManager.</color>");
+        }
+
+        wallet = GetComponent<CoinWallet>();
+        if (wallet == null)
+        {
+            Debug.LogError($"<color=orange>CoinWallet not found on  ({this.gameObject.name}).</color>");
         }
     }
 
@@ -77,18 +88,17 @@ public class ProjectileLauncher : NetworkBehaviour
 
         if (!IsOwner) { return; }
 
-        if (shotTimer > 0)
-        {
-            shotTimer -= Time.deltaTime;
-        }
+        if (shotTimer > 0) {shotTimer -= Time.deltaTime;}
 
         if (!shouldFire) { return; } // !LMB
 
-        // Fire Rate cooldown before updating server
-        float timeBetweenShots = 1 / fireRate;
-        if (shotTimer > 0)
-            // Can't fire yet, still in cooldown
-            { return; }
+        if (shotTimer > 0) { return; }
+
+        // Have Anno?
+        if(wallet.TotalCoins.Value < costToFire) { return; }
+
+
+
 
         //  FIRE
         //  make visable THIS clients projectiles to all other clients
@@ -136,12 +146,18 @@ public class ProjectileLauncher : NetworkBehaviour
     [ServerRpc]
     private void PrimaryFireServerRpc(Vector3 spawnPos, Vector3 direction)
     {
+        // Have Anno?
+        if (wallet.TotalCoins.Value < costToFire) { return; }
+        wallet.SpendCoins(costToFire);
+
+
         GameObject projectileInstance = Instantiate(
             serverProjectilePrefab,
             spawnPos,
             Quaternion.identity);
 
         projectileInstance.transform.up = direction; // same as barrel
+
 
         // Dont shoot self
         Physics2D.IgnoreCollision(playerCollider, projectileInstance.GetComponent<Collider2D>());

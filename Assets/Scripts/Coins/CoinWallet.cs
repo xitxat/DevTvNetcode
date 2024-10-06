@@ -9,7 +9,7 @@ public class CoinWallet : NetworkBehaviour
 
     private int coinVal;
 
-
+    //  COLLECT COINS
     public void OnTriggerEnter2D(Collider2D collision)
     {
         if (!collision.TryGetComponent<Coin>(out Coin coin)) { return; }
@@ -24,6 +24,11 @@ public class CoinWallet : NetworkBehaviour
            TotalCoins.Value += coinVal;
         }
 
-
     }
+
+    public void SpendCoins(int costToFire)
+    {
+        TotalCoins.Value -= costToFire;
+    }
+
 }
