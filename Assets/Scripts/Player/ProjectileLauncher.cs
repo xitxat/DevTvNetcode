@@ -16,8 +16,9 @@ public class ProjectileLauncher : NetworkBehaviour
 
     private InputReader inputReader;
     private bool shouldFire;
-    private float previousFireTime;
+    private float shotTimer;
     private float muzzleFlashTimer;
+
 
     [Header("Settings")]
     [SerializeField] private float projectileSpeed;
@@ -75,11 +76,17 @@ public class ProjectileLauncher : NetworkBehaviour
         }
 
         if (!IsOwner) { return; }
+
+        if (shotTimer > 0)
+        {
+            shotTimer -= Time.deltaTime;
+        }
+
         if (!shouldFire) { return; } // !LMB
 
-        // fire rate cooldown before updating server
+        // Fire Rate cooldown before updating server
         float timeBetweenShots = 1 / fireRate;
-        if (Time.time < previousFireTime + timeBetweenShots)
+        if (shotTimer > 0)
             // Can't fire yet, still in cooldown
             { return; }
 
@@ -89,7 +96,8 @@ public class ProjectileLauncher : NetworkBehaviour
         //   This client see's its proj
         SpawnDummyProjectile(projectileSpawnPoint.position, projectileSpawnPoint.up);
 
-            previousFireTime = Time.time;
+        //  Reset Fire rate
+        shotTimer = timeBetweenShots;
 
     }
 
