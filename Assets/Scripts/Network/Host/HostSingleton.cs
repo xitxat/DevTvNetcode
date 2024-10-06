@@ -32,11 +32,10 @@ public class HostSingleton : MonoBehaviour
 
     }
 
-    public async Task CreateClient()
+    //  No need to await to create
+    public void CreateHost()
     {
         gameManager = new HostGameManager();
 
-        // Go Authenticate before running other code
-        await gameManager.InitAsync();
     }
 }

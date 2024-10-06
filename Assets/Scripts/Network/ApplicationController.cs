@@ -6,6 +6,7 @@ public class ApplicationController : MonoBehaviour
 {
 
     [SerializeField] private ClientSingleton clientPrefab;
+    [SerializeField] private HostSingleton hostPrefab;
 
     async void  Start()
     {
@@ -25,8 +26,12 @@ public class ApplicationController : MonoBehaviour
         else
         {
             ClientSingleton clientSingleton =  Instantiate(clientPrefab);
-
             await clientSingleton.CreateClient();
+
+            HostSingleton hostSingleton =  Instantiate(hostPrefab);
+            hostSingleton.CreateHost();
+
+
                 //  wait for Auth, then:
 
             // Go to menu
