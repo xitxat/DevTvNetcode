@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Unity.Services.Authentication;
 using Unity.Services.Core;
@@ -19,9 +20,27 @@ public static class AuthenticationWrapper
             return AuthState;
         }
 
+        //  Only 1 authenticating instance allowed to run
+        if (AuthState == AuthState.Authenticating)
+        {
+            Debug.LogWarning("<color=yellow>Already Authenticating. Waiting... ¦|</color>");
+
+            await Authenticating();
+            return AuthState;
+        }
+
         await SignInAnonymouslyAsync(maxTries);
 
 
+
+        return AuthState;
+    }
+
+    private static async Task<AuthState> Authenticating()
+    {
+        // Force wait for all tries. 
+        while (AuthState == AuthState.Authenticating || AuthState == AuthState.NotAuthenticated)
+        { await Task.Delay(250);}
 
         return AuthState;
     }
@@ -59,14 +78,17 @@ public static class AuthenticationWrapper
                 AuthState = AuthState.Error;
             }
 
-
-
-
             // On Fail
             Debug.LogError("<color=orange>Retrying Authentication Service, ¦|</color>");
 
             tries++;
             await Task.Delay(1000);
+        }
+
+        if(AuthState != AuthState.Authenticated)
+        {
+            Debug.LogWarning($"<color=orange>Player not signed in succesfully after {tries} tries. ¦|</color>");
+            AuthState = AuthState.TimeOut;
         }
     }
 
