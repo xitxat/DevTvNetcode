@@ -20,7 +20,7 @@ public class HostGameManager
     {
         try
           {
-            //  Assign & Store the allocation with ID# (Join Code)
+            //  CREATE, Assign & Store the allocation with ID# (Join Code)
            allocation =  await Relay.Instance.CreateAllocationAsync(MaxConnections);
         }
         catch(Exception e)
@@ -45,8 +45,8 @@ public class HostGameManager
         //  Unity Transport switch to RELAY MODE
         UnityTransport transport = NetworkManager.Singleton.GetComponent<UnityTransport>();
 
-        //  Set connection type (User Data Protocol = RELAY) [IP,Port]
-        RelayServerData relayServerData = new RelayServerData(allocation, "udp");
+        //  Set connection type ("udp" User Data Protocol = RELAY) [IP,Port]
+        RelayServerData relayServerData = new RelayServerData(allocation, "dtls");
         transport.SetRelayServerData(relayServerData);
 
         //  Start

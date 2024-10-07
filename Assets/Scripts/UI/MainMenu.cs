@@ -1,13 +1,26 @@
+using TMPro;
 using UnityEngine;
 
 public class MainMenu : MonoBehaviour
 {
 
-    //  Access class HostGameManager  via Singleton.
+    [SerializeField] private TMP_InputField joinCodeField;
+
+
+    //  ALWAYS Access class Host/ Client  GameManagers  via Singleton.
     public async void StartHost()
     {
         await HostSingleton.Instance.GameManager.StartHostAsync(); 
 
      
+    }    
+    
+    public async void StartClient()
+    {
+        await ClientSingleton.Instance.GameManager.StartClientAsync(joinCodeField.text); 
+
+     
     }
+
+
 }
