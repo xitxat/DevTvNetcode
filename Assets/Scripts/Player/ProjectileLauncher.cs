@@ -6,7 +6,9 @@ public class ProjectileLauncher : NetworkBehaviour
 
 {
     [Header("References")]
+    //[SerializeField] private TankPlayer player;
     [SerializeField] private InputReader inputReader;
+    [SerializeField] private CoinWallet wallet;
     [SerializeField] private Transform projectileSpawnPoint;
     [SerializeField] private GameObject clientProjectilePrefab;
     [SerializeField] private GameObject serverProjectilePrefab;
@@ -15,7 +17,7 @@ public class ProjectileLauncher : NetworkBehaviour
 
 
     //private InputReader inputReader;
-    private CoinWallet wallet;
+    //private CoinWallet wallet;
     private bool shouldFire;
     private float shotTimer;
     private float muzzleFlashTimer;
@@ -27,42 +29,18 @@ public class ProjectileLauncher : NetworkBehaviour
     [SerializeField] private float muzzleFlashDuration;
     [SerializeField] private int costToFire; // Spend coins to fire
 
-    private float timeBetweenShots; // Fire Rate cooldown  
+    private float timeBetweenShots; // Fire Rate cooldown timer
 
 
-    //private void Start()
-    //{
-    //    timeBetweenShots = 1 / fireRate;
+    private void Start()
+    {
+        timeBetweenShots = 1 / fireRate;
 
-    //    inputReader = GameManager.Instance.inputReader;
-    //    if (inputReader == null)
-    //    {
-    //        Debug.LogError("<color=orange>InputReader not found in GameManager.</color>");
-    //    }
-
-    //    wallet = GetComponent<CoinWallet>();
-    //    if (wallet == null)
-    //    {
-    //        Debug.LogError($"<color=orange>CoinWallet not found on  ({this.gameObject.name}).</color>");
-    //    }
-    //}
+    }
 
     public override void OnNetworkSpawn()
     {
         if (!IsOwner) { return; }
-
-        //// Assign inputReader in OnNetworkSpawn to avoid timing issues
-        //inputReader = GameManager.Instance.inputReader;
-
-        //if (inputReader == null)
-        //{
-        //    Debug.LogError("InputReader not found in GameManager.");
-        //}
-        //else
-        //{
-        //    // Subscribe to input events after network spawn
-        //    inputReader.PrimaryFireEvent += HandlePrimaryFire;
-        //}
 
         inputReader.PrimaryFireEvent += HandlePrimaryFire;
     }
@@ -98,8 +76,6 @@ public class ProjectileLauncher : NetworkBehaviour
 
         // Have Anno?
         if(wallet.TotalCoins.Value < costToFire) { return; }
-
-
 
 
         //  FIRE

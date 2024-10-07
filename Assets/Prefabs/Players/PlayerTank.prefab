@@ -590,6 +590,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  inputReader: {fileID: 11400000, guid: ad3991ec657e55747981b799ecef4291, type: 2}
+  wallet: {fileID: 8896915746589266054}
   projectileSpawnPoint: {fileID: 2598315931960266877}
   clientProjectilePrefab: {fileID: 6090261579438306371, guid: 6752bbf1682801140bbc7e19a2698eeb, type: 3}
   serverProjectilePrefab: {fileID: 4908301232823005165, guid: 7f93c51add1296446a507ccfd85ec347, type: 3}
