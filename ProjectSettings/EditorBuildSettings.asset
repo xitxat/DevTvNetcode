@@ -15,16 +15,16 @@ EditorBuildSettings:
     path: Assets/Scenes/Game.unity
     guid: 7c93bf22689455e43933cd7d09584cf6
   - enabled: 0
-    path: Assets/Scenes/SampleScene.unity
+    path: Assets/Scenes/TmpScenes/SampleScene.unity
     guid: 8c9cfa26abfee488c85f1582747f6a02
   - enabled: 0
-    path: Assets/Scenes/Host Client not ok.unity
+    path: Assets/Scenes/TmpScenes/Host Client not ok.unity
     guid: b743d9fcf3d94d148bfe9e32fea4c58f
   - enabled: 0
-    path: Assets/Scenes/PlayerTank.unity
+    path: Assets/Scenes/TmpScenes/PlayerTank.unity
     guid: f6d16dbff1460a04784e26938d44a82e
   - enabled: 0
-    path: Assets/Scenes/Map.unity
+    path: Assets/Scenes/TmpScenes/Map.unity
     guid: 677ebf6e89b04ce43bfe61040f55af48
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}

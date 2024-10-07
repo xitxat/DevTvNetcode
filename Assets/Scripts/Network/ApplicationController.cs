@@ -26,11 +26,14 @@ public class ApplicationController : MonoBehaviour
         }
         else
         {
+            //  Spawn HostSingleton first otherwise Client will start game before 
+            //  Host(server) ~ throwing null HostSingleton  in Game Scene
+            //  Both HostManager & ClientManager prefabs need to be in Scene's DontDestroyOnLoad
+            HostSingleton hostSingleton = Instantiate(hostPrefab);
+            hostSingleton.CreateHost();
+
             ClientSingleton clientSingleton =  Instantiate(clientPrefab);
             bool authenticated = await clientSingleton.CreateClient();
-
-            HostSingleton hostSingleton =  Instantiate(hostPrefab);
-            hostSingleton.CreateHost();
             //  wait for Auth, then:
 
             // Go to menu

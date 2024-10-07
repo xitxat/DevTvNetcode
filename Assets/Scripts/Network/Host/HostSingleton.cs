@@ -1,6 +1,8 @@
 using System.Threading.Tasks;
 using UnityEngine;
 
+// Singletons: Global access, no cached refs needed.
+
 public class HostSingleton : MonoBehaviour
 {
 
