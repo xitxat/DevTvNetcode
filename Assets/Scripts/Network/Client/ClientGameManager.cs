@@ -16,6 +16,7 @@ public class ClientGameManager
 {
 
     private JoinAllocation allocation;
+    private NetworkClient networkClient;
     private const string MenuSceneName = "Menu";
     private const string GameSceneName = "Game";
 
@@ -28,6 +29,10 @@ public class ClientGameManager
         //  Authentications (Task)
         await UnityServices.InitializeAsync();
 
+        //  Inst when becomming a Client &
+        //  listen for NetworkClient Disconnect event
+        networkClient = new NetworkClient(NetworkManager.Singleton);
+
         // Await the 5 max tries & return state
         AuthState authState =  await AuthenticationWrapper.DoAuth();
 
@@ -39,6 +44,7 @@ public class ClientGameManager
         return false;
 
     }
+
 
     public void GoToMenu()
     {
