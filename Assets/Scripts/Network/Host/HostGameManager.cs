@@ -1,26 +1,32 @@
 using System;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 using System.Threading.Tasks;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
 using Unity.Networking.Transport.Relay;
+using Unity.Services.Lobbies;
+using Unity.Services.Lobbies.Models;
 using Unity.Services.Relay;
 using Unity.Services.Relay.Models;
-using UnityEngine;
-using UnityEngine.SceneManagement;
+using System.Collections;
 
+//  Use Try Catch for Network Calls
 public class HostGameManager 
 {
 
     private Allocation allocation;
     private string joinCode;
+    private string lobbyId;
     private const int MaxConnections = 20;
     private const string GameSceneName  = "Game";
 
     public async Task StartHostAsync()
     {
+
+            //  CREATE, Assign & Store the allocation with ID# (Join Code)
         try
           {
-            //  CREATE, Assign & Store the allocation with ID# (Join Code)
            allocation =  await Relay.Instance.CreateAllocationAsync(MaxConnections);
         }
         catch(Exception e)
@@ -29,12 +35,11 @@ public class HostGameManager
             return;
         }
 
+            //  Join Code
         try
         {
-            //   Join Code
             joinCode = await Relay.Instance.GetJoinCodeAsync(allocation.AllocationId);
             Debug.Log($"<color=teal>Join Code: {joinCode}</color>");
-
         }
         catch (Exception e)
         {
@@ -42,18 +47,58 @@ public class HostGameManager
             return;
         }
 
+        #region LOBBY
+        try
+        {
+            CreateLobbyOptions lobbyOptions = new CreateLobbyOptions();
+            lobbyOptions.IsPrivate = false; // Add Check box for player's lobby. Private need Jcode
+            // Set screen readable Relay data (Alloc Jcode, visible to members of Lobby ) to Lobby 
+            lobbyOptions.Data = new System.Collections.Generic.Dictionary<string, DataObject>()
+            {
+                { "JoinCode", new DataObject(
+                    visibility: DataObject.VisibilityOptions.Member,
+                    value: joinCode)}
+            };
+
+            // CreateLobbyAsync returns a Lobby ID (used for Heartbeat ping)
+            Lobby lobby = await Lobbies.Instance.CreateLobbyAsync(
+                "My Lobby", MaxConnections, lobbyOptions);
+
+            lobbyId = lobby.Id;
+
+            // Reroute Coroutine thru a monobehaviour
+            HostSingleton.Instance.StartCoroutine(HeartbeatLobby(15));
+
+
+        }
+        catch(LobbyServiceException exLSE)
+        {
+            Debug.Log(exLSE);
+            // Don't start Host
+            return;
+        }
+        #endregion
+
+        #region RELAY
         //  Unity Transport switch to RELAY MODE
         UnityTransport transport = NetworkManager.Singleton.GetComponent<UnityTransport>();
 
         //  Set connection type ("udp" User Data Protocol = RELAY) [IP,Port]
         RelayServerData relayServerData = new RelayServerData(allocation, "dtls");
         transport.SetRelayServerData(relayServerData);
+        #endregion
 
+        #region HOST
         //  Start
         NetworkManager.Singleton.StartHost();
 
         //  Scene
         NetworkManager.Singleton.SceneManager.LoadScene(GameSceneName, LoadSceneMode.Single);
+        #endregion
 
+        // Heartbeat ping
+        // coroutines need to be called from monobehaviours 
+        // Reroute thru HostSingleton
+        private IEnumerator HeartbeatLobby(float waitTimeSeconds)
     }
 }
