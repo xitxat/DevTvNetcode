@@ -10,12 +10,14 @@ using Unity.Services.Lobbies.Models;
 using Unity.Services.Relay;
 using Unity.Services.Relay.Models;
 using System.Collections;
+using System.Text;
 
 //  Use Try Catch for Network Calls
 public class HostGameManager 
 {
 
     private Allocation allocation;
+    private NetworkServer networkServer;
     private string joinCode;
     private string lobbyId;
     private const int MaxConnections = 20;
@@ -70,9 +72,12 @@ public class HostGameManager
                     value: joinCode)}
             };
 
+            // Ref Player Name to name scene with
+            string playerName = PlayerPrefs.GetString(NameSelector.PlayerNameKey, "NoName");
+
             // CreateLobbyAsync returns a Lobby ID (used for Heartbeat ping)
             Lobby lobby = await Lobbies.Instance.CreateLobbyAsync(
-                "My Lobby", MaxConnections, lobbyOptions);
+                $"{playerName}'s Lobby", MaxConnections, lobbyOptions);
 
             lobbyId = lobby.Id;
 
@@ -87,14 +92,36 @@ public class HostGameManager
         }
         #endregion
 
+        #region NETWORK SERVER
 
+        // Create
+        networkServer = new NetworkServer(NetworkManager.Singleton);
+
+        #endregion
 
         #region HOST
+
+        // Set Data from Network Server ApprovalCheck()
+        UserData userData = new UserData
+        {
+            userName = PlayerPrefs.GetString(NameSelector.PlayerNameKey, "NoNameO")
+        };
+
+        // Repackage Package: JSON <=> Byte Array
+        string payload = JsonUtility.ToJson(userData);
+        byte[] payloadBytes = Encoding.UTF8.GetBytes(payload);
+
+        // Send over network on Connecting to Server
+        NetworkManager.Singleton.NetworkConfig.ConnectionData = payloadBytes;
+
+
         //  Start
         NetworkManager.Singleton.StartHost();
 
+
         //  Scene
         NetworkManager.Singleton.SceneManager.LoadScene(GameSceneName, LoadSceneMode.Single);
+
         #endregion
 
     }

@@ -13,7 +13,7 @@ public class NameSelector : MonoBehaviour
     [SerializeField] private int minNameLength = 1;
     [SerializeField] private int maxNameLength = 12;
 
-    const string PlayerNameKey = "PlayerName";
+    public const string PlayerNameKey = "PlayerName"; // ref from ClientGameManager 
 
 
     void Start()

@@ -8,8 +8,9 @@ using Unity.Services.Relay.Models;
 using Unity.Services.Relay;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Text;
 
-       //   AUTHENTICATE PLAYER
+//   AUTHENTICATE PLAYER
 public class ClientGameManager 
 {
 
@@ -64,6 +65,18 @@ public class ClientGameManager
         //  Set connection type ("udp" User Data Protocol = RELAY) [IP,Port]
         RelayServerData relayServerData = new RelayServerData(allocation, "dtls");
         transport.SetRelayServerData(relayServerData);
+
+        // Set Data from Network Server ApprovalCheck()
+        UserData userData = new UserData
+        {
+            userName = PlayerPrefs.GetString(NameSelector.PlayerNameKey, "NoNameO")
+        };
+        // Repackage Package: JSON <=> Byte Array
+        string payload = JsonUtility.ToJson(userData);
+        byte[] payloadBytes = Encoding.UTF8.GetBytes(payload);
+
+        // Send over network on Connecting to Server
+        NetworkManager.Singleton.NetworkConfig.ConnectionData = payloadBytes;
 
         //  Start
         NetworkManager.Singleton.StartClient();

@@ -757,7 +757,7 @@ MonoBehaviour:
       - {fileID: 11400000, guid: 530a9884a74ac04478b41d3b150fa4d7, type: 2}
     TickRate: 30
     ClientConnectionBufferTimeout: 10
-    ConnectionApproval: 0
+    ConnectionApproval: 1
     ConnectionData: 
     EnableTimeResync: 0
     TimeResyncInterval: 30
@@ -852,6 +852,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd9cf71726c8a0f4fbc2239f29241b6b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  joinCodeField: {fileID: 0}
 --- !u!1 &1936303729
 GameObject:
   m_ObjectHideFlags: 0

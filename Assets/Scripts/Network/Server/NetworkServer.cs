@@ -2,6 +2,7 @@ using System;
 using Unity.Netcode;
 using UnityEngine;
 
+// HostGameManager creates this class
 public class NetworkServer 
 {
     private NetworkManager networkManager;
@@ -15,6 +16,7 @@ public NetworkServer( NetworkManager networkManager)
         networkManager.ConnectionApprovalCallback += ApprovalCheck;
     }
 
+    // Handle requests when Players connect
     private void ApprovalCheck(
         NetworkManager.ConnectionApprovalRequest request, 
         NetworkManager.ConnectionApprovalResponse response)
@@ -30,5 +32,8 @@ public NetworkServer( NetworkManager networkManager)
 
         // Finish connection to server
         response.Approved = true;
+
+        //  Spawn in Players
+        response.CreatePlayerObject = true;
     }
 }
