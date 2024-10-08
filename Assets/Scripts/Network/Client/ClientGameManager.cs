@@ -9,6 +9,7 @@ using Unity.Services.Relay;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Text;
+using Unity.Services.Authentication;
 
 //   AUTHENTICATE PLAYER
 public class ClientGameManager 
@@ -69,7 +70,8 @@ public class ClientGameManager
         // Set Data from Network Server ApprovalCheck()
         UserData userData = new UserData
         {
-            userName = PlayerPrefs.GetString(NameSelector.PlayerNameKey, "NoNameO")
+            userName = PlayerPrefs.GetString(NameSelector.PlayerNameKey, "NoNameO"),
+            userAuthId = AuthenticationService.Instance.PlayerId
         };
         // Repackage Package: JSON <=> Byte Array
         string payload = JsonUtility.ToJson(userData);

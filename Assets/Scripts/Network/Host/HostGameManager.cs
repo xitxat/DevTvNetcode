@@ -11,6 +11,7 @@ using Unity.Services.Relay;
 using Unity.Services.Relay.Models;
 using System.Collections;
 using System.Text;
+using Unity.Services.Authentication;
 
 //  Use Try Catch for Network Calls
 public class HostGameManager 
@@ -104,7 +105,9 @@ public class HostGameManager
         // Set Data from Network Server ApprovalCheck()
         UserData userData = new UserData
         {
-            userName = PlayerPrefs.GetString(NameSelector.PlayerNameKey, "NoNameO")
+            userName = PlayerPrefs.GetString(NameSelector.PlayerNameKey, "NoNameO"),
+            userAuthId = AuthenticationService.Instance.PlayerId
+
         };
 
         // Repackage Package: JSON <=> Byte Array
