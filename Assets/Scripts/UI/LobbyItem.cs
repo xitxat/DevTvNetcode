@@ -1,8 +1,11 @@
 using TMPro;
-using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
 using UnityEngine;
 
+//  !!! ATTACH TO LOBBYITEM PREFAB  !!!
+//      & add to its "JOIN button" callback LobbyItem.Join()
+//  ALSO: G.O. LobbiesBackground/RefreshButton : 
+//      OnClick:LobbiesBackground / LobbiesList/RefreshList
 
 //  Which Lobby are we.
 //  Update UI
