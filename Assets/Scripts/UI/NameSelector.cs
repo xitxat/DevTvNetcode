@@ -3,6 +3,9 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+// HOOKUP: [requires GO UI/EventSystem
+// GO ConnectButton  add GO NameSelector to OnClick NS Connect()
+// GO NameInputField add GO NameSelector to OnValueChanged HandleNameChanged() [in TMP component]
 public class NameSelector : MonoBehaviour
 {
     [SerializeField] private TMP_InputField nameField;
