@@ -109,6 +109,7 @@ public class HostGameManager
         while (true)
         {
             Lobbies.Instance.SendHeartbeatPingAsync(lobbyId);
+           // Debug.Log("PING");
             yield return delay;
         }
     }
