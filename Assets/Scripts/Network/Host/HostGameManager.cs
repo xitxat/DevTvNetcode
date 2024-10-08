@@ -47,6 +47,16 @@ public class HostGameManager
             return;
         }
 
+        #region RELAY
+        //  Unity Transport switch to RELAY MODE
+        UnityTransport transport = NetworkManager.Singleton.GetComponent<UnityTransport>();
+
+        //  Set connection type ("udp" User Data Protocol = RELAY) [IP,Port]
+        RelayServerData relayServerData = new RelayServerData(allocation, "dtls");
+        transport.SetRelayServerData(relayServerData);
+        #endregion
+
+
         #region LOBBY
         try
         {
@@ -66,10 +76,8 @@ public class HostGameManager
 
             lobbyId = lobby.Id;
 
-            // Reroute Coroutine thru a monobehaviour
+            // Reroute keep awake Ping Coroutine thru a monobehaviour
             HostSingleton.Instance.StartCoroutine(HeartbeatLobby(15));
-
-
         }
         catch(LobbyServiceException exLSE)
         {
@@ -79,14 +87,7 @@ public class HostGameManager
         }
         #endregion
 
-        #region RELAY
-        //  Unity Transport switch to RELAY MODE
-        UnityTransport transport = NetworkManager.Singleton.GetComponent<UnityTransport>();
 
-        //  Set connection type ("udp" User Data Protocol = RELAY) [IP,Port]
-        RelayServerData relayServerData = new RelayServerData(allocation, "dtls");
-        transport.SetRelayServerData(relayServerData);
-        #endregion
 
         #region HOST
         //  Start
@@ -96,9 +97,22 @@ public class HostGameManager
         NetworkManager.Singleton.SceneManager.LoadScene(GameSceneName, LoadSceneMode.Single);
         #endregion
 
-        // Heartbeat ping
-        // coroutines need to be called from monobehaviours 
-        // Reroute thru HostSingleton
-        private IEnumerator HeartbeatLobby(float waitTimeSeconds)
     }
+
+    // Heartbeat ping
+    // coroutines need to be called from monobehaviours 
+    // Reroute thru HostSingleton
+    // Stops on GameShutdown
+    private IEnumerator HeartbeatLobby(float waitTimeSeconds)
+    {
+        WaitForSecondsRealtime delay = new WaitForSecondsRealtime(waitTimeSeconds);
+        while (true)
+        {
+            Lobbies.Instance.SendHeartbeatPingAsync(lobbyId);
+            yield return delay;
+        }
+    }
+
+
+
 }
