@@ -22,8 +22,6 @@ public class NetworkServer : IDisposable
         networkManager.OnServerStarted += OnNetworkReady;
     }
 
-
-
     // Handle requests when Players connect
     private void ApprovalCheck(
         NetworkManager.ConnectionApprovalRequest request,
@@ -69,6 +67,24 @@ public class NetworkServer : IDisposable
 
         // Store ID of Disconnected client to save score 
 
+    }
+
+    // Retrrieve Player name from UserData Dictionary
+    // if1: clientID from dict clientIdToAuth passed to Dict UserData
+    // if2: UserData out  contains name
+    public UserData GetUserDataByClientId(ulong clientId)
+    {
+        if(clientIdToAuth.TryGetValue(clientId, out string authId))
+        {
+            if(authIdToUserData.TryGetValue(authId, out UserData data))
+            {
+                return data;
+            }
+
+            return null;
+        }
+
+        return null;
     }
 
     public void Dispose()
