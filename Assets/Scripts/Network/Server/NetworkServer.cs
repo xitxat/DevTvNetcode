@@ -78,6 +78,7 @@ public class NetworkServer : IDisposable
         {
             if(authIdToUserData.TryGetValue(authId, out UserData data))
             {
+                // contains Player Name
                 return data;
             }
 

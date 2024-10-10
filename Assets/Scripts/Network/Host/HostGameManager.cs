@@ -19,8 +19,9 @@ using Unity.Services.Authentication;
 public class HostGameManager : IDisposable
 {
 
+    public NetworkServer NetworkServer { get; private set; } // exposed to TankPlayer (Name extraction)
+
     private Allocation allocation;
-    private NetworkServer networkServer;
     private string joinCode;
     private string lobbyId;
     private const int MaxConnections = 20;
