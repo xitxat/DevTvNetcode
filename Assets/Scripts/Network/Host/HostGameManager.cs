@@ -146,14 +146,29 @@ public class HostGameManager : IDisposable
         }
     }
 
-    public void Dispose()
+    public async void Dispose()
     {
         //  Stop Heartbeat coroutine . out of class access
         // Use nameof(containing method)
         HostSingleton.Instance.StartCoroutine(nameof(HeartbeatLobby));
 
         // Stop Lobby
+        if (string.IsNullOrEmpty(lobbyId))
+        {
+            try
+            {
+                await Lobbies.Instance.DeleteLobbyAsync(lobbyId);
+            }
+            catch(LobbyServiceException exLSE)
+            {
+                Debug.Log(exLSE);
+            }
 
+            // Won;t retry with empty str on a Fail
+            lobbyId = string.Empty;
+        }
+
+        networkServer?.Dispose();
 
     }
 }
