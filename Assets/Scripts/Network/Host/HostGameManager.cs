@@ -11,9 +11,10 @@ using Unity.Services.Relay;
 using Unity.Services.Relay.Models;
 using System.Collections;
 using System.Text;
+using Unity.Services.Authentication;
 
 //  Use Try Catch for Network Calls
-public class HostGameManager 
+public class HostGameManager
 {
 
     private Allocation allocation;
@@ -21,23 +22,23 @@ public class HostGameManager
     private string joinCode;
     private string lobbyId;
     private const int MaxConnections = 20;
-    private const string GameSceneName  = "Game";
+    private const string GameSceneName = "Game";
 
     public async Task StartHostAsync()
     {
 
-            //  CREATE, Assign & Store the allocation with ID# (Join Code)
+        //  CREATE, Assign & Store the allocation with ID# (Join Code)
         try
-          {
-           allocation =  await Relay.Instance.CreateAllocationAsync(MaxConnections);
+        {
+            allocation = await Relay.Instance.CreateAllocationAsync(MaxConnections);
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             Debug.Log(e);
             return;
         }
 
-            //  Join Code
+        //  Join Code
         try
         {
             joinCode = await Relay.Instance.GetJoinCodeAsync(allocation.AllocationId);
@@ -84,7 +85,7 @@ public class HostGameManager
             // Reroute keep awake Ping Coroutine thru a monobehaviour
             HostSingleton.Instance.StartCoroutine(HeartbeatLobby(15));
         }
-        catch(LobbyServiceException exLSE)
+        catch (LobbyServiceException exLSE)
         {
             Debug.Log(exLSE);
             // Don't start Host
@@ -104,7 +105,9 @@ public class HostGameManager
         // Set Data from Network Server ApprovalCheck()
         UserData userData = new UserData
         {
-            userName = PlayerPrefs.GetString(NameSelector.PlayerNameKey, "NoNameO")
+            userName = PlayerPrefs.GetString(NameSelector.PlayerNameKey, "NoNameO"),
+            userAuthId = AuthenticationService.Instance.PlayerId
+
         };
 
         // Repackage Package: JSON <=> Byte Array
@@ -136,7 +139,7 @@ public class HostGameManager
         while (true)
         {
             Lobbies.Instance.SendHeartbeatPingAsync(lobbyId);
-           // Debug.Log("PING");
+            // Debug.Log("PING");
             yield return delay;
         }
     }

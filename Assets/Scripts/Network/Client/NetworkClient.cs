@@ -1,9 +1,12 @@
+using System;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class NetworkClient
+
+//  IDisposable: gain access to monobehaviours
+public class NetworkClient : IDisposable 
 {
 
     private NetworkManager networkManager;
@@ -46,4 +49,15 @@ public class NetworkClient
 
 
     }
+
+    public void Dispose()
+    {
+        if (networkManager != null)
+        {
+            networkManager.OnClientDisconnectCallback -= OnClientDisconnect;
+        }
+
+
+    }
+
 }

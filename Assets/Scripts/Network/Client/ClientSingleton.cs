@@ -44,5 +44,14 @@ public class ClientSingleton : MonoBehaviour
         return await GameManager.InitAsync();
     }
 
+    //  Closing Game cleanly
+    //  When this obj is Destroyed call & unsub from
+    //   1: ClientGameManager : IDisposable & --> 2: NetworkClient : IDisposable
+    private void OnDestroy()
+    {
+        GameManager?.Dispose();
+    }
+
+
 
 }

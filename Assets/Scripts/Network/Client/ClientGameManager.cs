@@ -9,12 +9,15 @@ using Unity.Services.Relay;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Text;
+using Unity.Services.Authentication;
 
 //   AUTHENTICATE PLAYER
-public class ClientGameManager 
+//  IDisposable: gain access to monobehaviours
+public class ClientGameManager : IDisposable
 {
 
     private JoinAllocation allocation;
+    private NetworkClient networkClient;
     private const string MenuSceneName = "Menu";
     private const string GameSceneName = "Game";
 
@@ -27,10 +30,14 @@ public class ClientGameManager
         //  Authentications (Task)
         await UnityServices.InitializeAsync();
 
-        // Await the 5 max tries & return state
-        AuthState authState =  await AuthenticationWrapper.DoAuth();
+        //  Inst when becomming a Client &
+        //  listen for NetworkClient Disconnect event
+        networkClient = new NetworkClient(NetworkManager.Singleton);
 
-        if(authState == AuthState.Authenticated)
+        // Await the 5 max tries & return state
+        AuthState authState = await AuthenticationWrapper.DoAuth();
+
+        if (authState == AuthState.Authenticated)
         {
             return true;
         }
@@ -38,6 +45,7 @@ public class ClientGameManager
         return false;
 
     }
+
 
     public void GoToMenu()
     {
@@ -69,7 +77,8 @@ public class ClientGameManager
         // Set Data from Network Server ApprovalCheck()
         UserData userData = new UserData
         {
-            userName = PlayerPrefs.GetString(NameSelector.PlayerNameKey, "NoNameO")
+            userName = PlayerPrefs.GetString(NameSelector.PlayerNameKey, "NoNameO"),
+            userAuthId = AuthenticationService.Instance.PlayerId
         };
         // Repackage Package: JSON <=> Byte Array
         string payload = JsonUtility.ToJson(userData);
@@ -84,5 +93,12 @@ public class ClientGameManager
         //  Scene
         //  Only Server changes the scene &
         //  Will handle client scene too.
+    }
+
+    public void Dispose()
+    {
+        // Pass down the chain
+        networkClient?.Dispose();
+
     }
 }
