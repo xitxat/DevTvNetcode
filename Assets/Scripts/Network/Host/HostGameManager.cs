@@ -14,7 +14,9 @@ using System.Text;
 using Unity.Services.Authentication;
 
 //  Use Try Catch for Network Calls
-public class HostGameManager
+//  Coroutine not in class HostGameManager.
+//      Accessed via HostSingleton.Instance.StartCoroutine
+public class HostGameManager : IDisposable
 {
 
     private Allocation allocation;
@@ -144,6 +146,14 @@ public class HostGameManager
         }
     }
 
+    public void Dispose()
+    {
+        //  Stop Heartbeat coroutine . out of class access
+        // Use nameof(containing method)
+        HostSingleton.Instance.StartCoroutine(nameof(HeartbeatLobby));
+
+        // Stop Lobby
 
 
+    }
 }

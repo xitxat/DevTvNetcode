@@ -80,5 +80,10 @@ public class NetworkServer : IDisposable
         networkManager.OnClientDisconnectCallback -= OnClientDisconnect;
         networkManager.OnServerStarted -= OnNetworkReady;
 
+        if (networkManager.IsListening)
+        {
+            networkManager.Shutdown();
+        }
+
     }
 }
