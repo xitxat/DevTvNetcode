@@ -8,7 +8,7 @@ public class TankPlayer : NetworkBehaviour
 {
 
     [Header("Refs")]
-    [SerializeField] private CinemachineVirtualCamera virtualCamera;
+    [SerializeField] private CinemachineCamera virtualCamera;
 
 
     [Header("Settings")]
