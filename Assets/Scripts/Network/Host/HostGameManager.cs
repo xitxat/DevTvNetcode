@@ -99,7 +99,7 @@ public class HostGameManager : IDisposable
         #region NETWORK SERVER
 
         // Create
-        networkServer = new NetworkServer(NetworkManager.Singleton);
+        NetworkServer = new NetworkServer(NetworkManager.Singleton);
 
         #endregion
 
@@ -169,7 +169,7 @@ public class HostGameManager : IDisposable
             lobbyId = string.Empty;
         }
 
-        networkServer?.Dispose();
+        NetworkServer?.Dispose();
 
     }
 }
