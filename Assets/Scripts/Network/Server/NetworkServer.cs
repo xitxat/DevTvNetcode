@@ -44,10 +44,12 @@ public class NetworkServer : IDisposable
         // Finish connection to server
         response.Approved = true;
 
-        //  Spawn List
+        // Assign a random spawn position and log it
+        Vector3 randomSpawnPos = SpawnPoint.GetRandomSpawnPos();
         response.Position = SpawnPoint.GetRandomSpawnPos();
-
         response.Rotation = Quaternion.identity;
+
+        Debug.Log("Client approved with random spawn position: " + randomSpawnPos);
 
         //  Spawn in Players
         response.CreatePlayerObject = true;
