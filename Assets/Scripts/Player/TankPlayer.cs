@@ -36,7 +36,7 @@ public class TankPlayer : NetworkBehaviour
             // & trigger network sync
             PlayerName.Value =  userData.userName;
 
-            OnPlayerSpawned?.Invoke(this)
+            OnPlayerSpawned?.Invoke(this);
         }
 
         if (IsOwner)
