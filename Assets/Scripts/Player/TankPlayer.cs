@@ -1,9 +1,11 @@
+using System;
 using Unity.Cinemachine;
 using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
 
 //          CUSTOMISE .THIS PLAYER
+//      NAME
 //      CINEMACHINE
 public class TankPlayer : NetworkBehaviour
 {
@@ -18,6 +20,10 @@ public class TankPlayer : NetworkBehaviour
     //  Sync names. Cant sync normal strings.
     public NetworkVariable<FixedString32Bytes> PlayerName = new NetworkVariable<FixedString32Bytes>();
 
+    // Server only invocation
+    public static event Action<TankPlayer> OnPlayerSpawned;
+    public static event Action<TankPlayer> OnPlayerDespawned;
+
     public override void OnNetworkSpawn()
     {
         if (IsServer)
@@ -30,12 +36,20 @@ public class TankPlayer : NetworkBehaviour
             // & trigger network sync
             PlayerName.Value =  userData.userName;
 
-
+            OnPlayerSpawned?.Invoke(this)
         }
 
         if (IsOwner)
         {
             virtualCamera.Priority = ownerPriority;
+        }
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        if (IsServer)
+        {
+            OnPlayerDespawned?.Invoke(this);
         }
     }
 }
