@@ -369,6 +369,7 @@ GameObject:
   - component: {fileID: 6766752925402209109}
   - component: {fileID: 4983986663344693961}
   - component: {fileID: 7208021781545899374}
+  - component: {fileID: 1157900482114969915}
   m_Layer: 0
   m_Name: OverHeadCanvas
   m_TagString: Untagged
@@ -435,6 +436,20 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   health: {fileID: 7614312315832765601}
   healthBarImage: {fileID: 2713800751890418645}
+--- !u!114 &1157900482114969915
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3746147901858332682}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b23ceda7ef6aae84aaaa2b0909e492c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 4052719424288594010}
+  playerNameText: {fileID: 7044710030084249741}
 --- !u!1 &5952233466444134703
 GameObject:
   m_ObjectHideFlags: 0
@@ -578,7 +593,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 4130735069
+  GlobalObjectIdHash: 3497915201
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1

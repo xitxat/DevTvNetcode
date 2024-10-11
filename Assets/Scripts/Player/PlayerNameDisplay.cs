@@ -1,16 +1,33 @@
+using System;
+using TMPro;
+using Unity.Collections;
 using UnityEngine;
 
 public class PlayerNameDisplay : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
+    [SerializeField] private TankPlayer player;
+    [SerializeField] private TMP_Text playerNameText;
+
     void Start()
     {
-        
+        // Force reread / update of name incase of late init
+        HandlePlayerNameChanged(string.Empty, player.PlayerName.Value);
+
+        // Sub to change vale event of Name
+        player.PlayerName.OnValueChanged += HandlePlayerNameChanged;
+
     }
 
-    // Update is called once per frame
-    void Update()
+    private void HandlePlayerNameChanged(FixedString32Bytes oldName, FixedString32Bytes newName)
+    {
+        // Set name
+        playerNameText.text = newName.ToString();
+    }
+
+    void OnDestroy()
     {
         
+        player.PlayerName.OnValueChanged -= HandlePlayerNameChanged;
     }
 }
