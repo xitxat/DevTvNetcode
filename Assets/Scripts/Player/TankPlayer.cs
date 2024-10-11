@@ -13,6 +13,9 @@ public class TankPlayer : NetworkBehaviour
     [Header("Refs")]
     [SerializeField] private CinemachineCamera virtualCamera;
 
+    // expose private property in inspector with field:
+    [field: SerializeField] public Health Health { get; private set; }
+
 
     [Header("Settings")]
     [SerializeField] private int ownerPriority = 15;
