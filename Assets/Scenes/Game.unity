@@ -155,7 +155,7 @@ Transform:
   - {fileID: 682264755}
   - {fileID: 970821017}
   - {fileID: 1146732891}
-  m_Father: {fileID: 467412641}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &138613836
 PrefabInstance:
@@ -309,8 +309,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 22026106}
+  m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &519420028
@@ -1982,3 +1981,4 @@ SceneRoots:
   - {fileID: 1102649112}
   - {fileID: 1416663292}
   - {fileID: 467412641}
+  - {fileID: 22026106}
