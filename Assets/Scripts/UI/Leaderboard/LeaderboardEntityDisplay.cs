@@ -1,5 +1,7 @@
 using UnityEngine;
 
+//  Handles each players stats onLeaderboard
+
 public class LeaderboardEntityDisplay : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
