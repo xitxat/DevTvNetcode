@@ -3,6 +3,7 @@ using Unity.Netcode;
 using UnityEngine;
 
 // Server logic
+// this is inside gameplay scene
 public class RespawnHandler : NetworkBehaviour
 {
 
@@ -12,10 +13,12 @@ public class RespawnHandler : NetworkBehaviour
     {
         if (!IsServer) { return; }
 
+        // Player may exist before scene creation (ie Self Host)
+        TankPlayer[] players = FindObjectsByType<TankPlayer>(FindObjectsSortMode.None);
+
         TankPlayer.OnPlayerSpawned += HandlePlayerSpawned;
         TankPlayer.OnPlayerDespawned += HandlePlayerDespawned;
     }
-
 
 
     public override void OnNetworkDespawn()
