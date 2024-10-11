@@ -52,7 +52,7 @@ public class Health : NetworkBehaviour
             // OnDie? if someone has subscribed to it
             OnDie?.Invoke(this); //  broadcast event to all  methods / subscribers
             isDead = true;
-            Debug.Log("<color = orange>DEAD</color>");
+            Debug.Log("<color=orange>   DEAD</color>");
         }
     }
 

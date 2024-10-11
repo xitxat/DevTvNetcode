@@ -683,6 +683,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   virtualCamera: {fileID: 9048162145284919357}
+  <Health>k__BackingField: {fileID: 7614312315832765601}
   ownerPriority: 15
   PlayerName:
     m_InternalValue:
