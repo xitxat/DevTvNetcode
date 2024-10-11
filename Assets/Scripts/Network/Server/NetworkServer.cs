@@ -44,6 +44,11 @@ public class NetworkServer : IDisposable
         // Finish connection to server
         response.Approved = true;
 
+        //  Spawn List
+        response.Position = SpawnPoint.GetRandomSpawnPos();
+
+        response.Rotation = Quaternion.identity;
+
         //  Spawn in Players
         response.CreatePlayerObject = true;
     }
