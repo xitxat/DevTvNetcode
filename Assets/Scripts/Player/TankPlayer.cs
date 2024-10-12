@@ -16,6 +16,9 @@ public class TankPlayer : NetworkBehaviour
     // expose private property in inspector with field:
     [field: SerializeField] public Health Health { get; private set; }
 
+    // Exposed to update the Leader board coun count
+    [field: SerializeField] public CoinWallet Wallet { get; private set; }
+
 
     [Header("Settings")]
     [SerializeField] private int ownerPriority = 15;
