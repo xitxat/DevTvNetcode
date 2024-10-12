@@ -17,7 +17,7 @@ public class RespawnHandler : NetworkBehaviour
         // Player may exist before scene creation (ie Self Host)
         // if so get any tanks that already exist...
         TankPlayer[] players = FindObjectsByType<TankPlayer>(FindObjectsSortMode.None);
-        //  SPAWN
+        
         foreach(TankPlayer player in players)
         {
             HandlePlayerSpawned(player);
@@ -49,6 +49,7 @@ public class RespawnHandler : NetworkBehaviour
 
     }
 
+    //  DIE
     private void HandlePlayerDie(TankPlayer player)
     {
         Destroy(player.gameObject);

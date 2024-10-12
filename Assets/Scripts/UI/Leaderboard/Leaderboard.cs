@@ -2,7 +2,7 @@ using Unity.Netcode;
 using UnityEngine;
 
 //   In Scene on GO GameHUD
-//   Track & Sync all leaderboard Data (custom networklist) < LeaderboardEntityState >
+//   SERVER : Track & Sync all leaderboard Data (custom networklist) < LeaderboardEntityState >
 
 public class Leaderboard : NetworkBehaviour
 {
@@ -19,16 +19,37 @@ public class Leaderboard : NetworkBehaviour
         leaderboardEntities = new NetworkList<LeaderboardEntityState>();
     }
 
+    //  SPAWN LEADERBOARD
     public override void OnNetworkSpawn()
     {
+        if (IsServer) 
+        { 
+            TankPlayer[] players = FindObjectsByType<TankPlayer>(FindObjectsSortMode.None);
+        
+            foreach (TankPlayer player in players)
+            {
+                // Makes sure host is on LEaderboard
+                HandlePlayerSpawned(player);
+            }
 
+            // if player joining after SPAWN via these Events...
+            TankPlayer.OnPlayerSpawned += HandlePlayerSpawned;
+            TankPlayer.OnPlayerDespawned += HandlePlayerDespawned;
+            
+        }
     }
+
+    //  DESPAWN LEADERBOARD
     public override void OnNetworkDespawn()
     {
-
+        if (IsServer)
+        {
+            TankPlayer.OnPlayerSpawned -= HandlePlayerSpawned;
+            TankPlayer.OnPlayerDespawned -= HandlePlayerDespawned;
+        }
     }
 
-    private void HandlePLayerSpawned(TankPlayer player)
+    private void HandlePlayerSpawned(TankPlayer player)
     {
         // Publish to Leaderboard
         // Add to LIst
@@ -40,7 +61,7 @@ public class Leaderboard : NetworkBehaviour
         });
     }
 
-    private void HandlePLayerDespawned(TankPlayer player)
+    private void HandlePlayerDespawned(TankPlayer player)
     {
         // Unity6.x may empty out leaderboard on game stop
         if(leaderboardEntities == null) { return; }
