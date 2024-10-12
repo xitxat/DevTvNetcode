@@ -18,10 +18,15 @@ public class LeaderboardEntityDisplay : MonoBehaviour
 
     public void Initialise(ulong clientId, FixedString32Bytes playerName, int coins)
     {
-        ClientId = clientId;
+        ClientId = clientId; // static
         this.playerName = playerName;
-        Coins = coins; // Dynamic update()
 
+        UpdateCoins(coins); // Dynamic update()
+    }
+
+    public void UpdateCoins(int coins)
+    {
+        Coins = coins;
         UpdateText();
     }
 
@@ -31,9 +36,6 @@ public class LeaderboardEntityDisplay : MonoBehaviour
         
     }
 
-    public void UpdateCoins()
-    {
 
-    }
 
 }
