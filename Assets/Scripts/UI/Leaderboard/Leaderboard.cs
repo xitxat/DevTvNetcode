@@ -7,6 +7,7 @@ using UnityEngine;
 //   In Scene on GO GameHUD
 //   SERVER : Track & Sync all leaderboard Data (custom networklist) < LeaderboardEntityState >
 // NB: Initialise() is defined in LeaderboardEntityDisplay.cs NOTR Unity API Initialize()
+//      https://docs-multiplayer.unity3d.com/netcode/current/basics/networkvariable/index.html
 
 public class Leaderboard : NetworkBehaviour
 {
@@ -147,6 +148,14 @@ public class Leaderboard : NetworkBehaviour
             PlayerName = player.PlayerName.Value,
             Coins = 0
         });
+
+        // SUB COINS
+            // Connect to Coins changing
+            // Coins exposed thru PlayerTank
+            // Needs amount & client ID.
+            // use Lambda to pass in Coin's value
+        player.Wallet.TotalCoins.OnValueChanged += (oldCoins, newCoins) =>
+            HandleCoinsChanged(player.OwnerClientId, newCoins);
     }
 
     private void HandlePlayerDespawned(TankPlayer player)
@@ -162,5 +171,15 @@ public class Leaderboard : NetworkBehaviour
             leaderboardEntities.Remove(entity);
             break;
         }
+
+        // UNSUB COINS
+        player.Wallet.TotalCoins.OnValueChanged -= (oldCoins, newCoins) =>
+            HandleCoinsChanged(player.OwnerClientId, newCoins);
     }
+
+    private void HandleCoinsChanged(ulong clientId, int newCoins)
+    {
+
+    }
+
 }

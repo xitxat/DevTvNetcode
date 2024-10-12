@@ -593,7 +593,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 4130735069
+  GlobalObjectIdHash: 3497915201
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -684,6 +684,7 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   virtualCamera: {fileID: 9048162145284919357}
   <Health>k__BackingField: {fileID: 7614312315832765601}
+  <Wallet>k__BackingField: {fileID: 8896915746589266054}
   ownerPriority: 15
   PlayerName:
     m_InternalValue:
