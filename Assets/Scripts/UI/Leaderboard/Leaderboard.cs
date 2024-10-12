@@ -179,6 +179,26 @@ public class Leaderboard : NetworkBehaviour
 
     private void HandleCoinsChanged(ulong clientId, int newCoins)
     {
+        // Go thru entity states synced to client
+        // Find which match this player
+        // Update coin value
+
+        for (int i = 0; i < leaderboardEntities.Count; i++)
+        {
+            if (leaderboardEntities[i].ClientId != clientId) { continue; }
+
+            leaderboardEntities[i] = new LeaderboardEntityState
+            {
+                // static
+                ClientId = leaderboardEntities[i].ClientId,
+                PlayerName = leaderboardEntities[i].PlayerName,
+
+                // dynamic
+                Coins = newCoins
+            };
+
+            return;
+        }
 
     }
 
