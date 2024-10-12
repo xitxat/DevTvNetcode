@@ -1,18 +1,39 @@
+using TMPro;
+using Unity.Collections;
 using UnityEngine;
 
-//  Handles each players stats onLeaderboard
+//  Handles each individual players stats onLeaderboard
 
 public class LeaderboardEntityDisplay : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+
+    // Exposed for Leaderboard
+    public ulong ClientId { get; private set; }
+    public int Coins { get; private set; }
+
+
+    [SerializeField] private TMP_Text displayText;
+    FixedString32Bytes playerName;
+
+
+    public void Initialise(ulong clientId, FixedString32Bytes playerName, int coins)
     {
+        ClientId = clientId;
+        this.playerName = playerName;
+        Coins = coins; // Dynamic update()
+
+        UpdateText();
+    }
+
+    private void UpdateText()
+    {
+        displayText.text = $"1. {playerName} [{Coins}]";
         
     }
 
-    // Update is called once per frame
-    void Update()
+    public void UpdateCoins()
     {
-        
+
     }
+
 }
