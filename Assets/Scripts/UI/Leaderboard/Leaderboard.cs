@@ -91,7 +91,7 @@ public class Leaderboard : NetworkBehaviour
             case NetworkListEvent<LeaderboardEntityState>.EventType.Add:
                 // Don't reAdd ourselves from the changeEvent
                 // Sort / Filter Linq. where => [foreach oneliner]
-                if(entityDisplays.Any(x => x.ClientId == changeEvent.Value.ClientId))
+                if(!entityDisplays.Any(x => x.ClientId == changeEvent.Value.ClientId))
                 {
                     // store to List entityDisplays & spawn it
                    LeaderboardEntityDisplay leaderboardEntity = 
