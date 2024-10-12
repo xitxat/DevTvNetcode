@@ -16,6 +16,7 @@ public class LeaderboardEntityDisplay : MonoBehaviour
     FixedString32Bytes playerName;
 
 
+    //  Custom Initialise not unities InitialiZe
     public void Initialise(ulong clientId, FixedString32Bytes playerName, int coins)
     {
         ClientId = clientId; // static

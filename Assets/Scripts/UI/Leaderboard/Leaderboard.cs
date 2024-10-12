@@ -1,8 +1,12 @@
+using System.Collections.Generic;
+using System.Linq;
 using Unity.Netcode;
+using Unity.VisualScripting;
 using UnityEngine;
 
 //   In Scene on GO GameHUD
 //   SERVER : Track & Sync all leaderboard Data (custom networklist) < LeaderboardEntityState >
+// NB: Initialise() is defined in LeaderboardEntityDisplay.cs NOTR Unity API Initialize()
 
 public class Leaderboard : NetworkBehaviour
 {
@@ -10,9 +14,13 @@ public class Leaderboard : NetworkBehaviour
     [SerializeField] private Transform leaderboardEntityHolder;
     [SerializeField] private LeaderboardEntityDisplay leaderboardEntityPrefab;
 
-    // Server Stores & Syncs a LIST of all Ids, names, coins
+    // Server Stores & Syncs a LIST of all PLAYER DATA: Ids, names, coins
     // Custom Network List <T> Server syncs clients
-    private NetworkList<LeaderboardEntityState> leaderboardEntities; // init in Awake
+    private NetworkList<LeaderboardEntityState> leaderboardEntities; // init in Awake (Network obj)
+
+    // List of lb prefabs for use in SWITCH
+    // init here (!Network obj)
+    private List<LeaderboardEntityDisplay> entityDisplays = new List<LeaderboardEntityDisplay>();
 
     private void Awake()
     {
@@ -57,7 +65,6 @@ public class Leaderboard : NetworkBehaviour
     }
 
 
-
     //  DESPAWN LEADERBOARD
     public override void OnNetworkDespawn()
     {
@@ -80,9 +87,50 @@ public class Leaderboard : NetworkBehaviour
         // Add
         switch (changeEvent.Type)
         {
-            // Player has spawned so add it to the leaderboard
+            // ADD
             case NetworkListEvent<LeaderboardEntityState>.EventType.Add:
-                Instantiate(leaderboardEntityPrefab, leaderboardEntityHolder);
+                // Don't reAdd ourselves from the changeEvent
+                // Sort / Filter Linq. where => [foreach oneliner]
+                if(entityDisplays.Any(x => x.ClientId == changeEvent.Value.ClientId))
+                {
+                    // store to List entityDisplays & spawn it
+                   LeaderboardEntityDisplay leaderboardEntity = 
+                        Instantiate(leaderboardEntityPrefab, leaderboardEntityHolder);
+                    leaderboardEntity.Initialise(
+                        changeEvent.Value.ClientId,
+                        changeEvent.Value.PlayerName,
+                        changeEvent.Value.Coins);
+
+                    entityDisplays.Add(leaderboardEntity);
+                }
+                break;
+
+            // REMOVE
+            case NetworkListEvent<LeaderboardEntityState>.EventType.Remove:
+                // Find if Dead, leave game, etc
+                // Default == null
+                // Get 1st element that matches this condition
+                LeaderboardEntityDisplay displayToRemove =
+                    entityDisplays.FirstOrDefault(x => x.ClientId == changeEvent.Value.ClientId);
+
+                // if found REMOVE
+                //1st remove parent GO [container] / detach from leaderboard, minimise bugs
+                if (displayToRemove != null)
+                {
+                    displayToRemove.transform.SetParent(null);
+                    Destroy(displayToRemove.gameObject);
+                    entityDisplays.Remove(displayToRemove);
+                }
+                break;
+
+            // UPDATE score / coins
+            case NetworkListEvent<LeaderboardEntityState>.EventType.Value:
+                LeaderboardEntityDisplay displayToUpdate =
+                    entityDisplays.FirstOrDefault(x => x.ClientId == changeEvent.Value.ClientId);
+                if(displayToUpdate != null)
+                {
+                    displayToUpdate.UpdateCoins(changeEvent.Value.Coins);
+                }
                 break;
         }
 
