@@ -22,6 +22,12 @@ public class Leaderboard : NetworkBehaviour
     //  SPAWN LEADERBOARD
     public override void OnNetworkSpawn()
     {
+        // GET CLIENTS TO lISTEN
+        if (IsClient)
+        {
+            leaderboardEntities.OnListChanged += HandleLeaderboardEntitiesChanged;
+        }
+
         if (IsServer) 
         { 
             TankPlayer[] players = FindObjectsByType<TankPlayer>(FindObjectsSortMode.None);
@@ -39,14 +45,37 @@ public class Leaderboard : NetworkBehaviour
         }
     }
 
+
+
     //  DESPAWN LEADERBOARD
     public override void OnNetworkDespawn()
     {
+        // GET CLIENTS TO lISTEN
+        if (IsClient)
+        {
+            leaderboardEntities.OnListChanged -= HandleLeaderboardEntitiesChanged;
+        }
+
         if (IsServer)
         {
             TankPlayer.OnPlayerSpawned -= HandlePlayerSpawned;
             TankPlayer.OnPlayerDespawned -= HandlePlayerDespawned;
         }
+    }
+
+    private void HandleLeaderboardEntitiesChanged(NetworkListEvent<LeaderboardEntityState> changeEvent)
+    {
+        // query changeEvent if vale changed & how;ie: added, removed, updated
+        // Add
+        switch (changeEvent.Type)
+        {
+            // Player has spawned so add it to the leaderboard
+            case NetworkListEvent<LeaderboardEntityState>.EventType.Add:
+                Instantiate(leaderboardEntityPrefab, leaderboardEntityHolder);
+                break;
+        }
+
+
     }
 
     private void HandlePlayerSpawned(TankPlayer player)
