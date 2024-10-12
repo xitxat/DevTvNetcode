@@ -26,6 +26,17 @@ public class Leaderboard : NetworkBehaviour
         if (IsClient)
         {
             leaderboardEntities.OnListChanged += HandleLeaderboardEntitiesChanged;
+
+            // Already added Self check
+            foreach(LeaderboardEntityState entity in leaderboardEntities)
+            {
+                HandleLeaderboardEntitiesChanged( new NetworkListEvent<LeaderboardEntityState>
+                    {
+                    // Add other players
+                    Type = NetworkListEvent<LeaderboardEntityState>.EventType.Add,
+                    Value = entity
+                });
+            }
         }
 
         if (IsServer) 
