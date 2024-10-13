@@ -30,10 +30,12 @@ public class LeaderboardEntityDisplay : MonoBehaviour
         Coins = coins;
         UpdateText();
     }
+  
 
-    private void UpdateText()
+    public void UpdateText()
     {
-        displayText.text = $"1. {playerName} [{Coins}]";
+        // siblinIndex Array from HandleLeaderboardEntitiesChanged()
+        displayText.text = $"¦{transform.GetSiblingIndex() + 1}¦ {playerName} [{Coins}]";
         
     }
 

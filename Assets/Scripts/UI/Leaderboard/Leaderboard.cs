@@ -14,6 +14,7 @@ public class Leaderboard : NetworkBehaviour
 
     [SerializeField] private Transform leaderboardEntityHolder;
     [SerializeField] private LeaderboardEntityDisplay leaderboardEntityPrefab;
+    [SerializeField] private int entitiesToDisplay = 5; //Top 5
 
     // Server Stores & Syncs a LIST of all PLAYER DATA: Ids, names, coins
     // Custom Network List <T> Server syncs clients
@@ -82,6 +83,7 @@ public class Leaderboard : NetworkBehaviour
         }
     }
 
+    // CHANGE :SWITCH stmt, Top 5
     private void HandleLeaderboardEntitiesChanged(NetworkListEvent<LeaderboardEntityState> changeEvent)
     {
         // query changeEvent if vale changed & how;ie: added, removed, updated
@@ -133,9 +135,21 @@ public class Leaderboard : NetworkBehaviour
                     displayToUpdate.UpdateCoins(changeEvent.Value.Coins);
                 }
                 break;
+
         }
 
+        // lambda expression to sort the entityDisplays list in descending order
+        //      Y compared to X
+        // Lambda Expression (x, y): Comparison function provided to the Sort()
+        entityDisplays.Sort((x, y) => y.Coins.CompareTo(x.Coins));
 
+        // Update Display
+        for (int i = 0; i < entityDisplays.Count; i++)
+        {
+            // LB Hierachy order
+            entityDisplays[i].transform.SetSiblingIndex(i);
+            entityDisplays[i].UpdateText();
+        }
     }
 
     private void HandlePlayerSpawned(TankPlayer player)
