@@ -25,7 +25,8 @@ public class LeaderboardEntityDisplay : MonoBehaviour
         this.playerName = playerName;
 
         // If Me (colourise name)
-        if(clientId == NetworkManager.Singleton.LocalClientId)
+        // Default Font Face HDR color in LeaderBoardEntity prefab. 
+        if (clientId == NetworkManager.Singleton.LocalClientId)
         {
             displayText.color = myColor;
         }
