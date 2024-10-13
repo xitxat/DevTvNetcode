@@ -1,5 +1,6 @@
 using TMPro;
 using Unity.Collections;
+using Unity.Netcode;
 using UnityEngine;
 
 //  Handles each individual players stats onLeaderboard
@@ -13,14 +14,21 @@ public class LeaderboardEntityDisplay : MonoBehaviour
 
 
     [SerializeField] private TMP_Text displayText;
+    [SerializeField] private Color myColor;
     FixedString32Bytes playerName;
 
 
-    //  Custom Initialise not unities InitialiZe
+    //  Custom Initialise not Unity's InitialiZe
     public void Initialise(ulong clientId, FixedString32Bytes playerName, int coins)
     {
         ClientId = clientId; // static
         this.playerName = playerName;
+
+        // If Me (colourise name)
+        if(clientId == NetworkManager.Singleton.LocalClientId)
+        {
+            displayText.color = myColor;
+        }
 
         UpdateCoins(coins); // Dynamic update()
     }

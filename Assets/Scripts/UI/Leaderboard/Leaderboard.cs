@@ -162,8 +162,10 @@ public class Leaderboard : NetworkBehaviour
                 // if off the board
                 if(myDisplay.transform.GetSiblingIndex() >= entitiesToDisplay)
                 {
-                    // Get last position
+                    // Kick last position, 
                     leaderboardEntityHolder.GetChild(entitiesToDisplay - 1).gameObject.SetActive(false);
+                    // turn me on in place
+                    myDisplay.gameObject.SetActive(true);
                 }
             }
         }
