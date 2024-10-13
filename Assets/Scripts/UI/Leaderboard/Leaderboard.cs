@@ -143,12 +143,29 @@ public class Leaderboard : NetworkBehaviour
         // Lambda Expression (x, y): Comparison function provided to the Sort()
         entityDisplays.Sort((x, y) => y.Coins.CompareTo(x.Coins));
 
-        // Update Display
+        // Update Display for ALL
         for (int i = 0; i < entityDisplays.Count; i++)
         {
             // LB Hierachy order
             entityDisplays[i].transform.SetSiblingIndex(i);
             entityDisplays[i].UpdateText();
+            bool shouldShow = i <= entitiesToDisplay - 1; //(zero based index)
+            entityDisplays[i].gameObject.SetActive(shouldShow);
+
+            // Show owner regardless, ie Our ID local client
+            LeaderboardEntityDisplay myDisplay = 
+                entityDisplays.FirstOrDefault(x => x.ClientId == NetworkManager.Singleton.LocalClientId);
+
+        // Update Display for Local Client
+            if (myDisplay != null)
+            {
+                // if off the board
+                if(myDisplay.transform.GetSiblingIndex() >= entitiesToDisplay)
+                {
+                    // Get last position
+                    leaderboardEntityHolder.GetChild(entitiesToDisplay - 1).gameObject.SetActive(false);
+                }
+            }
         }
     }
 
