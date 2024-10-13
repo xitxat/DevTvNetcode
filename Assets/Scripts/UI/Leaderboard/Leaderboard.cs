@@ -156,7 +156,8 @@ public class Leaderboard : NetworkBehaviour
             LeaderboardEntityDisplay myDisplay = 
                 entityDisplays.FirstOrDefault(x => x.ClientId == NetworkManager.Singleton.LocalClientId);
 
-        // Update Display for Local Client
+            // Update Display for Local Client
+            // LeaderboardEntityDisplay UpdateText() format
             if (myDisplay != null)
             {
                 // if off the board
