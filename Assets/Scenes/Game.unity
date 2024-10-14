@@ -213,7 +213,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  playerPrefab: {fileID: 4215666406592039944, guid: 5b666f9d28c610a4fa3c2b3e1108590a, type: 3}
+  playerPrefab: {fileID: 4052719424288594010, guid: 5b666f9d28c610a4fa3c2b3e1108590a, type: 3}
+  keptCoinPercentage: 50
 --- !u!4 &22463800
 Transform:
   m_ObjectHideFlags: 0
@@ -1826,6 +1827,7 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   leaderboardEntityHolder: {fileID: 637021231}
   leaderboardEntityPrefab: {fileID: 8512108055152182083, guid: 837c02d6c4b01044890e67f7d1869ec5, type: 3}
+  entitiesToDisplay: 5
 --- !u!114 &1598081288
 MonoBehaviour:
   m_ObjectHideFlags: 0

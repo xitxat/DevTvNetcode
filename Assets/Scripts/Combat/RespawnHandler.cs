@@ -74,14 +74,16 @@ public class RespawnHandler : NetworkBehaviour
         TankPlayer playerInstance = Instantiate(
             playerPrefab, SpawnPoint.GetRandomSpawnPos(), Quaternion.identity);
 
-        // Updated Coin Value after split
-        playerInstance.Wallet.TotalCoins.Value += keptCoins;
 
         // Assign playerInstanc to this ownerClientID
         // ownerClientID is being passed to the playerInstance
-        // Impilicit NetworkObject
+        // Expilicit NetworkObject
         playerInstance.NetworkObject.SpawnAsPlayerObject(ownerClientID);
 
+
+        // Updated Coin Value after split
+        // Network Vars modified AFTER spawn in
+        playerInstance.Wallet.TotalCoins.Value += keptCoins;
     }
 
 }
