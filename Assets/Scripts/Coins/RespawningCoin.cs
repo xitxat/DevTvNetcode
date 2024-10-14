@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//      Component: Network Transform used to SYNC position
+//  On Spawn only initial transform is Synced
 public class RespawningCoin : Coin
 {
     // Coin event: once collected, respawn triggered from coin listener
