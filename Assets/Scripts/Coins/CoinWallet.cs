@@ -5,6 +5,30 @@ using UnityEngine;
 //  https://www.gamedev.tv/dashboard/courses/22
 // BOUNTY COINS: less amount but higher value
 
+#region Summary
+/*
+ * Coin Drop Logic Summary:
+ * 
+ * - The number of coins dropped on player death is fixed by the variable 'bountyCoinCount'.
+ * - The value of each dropped coin is dynamic, calculated based on the player's total coin value ('TotalCoins.Value').
+ * - A percentage of the player's total coins is taken (determined by 'bountyPercentage'), and this is spread across the number of coins dropped.
+ * 
+ * Example:
+ * - TotalCoins.Value: 170
+ * - bountyPercentage: 50% (player drops half of their total coins)
+ * - bountyCoinCount: 10 (fixed number of coins dropped)
+ * 
+ * Calculation:
+ * - Total bounty value = TotalCoins.Value * (bountyPercentage / 100) = 85
+ * - Value of each dropped coin = bountyValue / bountyCoinCount = 85 / 10 = 8.5 (rounded down to 8)
+ * 
+ * Behavior:
+ * - If the value of each coin ('bountyCoinValue') is less than 'minBountyCoinValue', no coins will spawn.
+ * - If the player has more total coins, the value of each dropped coin will increase, but the number of coins dropped remains fixed.
+ */
+
+# endregion
+
 public class CoinWallet : NetworkBehaviour
 {
 
