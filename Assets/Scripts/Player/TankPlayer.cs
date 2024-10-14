@@ -7,6 +7,9 @@ using UnityEngine;
 //          CUSTOMISE .THIS PLAYER
 //      NAME
 //      CINEMACHINE
+//      HEALTH
+//      WALLET
+//  NetworkBehaviour's are Spawnable
 public class TankPlayer : NetworkBehaviour
 {
 
@@ -16,7 +19,7 @@ public class TankPlayer : NetworkBehaviour
     // expose private property in inspector with field:
     [field: SerializeField] public Health Health { get; private set; }
 
-    // Exposed to update the Leader board coun count
+    // Exposed to update the Leader board coin count
     [field: SerializeField] public CoinWallet Wallet { get; private set; }
 
 

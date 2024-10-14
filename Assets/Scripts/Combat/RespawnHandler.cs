@@ -8,7 +8,8 @@ using UnityEngine;
 public class RespawnHandler : NetworkBehaviour
 {
 
-    [SerializeField] private NetworkObject playerPrefab;
+    [SerializeField] private TankPlayer playerPrefab;
+    [SerializeField] private float keptCoinPercentage;
 
     public override void OnNetworkSpawn()
     {
@@ -52,6 +53,12 @@ public class RespawnHandler : NetworkBehaviour
     //  DIE
     private void HandlePlayerDie(TankPlayer player)
     {
+        // Retain "X" Coins
+        // todo add KillShot multiplyer Perk
+        // Access Coins : 
+        float keptCoins = player.Wallet.TotalCoins.Value;
+        //*(keptCoinPercentage / 100);
+
         Destroy(player.gameObject);
 
         // wait for next frame to respawn
@@ -64,11 +71,15 @@ public class RespawnHandler : NetworkBehaviour
         yield return null;
 
         // store
-        NetworkObject playerInstance = Instantiate(
+        TankPlayer playerInstance = Instantiate(
             playerPrefab, SpawnPoint.GetRandomSpawnPos(), Quaternion.identity);
 
+        //playerInstance.Wallet.TotalCoins;
+
         // Assign playerInstanc to this ownerClientID
-        playerInstance.SpawnAsPlayerObject(ownerClientID);
+        // ownerClientID is being passed to the playerInstance
+        // Impilicit NetworkObject
+        playerInstance.NetworkObject.SpawnAsPlayerObject(ownerClientID);
 
     }
 

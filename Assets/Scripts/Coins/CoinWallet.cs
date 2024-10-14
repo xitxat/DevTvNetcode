@@ -1,9 +1,10 @@
 using Unity.Netcode;
 using UnityEngine;
 
+//      NetworkVariable's accessed with .Value
+
 public class CoinWallet : NetworkBehaviour
 {
-
 
     public NetworkVariable<int> TotalCoins = new NetworkVariable<int>();
 
