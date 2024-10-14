@@ -3,6 +3,7 @@ using Unity.Netcode;
 using UnityEngine;
 
 //  https://www.gamedev.tv/dashboard/courses/22
+// BOUNTY COINS: less amount but higher value
 
 public class CoinWallet : NetworkBehaviour
 {
@@ -14,10 +15,11 @@ public class CoinWallet : NetworkBehaviour
 
     [Header("Settings")]
     [SerializeField] private float coinSpread = 3f; 
-    [SerializeField] private int bountyCoinCount = 10; // How many
+    [SerializeField] private int bountyCoinCount = 5; // # coins that will be spawned when the player dies. Fewer coins to increase value per coin
     [SerializeField] private float bountyPercentage = 50f; //* Loot drop half of wallet 50%
-    [SerializeField] private int minBountyCoinValue = 5; // only drop if Pl coins => * current amount in wallet. 
+    [SerializeField] private int minBountyCoinValue = 5; //The minimum value of each bounty coin that is allowed to spawn.. only drop if Pl coins => * current amount in wallet. 
     [SerializeField] private LayerMask layerMask;
+
 
     private float coinRadius;
     private int coinVal;
@@ -45,10 +47,19 @@ public class CoinWallet : NetworkBehaviour
 
     private void HandleDie(Health health)
     {
+
         // Calculate Bounty Coin value
-        int bountyCalc = (int)(bountyPercentage / 100f);
-        int bountyValue = TotalCoins.Value * bountyCalc;
+        //int bountyCalc = (int)(bountyPercentage / 100f);
+        //int bountyValue = TotalCoins.Value * bountyCalc;
+        //int bountyCoinValue = bountyValue / bountyCoinCount;
+
+        int bountyValue = (int)(TotalCoins.Value * (bountyPercentage / 100f));
         int bountyCoinValue = bountyValue / bountyCoinCount;
+
+        Debug.Log($"Bounty Coin Value: {bountyCoinValue}");
+        Debug.Log($"TotalCoins: {TotalCoins.Value}, Bounty Value: {bountyValue}, Bounty Coin Value: {bountyCoinValue}");
+
+
 
         // Excess coin check
         if (bountyCoinValue < minBountyCoinValue) { return; }
@@ -91,7 +102,8 @@ public class CoinWallet : NetworkBehaviour
         TotalCoins.Value -= costToFire;
     }
 
-    // Via dead player spread radius
+
+    // Via dead player spread radius for Bounty Coin
     private Vector2 GetSpawnPoint()
     {
 
