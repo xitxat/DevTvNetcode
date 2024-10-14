@@ -1826,6 +1826,7 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   leaderboardEntityHolder: {fileID: 637021231}
   leaderboardEntityPrefab: {fileID: 8512108055152182083, guid: 837c02d6c4b01044890e67f7d1869ec5, type: 3}
+  entitiesToDisplay: 5
 --- !u!114 &1598081288
 MonoBehaviour:
   m_ObjectHideFlags: 0

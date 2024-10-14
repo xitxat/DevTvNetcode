@@ -1,5 +1,10 @@
 using UnityEngine;
 
+// Check / Add prefab to Network prefabs LIST Asset
+//      (Scene: NetBootstrap > NetworkManager )
+
+//   Spawned via coin wallet
+
 public class BountyCoin : Coin
 {
 
