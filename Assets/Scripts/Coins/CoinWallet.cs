@@ -14,9 +14,9 @@ public class CoinWallet : NetworkBehaviour
 
     [Header("Settings")]
     [SerializeField] private float coinSpread = 3f; 
-    [SerializeField] private int bountyCoinCount = 10; 
-    [SerializeField] private float bountyPercentage = 50f; 
-    [SerializeField] private int minBountyCoinValue = 5; // only drop if Pl coins => amount
+    [SerializeField] private int bountyCoinCount = 10; // How many
+    [SerializeField] private float bountyPercentage = 50f; //* Loot drop half of wallet 50%
+    [SerializeField] private int minBountyCoinValue = 5; // only drop if Pl coins => * current amount in wallet. 
     [SerializeField] private LayerMask layerMask;
 
     private float coinRadius;
@@ -45,6 +45,7 @@ public class CoinWallet : NetworkBehaviour
 
     private void HandleDie(Health health)
     {
+        // Calculate Bounty Coin value
         int bountyCalc = (int)(bountyPercentage / 100f);
         int bountyValue = TotalCoins.Value * bountyCalc;
         int bountyCoinValue = bountyValue / bountyCoinCount;
