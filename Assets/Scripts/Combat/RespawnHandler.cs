@@ -56,17 +56,17 @@ public class RespawnHandler : NetworkBehaviour
         // Retain "X" Coins
         // todo add KillShot multiplyer Perk
         // Access Coins : 
-        float keptCoins = player.Wallet.TotalCoins.Value;
-        //*(keptCoinPercentage / 100);
+        float coinPercentage = keptCoinPercentage / 100f;
+        int keptCoins = (int)(player.Wallet.TotalCoins.Value * coinPercentage);
 
         Destroy(player.gameObject);
 
-        // wait for next frame to respawn
-        StartCoroutine(RespawnPlayer(player.OwnerClientId));
+        // wait for next frame to respawn with (id, coins, )
+        StartCoroutine(RespawnPlayer(player.OwnerClientId, keptCoins));
     }
 
     //  RESPAWN
-    private IEnumerator RespawnPlayer(ulong ownerClientID)
+    private IEnumerator RespawnPlayer(ulong ownerClientID, int keptCoins)
     {
         yield return null;
 
@@ -74,7 +74,8 @@ public class RespawnHandler : NetworkBehaviour
         TankPlayer playerInstance = Instantiate(
             playerPrefab, SpawnPoint.GetRandomSpawnPos(), Quaternion.identity);
 
-        //playerInstance.Wallet.TotalCoins;
+        // Updated Coin Value after split
+        playerInstance.Wallet.TotalCoins.Value += keptCoins;
 
         // Assign playerInstanc to this ownerClientID
         // ownerClientID is being passed to the playerInstance
