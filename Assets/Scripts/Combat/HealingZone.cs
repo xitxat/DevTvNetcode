@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class HealingZone : NetworkBehaviour
 
@@ -24,7 +25,10 @@ public class HealingZone : NetworkBehaviour
 
         // Get Player that Collided with Health mat
         // Bypass null check 
-        if(!collision.TryGetComponent<TankPlayer>(out TankPlayer player)) { return; }
+        // TryGetComponent checks ROOT
+        // Collider not on root (tank treads)
+        // Access via rb on root
+        if (!collision.attachedRigidbody.TryGetComponent<TankPlayer>(out TankPlayer player)) { return; }
 
         playersInZone.Add(player);
 
@@ -36,9 +40,12 @@ public class HealingZone : NetworkBehaviour
     {
         if (!IsServer) { return; }
 
-        if (!collision.TryGetComponent<TankPlayer>(out TankPlayer player)) { return; }
+        if (!collision.attachedRigidbody.TryGetComponent<TankPlayer>(out TankPlayer player)) { return; }
 
         playersInZone.Remove(player);
+
+        Debug.Log($"<color=green>Left Health mat: {player.PlayerName.Value}</color>");
+
     }
 
 
