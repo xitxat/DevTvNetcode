@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 
 // https://www.gamedev.tv/dashboard/courses/22 4.14 , 4.15
+// Costs coins to Heal
 
 public class HealingZone : NetworkBehaviour
 
@@ -15,8 +16,9 @@ public class HealingZone : NetworkBehaviour
 
     [Header("Settings")]
     [SerializeField] int maxHealPower = 30;
-    [SerializeField] float healCoolDown = 30f;
-    [SerializeField] float healTickRate = 1f; // use (1/ hTR) to convert to seconds
+    [SerializeField] float healCoolDown = 30f; // Seconds
+    // How long till next tick rate  // use (1/ hTR) to convert to seconds
+    [SerializeField] float healTickRate = 1f;
     [SerializeField] int coinsPerTick = 10;
     [SerializeField] int healthPerTick = 10;
 
@@ -68,7 +70,7 @@ public class HealingZone : NetworkBehaviour
 
         playersInZone.Add(player);
 
-       // Debug.Log($"<color=green>On Health mat: {player.PlayerName.Value}</color>");
+        Debug.Log($"<color=green>On Health mat: {player.PlayerName.Value}</color>");
 
     }    
     
@@ -80,7 +82,7 @@ public class HealingZone : NetworkBehaviour
 
         playersInZone.Remove(player);
 
-       // Debug.Log($"<color=green>Left Health mat: {player.PlayerName.Value}</color>");
+      Debug.Log($"<color=green>Left Health mat: {player.PlayerName.Value}</color>");
 
     }
     #endregion
@@ -135,8 +137,13 @@ public class HealingZone : NetworkBehaviour
 
                     // TODO cloak player, despawn Mat
                 }
-
             }
+
+            // DONE tick, reset timer 
+            // ISSUE reset via Time.deltaTime maynot be exactly "0"
+            // Use Modulo for accuracy
+            tickTimer = tickTimer % (1 / healTickRate);
+
         }
 
     }
