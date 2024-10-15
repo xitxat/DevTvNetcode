@@ -20,6 +20,9 @@ public class HealingZone : NetworkBehaviour
     [SerializeField] int coinsPerTick = 10;
     [SerializeField] int healthPerTick = 10;
 
+    private float remainingCooldown;
+    private float tickTimer;
+
     // Power of the healing bar. Clients Un/Sub to HealPower
     private NetworkVariable<int> HealPower = new NetworkVariable<int>();
 
@@ -27,6 +30,7 @@ public class HealingZone : NetworkBehaviour
     private List<TankPlayer> playersInZone = new List<TankPlayer>();
 
 
+    #region SPAWN
     public override void OnNetworkSpawn()
     {
         if (IsClient)
@@ -48,7 +52,7 @@ public class HealingZone : NetworkBehaviour
 
 
     }
-
+    #endregion
 
 
     #region LIST
@@ -82,6 +86,12 @@ public class HealingZone : NetworkBehaviour
     }
     #endregion
 
+    private void Update()
+    {
+        if (!IsServer) { return; }
+
+
+    }
 
     private void HandleHealPowerChanged(int oldHealPower, int newHealPower)
     {
