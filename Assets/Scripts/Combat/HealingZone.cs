@@ -16,16 +16,15 @@ public class HealingZone : NetworkBehaviour
     [Header("Settings")]
     [SerializeField] int maxHealPower = 30;
     [SerializeField] float healCoolDown = 30f;
-    [SerializeField] float healTickRate = 1f;
+    [SerializeField] float healTickRate = 1f; // use (1/ hTR) to convert to seconds
     [SerializeField] int coinsPerTick = 10;
     [SerializeField] int healthPerTick = 10;
 
     private float remainingCooldown;
-    private float tickTimer;
+    private float tickTimer;    // tickRate Update()
 
     // Power of the healing bar. Clients Un/Sub to HealPower
     private NetworkVariable<int> HealPower = new NetworkVariable<int>();
-
 
     private List<TankPlayer> playersInZone = new List<TankPlayer>();
 
@@ -86,10 +85,40 @@ public class HealingZone : NetworkBehaviour
     }
     #endregion
 
+    // Update Heal Power on Timer
     private void Update()
     {
         if (!IsServer) { return; }
 
+        // HP Mat cooldown
+        if(remainingCooldown > 0f)
+        {
+            remainingCooldown -= Time.deltaTime;
+
+            if(remainingCooldown < 0f)
+            {
+                HealPower.Value = maxHealPower;
+            }
+            else
+            {
+                return;
+            }
+        }
+
+        tickTimer += Time.deltaTime;
+        // Ticks per second
+        {
+            foreach(TankPlayer player in playersInZone)
+            {
+                // Stop if out of power
+                if(HealPower.Value == 0) { break; }
+
+                // Stop Mat actions if Player health == max HP
+                if(player.Health.CurrentHealth.Value == player.Health.MaxHealth)
+                // Go to next player in List
+                { continue; }
+            }
+        }
 
     }
 
