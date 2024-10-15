@@ -37,8 +37,18 @@ public class HealingZone : NetworkBehaviour
         if (IsClient)
         {
             HealPower.OnValueChanged += HandleHealPowerChanged;
+
+            // Transfer healing Power to Player
+            HandleHealPowerChanged(0, HealPower.Value);
         }
+
+        if (IsServer)
+        {
+            HealPower.Value = maxHealPower;
+        }
+
     }
+
 
     public override void OnNetworkDespawn()
     {
