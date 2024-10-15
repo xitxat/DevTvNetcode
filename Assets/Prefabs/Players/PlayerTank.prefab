@@ -771,9 +771,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   virtualCamera: {fileID: 9048162145284919357}
+  minimapIconRenderer: {fileID: 6243822134143807579}
   <Health>k__BackingField: {fileID: 7614312315832765601}
   <Wallet>k__BackingField: {fileID: 8896915746589266054}
   ownerPriority: 15
+  ownerColor: {r: 0, g: 0.9301295, b: 1, a: 1}
   PlayerName:
     m_InternalValue:
       utf8LengthInBytes: 0
