@@ -87,6 +87,7 @@ GameObject:
   - component: {fileID: 5701243765396654717}
   - component: {fileID: 7362552358570718548}
   - component: {fileID: 6182704595400058605}
+  - component: {fileID: 5095368933338699975}
   m_Layer: 7
   m_Name: HealingZone
   m_TagString: Untagged
@@ -236,6 +237,25 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 4, y: 4}
   m_EdgeRadius: 0
+--- !u!114 &5095368933338699975
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3712247800519662924}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 92af5be82d0653a4a943d90d8d92b923, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  healPowerBar: {fileID: 3414251944387225032}
+  maxHealPower: 30
+  healCoolDown: 30
+  healTickRate: 1
+  coinsPerTick: 10
+  healthPerTick: 10
 --- !u!1 &7515876000920904072
 GameObject:
   m_ObjectHideFlags: 0
