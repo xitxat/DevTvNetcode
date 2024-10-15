@@ -85,7 +85,7 @@ public class HealingZone : NetworkBehaviour
     }
     #endregion
 
-    // Update Heal Power on Timer
+    //  Heal Power Transfer
     private void Update()
     {
         if (!IsServer) { return; }
@@ -117,6 +117,25 @@ public class HealingZone : NetworkBehaviour
                 if(player.Health.CurrentHealth.Value == player.Health.MaxHealth)
                 // Go to next player in List
                 { continue; }
+
+                // Player No coins == No Heal
+                if(player.Wallet.TotalCoins.Value < coinsPerTick) { continue; }
+
+                // Calc Cost & give HP
+                player.Wallet.SpendCoins(coinsPerTick);
+                player.Health.RestoreHealth(healthPerTick);
+
+                // Update HP Mat
+                HealPower.Value -= 1;
+
+                if (HealPower.Value == 0)
+                {
+                    // Don't heal players & enter coolDow2n
+                    remainingCooldown = healCoolDown;
+
+                    // TODO cloak player, despawn Mat
+                }
+
             }
         }
 
