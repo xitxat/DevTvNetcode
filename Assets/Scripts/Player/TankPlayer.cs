@@ -12,6 +12,7 @@ public class TankPlayer : NetworkBehaviour
 
     [Header("Refs")]
     [SerializeField] private CinemachineCamera virtualCamera;
+    [SerializeField] private SpriteRenderer minimapIconRenderer;
 
     // expose private property in inspector with field:
     [field: SerializeField] public Health Health { get; private set; }
@@ -22,6 +23,8 @@ public class TankPlayer : NetworkBehaviour
 
     [Header("Settings")]
     [SerializeField] private int ownerPriority = 15;
+    [SerializeField] private Color ownerColor;
+
 
     //  Sync names. Cant sync normal strings.
     public NetworkVariable<FixedString32Bytes> PlayerName = new NetworkVariable<FixedString32Bytes>();
@@ -47,7 +50,10 @@ public class TankPlayer : NetworkBehaviour
 
         if (IsOwner)
         {
+
             virtualCamera.Priority = ownerPriority;
+
+            minimapIconRenderer.color = ownerColor;
         }
     }
 
