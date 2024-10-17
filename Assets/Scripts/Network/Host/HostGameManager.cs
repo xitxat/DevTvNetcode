@@ -124,6 +124,9 @@ public class HostGameManager : IDisposable
         //  Start
         NetworkManager.Singleton.StartHost();
 
+        //  sub to Button "Exit Arena"
+        NetworkServer.OnClientLeft += HandleClientLeft;
+
 
         //  Scene
         NetworkManager.Singleton.SceneManager.LoadScene(GameSceneName, LoadSceneMode.Single);
@@ -147,8 +150,10 @@ public class HostGameManager : IDisposable
         }
     }
 
-    // Handle unexpected server shutdown
-    public  void Dispose()
+
+    #region SHUTDOWN
+    // Handle unexpected server shutdown & Exit Arena
+    public void Dispose()
     {
          ShutDown();
 
@@ -176,6 +181,25 @@ public class HostGameManager : IDisposable
             lobbyId = string.Empty;
         }
 
+        NetworkServer.OnClientLeft -= HandleClientLeft;
+
+
         NetworkServer?.Dispose();
     }
+
+    private async void HandleClientLeft(string authId)
+    {
+        try
+        {
+            // If you own the Lobby, Try:
+           await  LobbyService.Instance.RemovePlayerAsync(lobbyId, authId);
+        }
+        catch (LobbyServiceException exLSE)
+        {
+            Debug.Log(exLSE);
+        }
+    }
+    #endregion
+
+
 }

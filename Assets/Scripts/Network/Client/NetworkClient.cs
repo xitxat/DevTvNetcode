@@ -34,6 +34,12 @@ public class NetworkClient : IDisposable
         //   Don't disconnect
         if (clientId != 0 && clientId != networkManager.LocalClientId) { return; }
 
+
+    }
+
+    public void Disconnect()
+    {
+        //Called OnClick "Exit Arena"
         // Change scene for client stranded in "GAME" upon an error, etc,
         //  Go back to main menu
         if (SceneManager.GetActiveScene().name != MenuSceneName)
@@ -46,8 +52,6 @@ public class NetworkClient : IDisposable
         {
             networkManager.Shutdown();
         }
-
-
     }
 
     public void Dispose()
@@ -59,5 +63,6 @@ public class NetworkClient : IDisposable
 
 
     }
+
 
 }

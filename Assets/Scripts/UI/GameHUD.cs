@@ -12,5 +12,8 @@ public void LeaveGame()
         {
             HostSingleton.Instance.GameManager.ShutDown();
         }
+
+        // For Client wanting to Leave
+        ClientSingleton.Instance.GameManager.Disconnect();
     }
 }

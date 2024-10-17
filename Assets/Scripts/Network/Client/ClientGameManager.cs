@@ -95,10 +95,18 @@ public class ClientGameManager : IDisposable
         //  Will handle client scene too.
     }
 
+    // Client Disconnect
+    internal void Disconnect()
+    {
+        networkClient.Disconnect();    }
+
+
     public void Dispose()
     {
         // Pass down the chain
         networkClient?.Dispose();
 
     }
+
+
 }
