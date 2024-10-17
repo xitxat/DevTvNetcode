@@ -197,8 +197,12 @@ public class Leaderboard : NetworkBehaviour
         // Unity6.x may empty out leaderboard on game stop
         if(leaderboardEntities == null) { return; }
 
+
+        // Possible BUG: host was trying to clean up their own state from the leaderboard
+        //      if (IsServer && player.OwnerClientId == OwnerClientId) { return; }
+
         // Find the matching player
-        foreach(LeaderboardEntityState entity in leaderboardEntities)
+        foreach (LeaderboardEntityState entity in leaderboardEntities)
         {
             if(entity.ClientId != player.OwnerClientId) { continue; }
 
@@ -209,6 +213,7 @@ public class Leaderboard : NetworkBehaviour
         // UNSUB COINS
         player.Wallet.TotalCoins.OnValueChanged -= (oldCoins, newCoins) =>
             HandleCoinsChanged(player.OwnerClientId, newCoins);
+
     }
 
     private void HandleCoinsChanged(ulong clientId, int newCoins)

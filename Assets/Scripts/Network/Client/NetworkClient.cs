@@ -34,7 +34,8 @@ public class NetworkClient : IDisposable
         //   Don't disconnect
         if (clientId != 0 && clientId != networkManager.LocalClientId) { return; }
 
-
+        // if client & removed for some reason
+        Disconnect();
     }
 
     public void Disconnect()
