@@ -8,6 +8,8 @@ public class NetworkServer : IDisposable
 {
     private NetworkManager networkManager;
 
+    public Action<string> OnClientLeft;  // authId is  a string
+
     private Dictionary<ulong, string> clientIdToAuth = new Dictionary<ulong, string>();
     private Dictionary<string, UserData> authIdToUserData = new Dictionary<string, UserData>();
 
@@ -61,6 +63,7 @@ public class NetworkServer : IDisposable
         networkManager.OnClientDisconnectCallback += OnClientDisconnect;
     }
 
+    // Remove player data from List
     private void OnClientDisconnect(ulong clientId)
     {
         // Remove ID of Disconnected client from BOTH Dictionaries
@@ -69,6 +72,11 @@ public class NetworkServer : IDisposable
             clientIdToAuth.Remove(clientId);
 
             authIdToUserData.Remove(authId);
+
+            // Remove Leaving player from Lobby
+            // Using authId to interact with Lobby Service
+            OnClientLeft?.Invoke(authId);
+
         }
 
 

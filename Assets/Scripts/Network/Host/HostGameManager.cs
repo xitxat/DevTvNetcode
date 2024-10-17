@@ -148,9 +148,9 @@ public class HostGameManager : IDisposable
     }
 
     // Handle unexpected server shutdown
-    public async void Dispose()
+    public  void Dispose()
     {
-        ShutDown();
+         ShutDown();
 
     }
 
