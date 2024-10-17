@@ -147,7 +147,14 @@ public class HostGameManager : IDisposable
         }
     }
 
+    // Handle unexpected server shutdown
     public async void Dispose()
+    {
+        ShutDown();
+
+    }
+
+    public async void ShutDown()
     {
         //  Stop Heartbeat coroutine . out of class access
         // Use nameof(containing method)
@@ -160,7 +167,7 @@ public class HostGameManager : IDisposable
             {
                 await Lobbies.Instance.DeleteLobbyAsync(lobbyId);
             }
-            catch(LobbyServiceException exLSE)
+            catch (LobbyServiceException exLSE)
             {
                 Debug.Log(exLSE);
             }
@@ -170,6 +177,5 @@ public class HostGameManager : IDisposable
         }
 
         NetworkServer?.Dispose();
-
     }
 }

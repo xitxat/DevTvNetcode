@@ -4,6 +4,8 @@ using UnityEngine;
 //      (Scene: NetBootstrap > NetworkManager )
 
 //   Spawned via coin wallet
+//   Bounty Coins spawned around dead  Player
+//      restrict out of Bounds bCoins: increase arena wall collider size.
 
 public class BountyCoin : Coin
 {

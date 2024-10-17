@@ -3,6 +3,7 @@ using UnityEngine;
 
 
 //  PHYSICS2D MATRIX COINS ARE ON PICKUPS WHICH INTERACTS WITH DEFAULT (PLAYER/TANK)
+//  Coins spawned inside of a Range
 public class CoinSpawner : NetworkBehaviour
 {
 
