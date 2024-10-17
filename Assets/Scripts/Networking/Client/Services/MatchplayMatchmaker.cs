@@ -6,6 +6,7 @@ using Unity.Services.Matchmaker;
 using Unity.Services.Matchmaker.Models;
 using UnityEngine;
 
+// Queue player, read matchmaker data,  
 public enum MatchmakerPollingResult
 {
     Success,
@@ -32,14 +33,19 @@ public class MatchplayMatchmaker : IDisposable
 
     public bool IsMatchmaking { get; private set; }
 
+
+    // Queue
     public async Task<MatchmakingResult> Matchmake(UserData data)
     {
         cancelToken = new CancellationTokenSource();
 
+        //  Get Prefs
         string queueName = data.userGamePreferences.ToMultiplayQueue();
+        //  Q name
         CreateTicketOptions createTicketOptions = new CreateTicketOptions(queueName);
         Debug.Log(createTicketOptions.QueueName);
 
+        //  Players for Q (Teams not implimented)
         List<Player> players = new List<Player>
         {
             new Player(data.userAuthId, data.userGamePreferences)
@@ -47,11 +53,13 @@ public class MatchplayMatchmaker : IDisposable
 
         try
         {
+            // Go to UGS & create player / Q ticket
             IsMatchmaking = true;
             CreateTicketResponse createResult = await MatchmakerService.Instance.CreateTicketAsync(players, createTicketOptions);
 
             lastUsedTicket = createResult.Id;
 
+            // Find tickets & connect (Ping avail. matches)
             try
             {
                 while (!cancelToken.IsCancellationRequested)
@@ -62,6 +70,7 @@ public class MatchplayMatchmaker : IDisposable
                     {
                         MultiplayAssignment matchAssignment = (MultiplayAssignment)checkTicket.Value;
 
+                        //  OK!
                         if (matchAssignment.Status == MultiplayAssignment.StatusOptions.Found)
                         {
                             return ReturnMatchResult(MatchmakerPollingResult.Success, "", matchAssignment);
@@ -91,6 +100,7 @@ public class MatchplayMatchmaker : IDisposable
         return ReturnMatchResult(MatchmakerPollingResult.TicketRetrievalError, "Cancelled Matchmaking", null);
     }
 
+    //  CANCEL
     public async Task CancelMatchmaking()
     {
         if (!IsMatchmaking) { return; }
@@ -109,6 +119,7 @@ public class MatchplayMatchmaker : IDisposable
         await MatchmakerService.Instance.DeleteTicketAsync(lastUsedTicket);
     }
 
+    // Data conversion from UGS (return  IP, Port)
     private MatchmakingResult ReturnMatchResult(MatchmakerPollingResult resultErrorType, string message, MultiplayAssignment assignment)
     {
         IsMatchmaking = false;
