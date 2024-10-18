@@ -18,6 +18,9 @@ public class ClientGameManager : IDisposable
 
     private JoinAllocation allocation;
     private NetworkClient networkClient;
+    private MatchplayMatchmaker matchmaker; //>Services
+    private UserData userData;
+
     private const string MenuSceneName = "Menu";
     private const string GameSceneName = "Game";
 
@@ -33,12 +36,22 @@ public class ClientGameManager : IDisposable
         //  Inst when becomming a Client &
         //  listen for NetworkClient Disconnect event
         networkClient = new NetworkClient(NetworkManager.Singleton);
+        matchmaker = new MatchplayMatchmaker();
 
         // Await the 5 max tries & return state
+        //  Returns AuthID
         AuthState authState = await AuthenticationWrapper.DoAuth();
 
         if (authState == AuthState.Authenticated)
         {
+            // Set Data from Network Server ApprovalCheck()
+            // user prefs like solo, team
+            userData = new UserData
+            {
+                userName = PlayerPrefs.GetString(NameSelector.PlayerNameKey, "NoNameO"),
+                userAuthId = AuthenticationService.Instance.PlayerId
+            };
+
             return true;
         }
 
@@ -52,6 +65,7 @@ public class ClientGameManager : IDisposable
         SceneManager.LoadScene(MenuSceneName);
     }
 
+    //  START CLIENT    
     // Called by Menu Button
     public async Task StartClientAsync(string joinCode)
     {
@@ -74,12 +88,8 @@ public class ClientGameManager : IDisposable
         RelayServerData relayServerData = new RelayServerData(allocation, "dtls");
         transport.SetRelayServerData(relayServerData);
 
-        // Set Data from Network Server ApprovalCheck()
-        UserData userData = new UserData
-        {
-            userName = PlayerPrefs.GetString(NameSelector.PlayerNameKey, "NoNameO"),
-            userAuthId = AuthenticationService.Instance.PlayerId
-        };
+
+
         // Repackage Package: JSON <=> Byte Array
         string payload = JsonUtility.ToJson(userData);
         byte[] payloadBytes = Encoding.UTF8.GetBytes(payload);
@@ -93,6 +103,14 @@ public class ClientGameManager : IDisposable
         //  Scene
         //  Only Server changes the scene &
         //  Will handle client scene too.
+    }
+
+
+    // br 5.07
+    private async Task<MatchmakerPollingResult> GetMatchAsync()
+    {
+        MatchmakingResult matchmakingResult = await matchmaker.Matchmake(userData);
+
     }
 
     // Client Disconnect
