@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Unity.Services.Core;
 using UnityEngine;
 
 // Singletons: Global access, no cached refs needed.
@@ -35,9 +36,10 @@ public class ServerSingleton : MonoBehaviour
 
     }
 
-    //  No need to await to create
-    public void CreateServer()
+    //  UGS
+    public async Task CreateServer()
     {
+        await UnityServices.InitializeAsync();
         GameManager = new ServerGameManager();
 
     }

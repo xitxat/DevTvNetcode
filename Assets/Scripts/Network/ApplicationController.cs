@@ -2,12 +2,15 @@ using System;
 using System.Threading.Tasks;
 using UnityEngine;
 
+// br 5.04
+// Called by Client / Host / Server to establish Singleton
 // On Client Auth GoTo Menu scene
 public class ApplicationController : MonoBehaviour
 {
 
     [SerializeField] private ClientSingleton clientPrefab;
     [SerializeField] private HostSingleton hostPrefab;
+    [SerializeField] private ServerSingleton serverPrefab;
 
     async void  Start()
     {
@@ -22,6 +25,11 @@ public class ApplicationController : MonoBehaviour
     {
         if (isDedicatedServer)
         {
+            // Spawn in Prefab
+            ServerSingleton serverSingleton = Instantiate(serverPrefab);
+            // Connect UGS
+            await serverSingleton.CreateServer();
+
 
         }
         else

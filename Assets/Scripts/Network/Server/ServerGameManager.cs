@@ -13,9 +13,20 @@ using System.Collections;
 using System.Text;
 using Unity.Services.Authentication;
 
-
+// serverPort : game
+// serverQPort: analyitics
 public class ServerGameManager : IDisposable
 {
+
+
+
+
+    public async Task StartGameServerAsync()
+    {
+        throw new NotImplementedException();
+    }
+
+
     public void Dispose()
     {
 
