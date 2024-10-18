@@ -65,7 +65,16 @@ public class ClientGameManager : IDisposable
         SceneManager.LoadScene(MenuSceneName);
     }
 
+    //  connect to DEDICATED SERVER
+    private void StartClient(string ip, int port)
+    {
+        UnityTransport transport = NetworkManager.Singleton.GetComponent<UnityTransport>();
 
+        // setup ip & port for client to connect to DEDICATED SERVER
+        transport.SetConnectionData(ip, (ushort)port);
+        ConnectClient();
+                
+    }
 
     //  START CLIENT    
     // Called by Menu Button
@@ -91,8 +100,7 @@ public class ClientGameManager : IDisposable
         RelayServerData relayServerData = new RelayServerData(allocation, "dtls");
         transport.SetRelayServerData(relayServerData);
 
-
-
+        ConnectClient();
 
     }
 
@@ -114,8 +122,18 @@ public class ClientGameManager : IDisposable
         //  Will handle client scene too.
     }
 
-    private void StartClient()
+
+
+    // Calleed from UI "Find Match" (UI doesn't await)
+    public async void MatchMakeAsync(Action<MatchmakerPollingResult> onMatchMakeResponse)
     {
+        if (matchmaker.IsMatchmaking) { return; }
+
+        // get match and populate matchResult enum Success /error
+        MatchmakerPollingResult matchResult =  await GetMatchAsync();
+
+        // send event back to caller that matchmaking has finished
+        onMatchMakeResponse?.Invoke(matchResult);
 
     }
 
@@ -128,9 +146,9 @@ public class ClientGameManager : IDisposable
 
         if(matchmakingResult.result == MatchmakerPollingResult.Success)
         {
-            // Connect to Server
-
-        }
+            // Connect to dEDICATED Server
+            StartClient(matchmakingResult.ip, matchmakingResult.port);
+                }
 
         return matchmakingResult.result;
 
