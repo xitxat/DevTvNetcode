@@ -43,13 +43,14 @@ public class ServerGameManager : IDisposable
         // Server status. Players in, Server Health
         await multiplayAllocationService.BeginServerCheck();
 
+        // Open Server on this IP & Port
         if(!networkServer.OpenConnection(serverIP, serverPort))
         {
             Debug.LogWarning("NetworkServer did not start. :( ");
             return;
         }
 
-        //  Scene
+        //  Load Scene
         NetworkManager.Singleton.SceneManager.LoadScene(GameSceneName, LoadSceneMode.Single);
 
 

@@ -1,8 +1,10 @@
 using System.Threading.Tasks;
+using Unity.Netcode;
 using Unity.Services.Core;
 using UnityEngine;
 
 // Singletons: Global access, no cached refs needed.
+// QPort: Query port
 
 public class ServerSingleton : MonoBehaviour
 {
@@ -40,7 +42,15 @@ public class ServerSingleton : MonoBehaviour
     public async Task CreateServer()
     {
         await UnityServices.InitializeAsync();
-        GameManager = new ServerGameManager();
+
+        // Read in Networking> Application data from cmd
+        // Send to ServerGameManager
+        GameManager = new ServerGameManager(
+            ApplicationData.IP(),
+            ApplicationData.Port(),
+            ApplicationData.QPort(),
+            NetworkManager.Singleton
+            );
 
     }
 
