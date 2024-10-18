@@ -111,6 +111,14 @@ public class ClientGameManager : IDisposable
     {
         MatchmakingResult matchmakingResult = await matchmaker.Matchmake(userData);
 
+        if(matchmakingResult.result == MatchmakerPollingResult.Success)
+        {
+            // Connect to Server
+
+        }
+
+        return matchmakingResult.result;
+
     }
 
     // Client Disconnect
