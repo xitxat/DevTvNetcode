@@ -65,10 +65,14 @@ public class ClientGameManager : IDisposable
         SceneManager.LoadScene(MenuSceneName);
     }
 
+
+
     //  START CLIENT    
     // Called by Menu Button
+    // jOINsERVER VIA Lobby and Relay
     public async Task StartClientAsync(string joinCode)
     {
+        // Relay Specific
         try
         {
             //  JOIN allocation with ID# (Join Code)
@@ -80,7 +84,6 @@ public class ClientGameManager : IDisposable
             return;
         }
 
-
         //  Unity Transport switch to RELAY MODE
         UnityTransport transport = NetworkManager.Singleton.GetComponent<UnityTransport>();
 
@@ -90,6 +93,12 @@ public class ClientGameManager : IDisposable
 
 
 
+
+    }
+
+    private void ConnectClient()
+    {
+        // Generic Server Connection
         // Repackage Package: JSON <=> Byte Array
         string payload = JsonUtility.ToJson(userData);
         byte[] payloadBytes = Encoding.UTF8.GetBytes(payload);
@@ -105,8 +114,14 @@ public class ClientGameManager : IDisposable
         //  Will handle client scene too.
     }
 
+    private void StartClient()
+    {
 
-    // br 5.07
+    }
+
+
+    //  MATCHMAKE
+    // br 5.07, 08
     private async Task<MatchmakerPollingResult> GetMatchAsync()
     {
         MatchmakingResult matchmakingResult = await matchmaker.Matchmake(userData);
