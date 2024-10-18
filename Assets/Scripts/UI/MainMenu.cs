@@ -34,11 +34,14 @@ public class MainMenu : MonoBehaviour
         if (isCancelling) { return; }
 
         // Qing
-        if (isMatchMaking) {
+        if (isMatchMaking) 
+        {
             queueStatusText.text = "Cancelling ...";
             isCancelling = true;
 
             // Cancel Matchmaking
+            await ClientSingleton.Instance.GameManager.CancelMatchMaking();
+
             isCancelling = false;
             isMatchMaking = false;
             findMatchButtonText.text = "Find Match";

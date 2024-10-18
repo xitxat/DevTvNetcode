@@ -137,6 +137,14 @@ public class ClientGameManager : IDisposable
 
     }
 
+    // br5.08
+    public async Task CancelMatchMaking()
+    {
+        // Finish cancelling before we update text
+        await matchmaker.CancelMatchmaking();
+        // await the Main Menu 
+    }
+
 
     //  MATCHMAKE
     // br 5.07, 08
