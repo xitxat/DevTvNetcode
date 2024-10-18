@@ -23,6 +23,10 @@ public class ServerGameManager : IDisposable
     private int queryPort;
     private NetworkServer networkServer;    // Approve connections, 
     private MultiplayAllocationService multiplayAllocationService; // Server health ping  via cmd
+
+    private const string GameSceneName = "Game";
+
+
     public ServerGameManager(string serverIP, int serverPort, int queryPort, NetworkManager manager)
     {
         this.serverIP = serverIP;
@@ -45,6 +49,8 @@ public class ServerGameManager : IDisposable
             return;
         }
 
+        //  Scene
+        NetworkManager.Singleton.SceneManager.LoadScene(GameSceneName, LoadSceneMode.Single);
 
 
 
@@ -53,6 +59,7 @@ public class ServerGameManager : IDisposable
 
     public void Dispose()
     {
-
+        multiplayAllocationService?.Dispose();
+        networkServer?.Dispose();
     }
 }
