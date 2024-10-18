@@ -27,7 +27,7 @@ public class UserData
     public string userAuthId;
 
     // What the useer wants to play
-    public GameInfo userGamePreferences = new GameInfo() ;
+    public GameInfo userGamePreferences = new GameInfo();
 }
 
 
