@@ -28,7 +28,7 @@ public class MainMenu : MonoBehaviour
     }
 
 
-    // BUTTON FIND MATCH click
+    // BUTTON FIND MATCH click (set ref in Canvas)
     public async void FindMatchPress()
     {
         if (isCancelling) { return; }
