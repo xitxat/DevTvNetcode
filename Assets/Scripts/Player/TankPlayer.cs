@@ -13,6 +13,7 @@ public class TankPlayer : NetworkBehaviour
     [Header("Refs")]
     [SerializeField] private CinemachineCamera virtualCamera;
     [SerializeField] private SpriteRenderer minimapIconRenderer;
+    [SerializeField] private Texture2D crosshair;
 
     // expose private property in inspector with field:
     [field: SerializeField] public Health Health { get; private set; }
@@ -54,6 +55,12 @@ public class TankPlayer : NetworkBehaviour
             virtualCamera.Priority = ownerPriority;
 
             minimapIconRenderer.color = ownerColor;
+
+            // V2: middle of Cursor circle
+            Cursor.SetCursor(crosshair, new Vector2(
+                crosshair.width / 2, 
+                crosshair.height / 2),
+                CursorMode.Auto);
         }
     }
 
