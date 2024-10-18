@@ -9,6 +9,9 @@ public class NetworkServer : IDisposable
 {
     private NetworkManager networkManager;
 
+    public Action<UserData> OnUserJoined; // backfilling
+    public Action<UserData> OnUserLeft;
+
     public Action<string> OnClientLeft;  // authId is  a string
 
     private Dictionary<ulong, string> clientIdToAuth = new Dictionary<ulong, string>();
@@ -33,7 +36,7 @@ public class NetworkServer : IDisposable
         return networkManager.StartServer();
     }
 
-    // Handle requests when Players connect
+    // Handle requests when Players connect / User join
     private void ApprovalCheck(
         NetworkManager.ConnectionApprovalRequest request,
         NetworkManager.ConnectionApprovalResponse response)
@@ -50,6 +53,7 @@ public class NetworkServer : IDisposable
         //  Auto .add ~ update if already exists
         clientIdToAuth[request.ClientNetworkId] = userData.userAuthId;
         authIdToUserData[userData.userAuthId] = userData;
+        OnUserJoined?.Invoke(userData); // add to backfiller
         Debug.Log(userData.userName);
 
         // Finish connection to server
@@ -79,6 +83,8 @@ public class NetworkServer : IDisposable
         if (clientIdToAuth.TryGetValue(clientId, out string authId))
         {
             clientIdToAuth.Remove(clientId);
+            // Remove user from backfiller
+            OnUserLeft?.Invoke(authIdToUserData[authId]); 
 
             authIdToUserData.Remove(authId);
 

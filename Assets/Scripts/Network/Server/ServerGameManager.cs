@@ -58,6 +58,8 @@ public class ServerGameManager : IDisposable
                 //  START BACKFILLING br5.09
                 // allow players to enter after start
                 await StartBackfill(matchmakerPayload);
+                networkServer.OnUserJoined += UserJoined;
+                networkServer.OnUserLeft += UserLeft;
             }
             else
             {
@@ -165,6 +167,9 @@ public class ServerGameManager : IDisposable
 
     public void Dispose()
     {
+        networkServer.OnUserJoined -= UserJoined;
+        networkServer.OnUserLeft -= UserLeft;
+
         backfiller?.Dispose();
         multiplayAllocationService?.Dispose();
         networkServer?.Dispose();
