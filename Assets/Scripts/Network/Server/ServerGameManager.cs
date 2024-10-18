@@ -22,6 +22,8 @@ public class ServerGameManager : IDisposable
     private string serverIP;
     private int serverPort;
     private int queryPort;
+
+    private MatchplayBackfiller backfiller;
     private NetworkServer networkServer;    // Approve connections, 
     private MultiplayAllocationService multiplayAllocationService; // Server health ping  via cmd
 
@@ -53,10 +55,13 @@ public class ServerGameManager : IDisposable
 
             if(matchmakerPayload != null)
             {
-
+                //  START BACKFILLING br5.09
+                // allow players to enter after start
+                await StartBackfill(matchmakerPayload);
             }
             else
             {
+            Debug.LogWarning("Matchmaker payload timed out ;(");
 
             }
         }
@@ -98,6 +103,12 @@ public class ServerGameManager : IDisposable
         return null;
     }
 
+
+    private async Task StartBackfill(MatchmakingResults payload)
+    {
+        // connection str (ip:port)
+        new MatchplayBackfiller($"{serverIP}:{serverPort}", payload.QueueName, payload.MatchProperties, 20);
+    }
 
     public void Dispose()
     {
