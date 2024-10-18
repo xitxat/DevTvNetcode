@@ -1288,12 +1288,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3019f22368bb85b44ba9bb89556a2b27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  note: "1. Prefab Variants: drag base prefab into hierarchy, then drag back to Prefab
-    folder.\r\n2. Access the InputReader through the GameManager\r\n        inputReader
-    = GameManager.Instance.inputReader;\r\n3. Assign inputReader in OnNetworkSpawn
-    to avoid timing issues\n5. {get, private set;} properties can be made visible
-    in inspector with: \n\t [field: SerializeField] \n6. Network vars accesed via
-    .Value\n7. Network vars always provide penultimate and ultimate values in callbacks\n\r\n\n\n\n\n\n\n\n\n\n"
+  note: "0. ApplicationData will need to be updated for cmd log parsing / custom
+    launch parameters see: \n\thttps://docs-multiplayer.unity3d.com/netcode/current/learn/sample-dedicated-server/\n\tvs
+    old https://github.com/Unity-Technologies/com.unity.services.samples.matchplay?tab=readme-ov-file\n1.
+    Prefab Variants: drag base prefab into hierarchy, then drag back to Prefab folder.\r\n2.
+    Access the InputReader through the GameManager\r\n        inputReader = GameManager.Instance.inputReader;\r\n3.
+    Assign inputReader in OnNetworkSpawn to avoid timing issues\n5. {get, private
+    set;} properties can be made visible in inspector with: \n\t [field: SerializeField]
+    \n6. Network vars accesed via .Value\n7. Network vars always provide penultimate
+    and ultimate values in callbacks\n\n\n\r\n\n\n\n\n\n\n\n\n\n"
 --- !u!4 &601007118
 Transform:
   m_ObjectHideFlags: 0
