@@ -165,21 +165,21 @@ public class HostGameManager : IDisposable
         // Stop Lobby
         if (string.IsNullOrEmpty(lobbyId)) { return; }
         
-            //  Stop Heartbeat coroutine . out of class access
-            // Use nameof(containing method)
-            HostSingleton.Instance.StartCoroutine(nameof(HeartbeatLobby));
+        //  Stop Heartbeat coroutine . out of class access
+        // Use nameof(containing method)
+        HostSingleton.Instance.StartCoroutine(nameof(HeartbeatLobby));
 
-            try
-            {
-                await Lobbies.Instance.DeleteLobbyAsync(lobbyId);
-            }
-            catch (LobbyServiceException exLSE)
-            {
-                Debug.Log(exLSE);
-            }
+        try
+        {
+            await Lobbies.Instance.DeleteLobbyAsync(lobbyId);
+        }
+        catch (LobbyServiceException exLSE)
+        {
+            Debug.Log(exLSE);
+        }
 
-            // Won;t retry with empty str on a Fail
-            lobbyId = string.Empty;
+        // Won;t retry with empty str on a Fail
+        lobbyId = string.Empty;
         
 
         NetworkServer.OnClientLeft -= HandleClientLeft;
