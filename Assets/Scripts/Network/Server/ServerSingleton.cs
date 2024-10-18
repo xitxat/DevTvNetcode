@@ -3,6 +3,8 @@ using Unity.Netcode;
 using Unity.Services.Core;
 using UnityEngine;
 
+// This is the PREFAB ServerManager.
+//      refed by NetBootstrap Application Controller
 // Singletons: Global access, no cached refs needed.
 // QPort: Query port
 
