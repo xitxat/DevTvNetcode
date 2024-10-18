@@ -48,12 +48,41 @@ public class MainMenu : MonoBehaviour
         }
 
         // while not alrewady in Q
-        // Start Q
+        // Start Q MatchMaking
+        // Pass in Event when method is called
+        ClientSingleton.Instance.GameManager.MatchMakeAsync(OnMatchMade);
         findMatchButtonText.text = "Cancel";
         queueStatusText.text = "Searching ...";
         isMatchMaking = true;
     }
 
+    // Pass enum result in on Match
+    private void OnMatchMade(MatchmakerPollingResult result)
+    {
+        switch (result) 
+        {
+            case MatchmakerPollingResult.Success:
+                // as we change scene and connect
+                queueStatusText.text = "Connecting ...";
+                break;
+            case MatchmakerPollingResult.TicketCreationError:
+                queueStatusText.text = "TicketCreationError";
+                break;            
+            case MatchmakerPollingResult.TicketCancellationError:
+                queueStatusText.text = "TicketCancellationError";
+                break;            
+            case MatchmakerPollingResult.TicketRetrievalError:
+                queueStatusText.text = "TicketRetrievalError";
+                break;
+            case MatchmakerPollingResult.MatchAssignmentError:
+                queueStatusText.text = "MatchAssignmentError";
+                break;
+
+
+
+
+        }
+    }
 
     //  ALWAYS Access class Host/ Client  GameManagers  via Singleton.
     public async void StartHost()
