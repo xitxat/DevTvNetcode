@@ -138,11 +138,34 @@ public class ServerGameManager : IDisposable
     
     private void UserLeft(UserData user)
     {
+        // returns # players left after removal
+        int playerCount = backfiller.RemovePlayerFromMatch(user.userAuthId);
+        multiplayAllocationService.RemovePlayer();
 
+        if(playerCount <= 0)
+        {
+            CloseServer();
+            return;
+        }
+
+        // Empty slots; refill
+        if(backfiller.NeedsPlayers() && !backfiller.IsBackfilling)
+        {
+            _ = backfiller.BeginBackfilling();
+        }
+    }
+
+
+    private async void CloseServer()
+    {
+        await backfiller.StopBackfill();
+        Dispose();
+        Application.Quit(); // Server
     }
 
     public void Dispose()
     {
+        backfiller?.Dispose();
         multiplayAllocationService?.Dispose();
         networkServer?.Dispose();
     }
