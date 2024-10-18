@@ -107,7 +107,38 @@ public class ServerGameManager : IDisposable
     private async Task StartBackfill(MatchmakingResults payload)
     {
         // connection str (ip:port)
-        new MatchplayBackfiller($"{serverIP}:{serverPort}", payload.QueueName, payload.MatchProperties, 20);
+        backfiller = new MatchplayBackfiller($"{serverIP}:{serverPort}", 
+            payload.QueueName, 
+            payload.MatchProperties, 
+            20);
+
+        // when match starts
+        if (backfiller.NeedsPlayers())
+        {
+        await backfiller.BeginBackfilling();
+
+        }
+
+    }
+
+
+    private void UserJoined(UserData user)
+    {
+        backfiller.AddPlayerToMatch(user);
+        // manual update analytic service (no user data)
+        multiplayAllocationService.AddPlayer();
+
+        // If have MAX players
+        if(!backfiller.NeedsPlayers() && backfiller.IsBackfilling)
+        {
+            // _= we don't need to await data return
+            _ = backfiller.StopBackfill();
+        }
+    }    
+    
+    private void UserLeft(UserData user)
+    {
+
     }
 
     public void Dispose()
