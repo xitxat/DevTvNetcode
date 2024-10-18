@@ -40,9 +40,17 @@ public class GameInfo
 
 
 
+    //  UGS MATCHMAKER
     public string ToMultiplayQueue()
     {
-        return "";
+        return gameQueue switch
+        {
+            GameQueue.Solo => "solo-queue",
+            GameQueue.Team => "team-queue",
+
+            // _ (default)
+            _ => "solo-queue"
+        };
     }
 }
 
