@@ -30,7 +30,7 @@ public class ApplicationController : MonoBehaviour
             // Connect UGS
             await serverSingleton.CreateServer();
 
-
+            await serverSingleton.GameManager.StartGameServerAsync();
         }
         else
         {

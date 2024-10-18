@@ -13,17 +13,41 @@ using System.Collections;
 using System.Text;
 using Unity.Services.Authentication;
 
+ // br 5.04
 // serverPort : game
-// serverQPort: analyitics
+// queryPort: analyitics
 public class ServerGameManager : IDisposable
 {
+    private string serverIP;
+    private int serverPort;
+    private int queryPort;
+    private NetworkServer networkServer;    // Approve connections, 
+    private MultiplayAllocationService multiplayAllocationService; // Server health ping  via cmd
+    public ServerGameManager(string serverIP, int serverPort, int queryPort, NetworkManager manager)
+    {
+        this.serverIP = serverIP;
+        this.serverPort = serverPort;
+        this.queryPort = queryPort;
+        networkServer = new NetworkServer(manager);
+        multiplayAllocationService = new MultiplayAllocationService();
+    }
 
 
-
-
+    // Enter when sucessfully conntected to UGS / BEGIN:
     public async Task StartGameServerAsync()
     {
-        throw new NotImplementedException();
+        // Server status. Players in, Server Health
+        await multiplayAllocationService.BeginServerCheck();
+
+        if(!networkServer.OpenConnection(serverIP, serverPort))
+        {
+            Debug.LogWarning("NetworkServer did not start. :( ");
+            return;
+        }
+
+
+
+
     }
 
 

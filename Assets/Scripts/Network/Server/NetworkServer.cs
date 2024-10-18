@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Unity.Netcode;
+using Unity.Netcode.Transports.UTP;
 using UnityEngine;
 
 // HostGameManager creates this class
@@ -22,6 +23,14 @@ public class NetworkServer : IDisposable
         networkManager.ConnectionApprovalCallback += ApprovalCheck;
 
         networkManager.OnServerStarted += OnNetworkReady;
+    }
+
+    public bool OpenConnection(string ip, int port)
+    {  // called by BeginServerCheck(); receives return from this t/f
+        // set connection Data via transport component
+        UnityTransport transport = networkManager.gameObject.GetComponent<UnityTransport>();
+        transport.SetConnectionData(ip, (ushort)port);
+        return networkManager.StartServer();
     }
 
     // Handle requests when Players connect
