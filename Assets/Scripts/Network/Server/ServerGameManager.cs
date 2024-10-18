@@ -12,8 +12,9 @@ using Unity.Services.Relay.Models;
 using System.Collections;
 using System.Text;
 using Unity.Services.Authentication;
+using Unity.Services.Matchmaker.Models;
 
- // br 5.04
+// br 5.04
 // serverPort : game
 // queryPort: analyitics
 public class ServerGameManager : IDisposable
@@ -38,10 +39,31 @@ public class ServerGameManager : IDisposable
 
 
     // Enter when sucessfully conntected to UGS / BEGIN:
+    // Match made. spin up server
     public async Task StartGameServerAsync()
     {
         // Server status. Players in, Server Health
         await multiplayAllocationService.BeginServerCheck();
+
+        // API calls
+        try
+        {
+            // return matchmaking data
+            MatchmakingResults matchmakerPayload =  await GetMatchmakerPayload();
+
+            if(matchmakerPayload != null)
+            {
+
+            }
+            else
+            {
+
+            }
+        }
+        catch(Exception e)
+        {
+            Debug.LogWarning(e);
+        }
 
         // Open Server on this IP & Port
         if(!networkServer.OpenConnection(serverIP, serverPort))
@@ -53,8 +75,27 @@ public class ServerGameManager : IDisposable
         //  Load Scene
         NetworkManager.Singleton.SceneManager.LoadScene(GameSceneName, LoadSceneMode.Single);
 
+    }
 
 
+
+    private async Task<MatchmakingResults> GetMatchmakerPayload()
+    {
+        // Handle matchmking failure, force timeout, avoid server hang via shutdown
+            // timer + await countdown Task
+
+        // Event subs + return Payload matchmaking data
+            //Store this task in var, (don't run yet)
+        Task<MatchmakingResults> matchmakerPayloadTask = 
+            multiplayAllocationService.SubscribeAndAwaitMatchmakerAllocation(); // f12
+
+        // if True matchmakerPayloadTask enter {} , F; return null
+        if (await Task.WhenAny(matchmakerPayloadTask, Task.Delay(20000)) == matchmakerPayloadTask)
+        {
+            return matchmakerPayloadTask.Result;
+        }
+
+        return null;
     }
 
 
