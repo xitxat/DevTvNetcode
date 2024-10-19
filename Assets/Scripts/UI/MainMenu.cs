@@ -10,6 +10,7 @@ public class MainMenu : MonoBehaviour
     [SerializeField] private TMP_Text findMatchButtonText;
     [SerializeField] private TMP_InputField joinCodeField;
 
+    private float timeInQueue;
     private bool isMatchMaking;
     private bool isCancelling;
 
@@ -26,6 +27,15 @@ public class MainMenu : MonoBehaviour
         queueStatusText.text = string.Empty;
         queueTimerText.text = string.Empty;
     }
+
+    private void Update()
+    {
+        if (isMatchMaking)
+        {
+            timeInQueue += Time.deltaTime;
+        }
+    }
+
 
 
     // BUTTON FIND MATCH click (set ref in Canvas)
@@ -56,12 +66,15 @@ public class MainMenu : MonoBehaviour
         ClientSingleton.Instance.GameManager.MatchMakeAsync(OnMatchMade);
         findMatchButtonText.text = "Cancel";
         queueStatusText.text = "Searching ...";
+        timeInQueue = 0f;
         isMatchMaking = true;
     }
 
     // Pass enum result in on Match
     private void OnMatchMade(MatchmakerPollingResult result)
     {
+
+
         switch (result) 
         {
             case MatchmakerPollingResult.Success:
