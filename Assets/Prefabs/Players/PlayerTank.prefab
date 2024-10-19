@@ -324,6 +324,7 @@ GameObject:
   - component: {fileID: 2333888513737428821}
   - component: {fileID: 4024962225010407993}
   - component: {fileID: 3844757163518473756}
+  - component: {fileID: 29209496778286905}
   m_Layer: 0
   m_Name: LeftTracks
   m_TagString: Untagged
@@ -5146,6 +5147,18 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!114 &29209496778286905
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1576128276556184990}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2867bf8312d19a44bd7f61971c0c7e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2373421085082326790
 GameObject:
   m_ObjectHideFlags: 0
@@ -10258,6 +10271,7 @@ GameObject:
   - component: {fileID: 1084449632693282074}
   - component: {fileID: 2558194500311470719}
   - component: {fileID: 8350660342282022533}
+  - component: {fileID: 1323235859780104427}
   m_Layer: 0
   m_Name: RightTracks
   m_TagString: Untagged
@@ -15080,6 +15094,18 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!114 &1323235859780104427
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5180045833689952351}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2867bf8312d19a44bd7f61971c0c7e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5952233466444134703
 GameObject:
   m_ObjectHideFlags: 0
