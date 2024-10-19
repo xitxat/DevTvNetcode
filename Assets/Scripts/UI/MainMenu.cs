@@ -13,6 +13,7 @@ public class MainMenu : MonoBehaviour
 
     private float timeInQueue; // Display
     private bool isMatchMaking;
+    private bool isBusy;
     private bool isCancelling;
 
 
@@ -59,11 +60,15 @@ public class MainMenu : MonoBehaviour
 
             isCancelling = false;
             isMatchMaking = false;
+            isBusy = false;
             findMatchButtonText.text = "Find Match";
             queueStatusText.text = string.Empty;
+            queueTimerText.text = string.Empty;
 
             return; 
         }
+
+        if (isBusy) { return; }
 
         // while not alrewady in Q
         // Start Q MatchMaking
