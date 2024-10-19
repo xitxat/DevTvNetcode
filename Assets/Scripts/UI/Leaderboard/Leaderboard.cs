@@ -86,7 +86,7 @@ public class Leaderboard : NetworkBehaviour
     // CHANGE :SWITCH stmt, Top 5
     private void HandleLeaderboardEntitiesChanged(NetworkListEvent<LeaderboardEntityState> changeEvent)
     {
-        // query changeEvent if vale changed & how;ie: added, removed, updated
+        Debug.Log($"<color=yellow>Leaderboard change event type: {changeEvent.Type}, ClientId: {changeEvent.Value.ClientId}, Coins: {changeEvent.Value.Coins}</color>");        // query changeEvent if vale changed & how;ie: added, removed, updated
         // Add
         switch (changeEvent.Type)
         {

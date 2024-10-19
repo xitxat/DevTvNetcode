@@ -19,7 +19,7 @@ public class ClientSingleton : MonoBehaviour
 
             if(instance == null)
             {
-                Debug.LogError("<color=orange>No <ClientSingleton> in Scene!</color>");
+               // Debug.LogError("<color=orange>No <ClientSingleton> in Scene!</color>");
                 return null;
             }
 
