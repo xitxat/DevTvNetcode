@@ -28,7 +28,6 @@ public class ServerGameManager : IDisposable
     private MatchplayBackfiller backfiller;
     private MultiplayAllocationService multiplayAllocationService; // Server health ping  via cmd
 
-    private const string GameSceneName = "Game";
 
 
     public NetworkServer NetworkServer { get; private set; }    // Approve connections,
@@ -81,9 +80,6 @@ public class ServerGameManager : IDisposable
             Debug.LogWarning("NetworkServer did not start. :( ");
             return;
         }
-
-        //  Load Scene
-        NetworkManager.Singleton.SceneManager.LoadScene(GameSceneName, LoadSceneMode.Single);
 
     }
 

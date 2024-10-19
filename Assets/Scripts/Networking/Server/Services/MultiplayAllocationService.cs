@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -7,6 +8,7 @@ using Unity.Services.Multiplay;
 using UnityEngine;
 
 // Unity helper. UGS Event hookup,
+// Max players hard set (20) in BeginServerCheck()
 public class MultiplayAllocationService : IDisposable
 {
     private IMultiplayService multiplayService;
@@ -92,7 +94,7 @@ public class MultiplayAllocationService : IDisposable
     {
         if (multiplayService == null) { return; }
 
-        serverCheckManager = await multiplayService.StartServerQueryHandlerAsync((ushort)20, "", "", "0", "");
+        serverCheckManager = await multiplayService.StartServerQueryHandlerAsync((ushort)20, "", "ServerName", "0", "");
 
         ServerCheckLoop(serverCheckCancel.Token);
     }
@@ -168,4 +170,6 @@ public class MultiplayAllocationService : IDisposable
 
         serverEvents?.UnsubscribeAsync();
     }
+
+
 }

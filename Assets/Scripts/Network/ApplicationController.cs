@@ -1,6 +1,9 @@
 using System;
+using System.Collections;
 using System.Threading.Tasks;
+using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 // br 5.04
 // Called by Client / Host / Server to establish Singleton
@@ -14,6 +17,10 @@ public class ApplicationController : MonoBehaviour
 
     private ApplicationData appData;
 
+    private const string GameSceneName = "Game";
+
+
+    // Entry to Dedicated server
     async void  Start()
     {
         DontDestroyOnLoad(gameObject);
@@ -27,15 +34,18 @@ public class ApplicationController : MonoBehaviour
     {
         if (isDedicatedServer)
         {
+            // Throttle Frame Rate
+            Application.targetFrameRate = 60;
+
             // Instanciate Application Data. runs AD constructor; returns cmd line IP, Port queries
             appData = new ApplicationData();
 
             // Spawn in Prefab
             ServerSingleton serverSingleton = Instantiate(serverPrefab);
-            // Connect UGS
-            await serverSingleton.CreateServer();
 
-            await serverSingleton.GameManager.StartGameServerAsync();
+            // Connect UGS
+            StartCoroutine(LoadGameSceneAsync(serverSingleton));
+
         }
         else
         {
@@ -55,5 +65,28 @@ public class ApplicationController : MonoBehaviour
                 clientSingleton.GameManager.GoToMenu();
             }
         }
+    }
+
+    // Load game scene well before Player spawn
+    // Before the dedicated server is spun
+    private IEnumerator LoadGameSceneAsync(ServerSingleton serverSingleton)
+    {
+        //  LOAD SCENE 
+        //NetworkManager.Singleton.SceneManager.LoadScene(GameSceneName, LoadSceneMode.Single);
+        AsyncOperation   asyncOperation =  SceneManager.LoadSceneAsync(GameSceneName);
+
+        // scene not loaded
+        while (!asyncOperation.isDone)
+        {
+            // skip to next frame untill scene loaded
+            yield return null;
+        }
+
+        // Connect UGS
+        //  Create & start dedicated server
+        Task createServerTask =  serverSingleton.CreateServer();
+       // NoteComponent asyny so 
+
+        Task  startServerTask =  serverSingleton.GameManager.StartGameServerAsync();
     }
 }
