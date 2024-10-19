@@ -12,12 +12,12 @@ public class PlayerMovement : NetworkBehaviour
     [SerializeField] private InputReader inputReader;
     [SerializeField] private Transform bodyTransform; // obj with ClientNetworkTransform
     [SerializeField] private Rigidbody2D rb;
-    //[SerializeField] private ParticleSystem dustTrail;
+    [SerializeField] private ParticleSystem dustTrail;
 
     [Header("Settings")]
     [SerializeField] private float movementSpeed = 10f;
     [SerializeField] private float turningRate = 360f; // per second
-    //[SerializeField] private float emissionRate = 10f;
+    [SerializeField] private float emissionRate = 10f;
 
     private ParticleSystem.EmissionModule emissionModule;
     private Vector2 previousMovementInput;
@@ -27,7 +27,7 @@ public class PlayerMovement : NetworkBehaviour
 
     private void Awake()
     {
-        //emissionModule = dustTrail.emission;
+        emissionModule = dustTrail.emission;
 
         // Ensure bodyTransform is assigned to correct BODY
         if (bodyTransform == null)
@@ -100,14 +100,15 @@ public class PlayerMovement : NetworkBehaviour
     {
         //   * Time.deltaTime is included in FixedUpdate
 
-        //if ((transform.position - previousPos).sqrMagnitude > ParticleStopThreshhold)
-        //{
-        //    emissionModule.rateOverTime = emissionRate;
-        //}
-        //else
-        //{
-        //    emissionModule.rateOverTime = 0;
-        //}
+        // Dust Trail Emission
+        if ((transform.position - previousPos).sqrMagnitude > ParticleStopThreshhold)
+        {
+            emissionModule.rateOverTime = emissionRate;
+        }
+        else
+        {
+            emissionModule.rateOverTime = 0;
+        }
 
         //previousPos = transform.position;
 
