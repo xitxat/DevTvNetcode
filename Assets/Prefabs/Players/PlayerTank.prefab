@@ -5637,7 +5637,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 0.7169812, g: 0.52688354, b: 0.4295123, a: 1}
+      maxColor: {r: 0.4245283, g: 0.40167794, b: 0.39048594, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -15371,8 +15371,10 @@ MonoBehaviour:
   inputReader: {fileID: 11400000, guid: ad3991ec657e55747981b799ecef4291, type: 2}
   bodyTransform: {fileID: 1127866828773146448}
   rb: {fileID: 3480034870280590461}
+  dustTrail: {fileID: 2455105928462107042}
   movementSpeed: 15
   turningRate: 270
+  emissionRate: 10
 --- !u!114 &410092431257504717
 MonoBehaviour:
   m_ObjectHideFlags: 0
