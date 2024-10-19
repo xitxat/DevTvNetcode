@@ -50,8 +50,8 @@ public class TankPlayer : NetworkBehaviour
             else
             {
                 // DEDICATED SERVER
-                userData = 
-                    ServerSingleton.Instance.GameManager.Networkserver
+                userData =
+                    ServerSingleton.Instance.GameManager.NetworkServer.GetUserDataByClientId(OwnerClientId);
             }
 
 
