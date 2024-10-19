@@ -6,10 +6,10 @@ using UnityEngine;
 
 public class LobbiesList : MonoBehaviour
 {
+    [SerializeField] private MainMenu mainMenu;
     [SerializeField] private Transform lobbyItemParent;
     [SerializeField] private LobbyItem lobbyItemPrefab; // NEEDS Lobby Item component!
 
-    private bool isJoining;
     private bool isRefreshing;
 
     private void OnEnable()
@@ -75,31 +75,8 @@ public class LobbiesList : MonoBehaviour
         isRefreshing = false;
     }
 
-    public async void JoinAsync(Lobby lobby)
+    public  void JoinAsync(Lobby lobby)
     {
-        // Automatically assin the Join Code
-        try
-        {
-            //  Handle Join Button spam/mash
-            if (isJoining) { return; }
-            isJoining = true;
-
-
-            // joiningLobby contains the JoinCode from -> (lobby.Id)
-            Lobby joiningLobby = await Lobbies.Instance.JoinLobbyByIdAsync(lobby.Id);
-            // Extract Join Code
-            string joinCode = joiningLobby.Data["JoinCode"].Value;
-
-            // Pass in JCode to client
-            await ClientSingleton.Instance.GameManager.StartClientAsync(joinCode);
-
-
-        }
-        catch (LobbyServiceException exLSE)
-        {
-            Debug.Log(exLSE);
-        }
-
-        isJoining = false;
+         mainMenu.JoinAsync(lobby);
     }
 }

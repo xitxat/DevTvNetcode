@@ -1,5 +1,7 @@
 using System;
 using TMPro;
+using Unity.Services.Lobbies.Models;
+using Unity.Services.Lobbies;
 using UnityEngine;
 
 public class MainMenu : MonoBehaviour
@@ -13,7 +15,7 @@ public class MainMenu : MonoBehaviour
 
     private float timeInQueue; // Display
     private bool isMatchMaking;
-    private bool isBusy;
+    private bool isBusy; // no access to other buttons
     private bool isCancelling;
 
 
@@ -113,16 +115,55 @@ public class MainMenu : MonoBehaviour
     //  ALWAYS Access class Host/ Client  GameManagers  via Singleton.
     public async void StartHost()
     {
-        await HostSingleton.Instance.GameManager.StartHostAsync(); 
+        if (isBusy) { return; }
 
+        isBusy = true;
+
+        await HostSingleton.Instance.GameManager.StartHostAsync();
+
+        // incase of Error & still onMain Menu
+        isBusy = false;
      
     }    
     
     public async void StartClient()
     {
+        if (isBusy) { return; }
+
+        isBusy = true;
+
         await ClientSingleton.Instance.GameManager.StartClientAsync(joinCodeField.text); 
 
-     
+        isBusy = false;
+
+    }
+
+    public async void JoinAsync(Lobby lobby)
+    {
+        // Automatically assin the Join Code
+        try
+        {
+            //  Handle Join Button spam/mash
+            if (isBusy) { return; }
+            isBusy = true;
+
+
+            // joiningLobby contains the JoinCode from -> (lobby.Id)
+            Lobby joiningLobby = await Lobbies.Instance.JoinLobbyByIdAsync(lobby.Id);
+            // Extract Join Code
+            string joinCode = joiningLobby.Data["JoinCode"].Value;
+
+            // Pass in JCode to client
+            await ClientSingleton.Instance.GameManager.StartClientAsync(joinCode);
+
+
+        }
+        catch (LobbyServiceException exLSE)
+        {
+            Debug.Log(exLSE);
+        }
+
+        isBusy = false;
     }
 
 
