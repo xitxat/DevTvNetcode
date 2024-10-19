@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 
@@ -10,7 +11,7 @@ public class MainMenu : MonoBehaviour
     [SerializeField] private TMP_Text findMatchButtonText;
     [SerializeField] private TMP_InputField joinCodeField;
 
-    private float timeInQueue;
+    private float timeInQueue; // Display
     private bool isMatchMaking;
     private bool isCancelling;
 
@@ -33,6 +34,10 @@ public class MainMenu : MonoBehaviour
         if (isMatchMaking)
         {
             timeInQueue += Time.deltaTime;
+            // Conversion to HMS
+            TimeSpan ts = TimeSpan.FromSeconds(timeInQueue);
+            // Format: {0} ~ first index, how many decimal places
+            queueTimerText.text = string.Format("{0:00}:{1:00}", ts.Minutes, ts.Seconds);
         }
     }
 
