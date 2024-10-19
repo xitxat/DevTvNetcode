@@ -45,7 +45,7 @@ public class ServerSingleton : MonoBehaviour
     {
         await UnityServices.InitializeAsync();
 
-        // Read in Networking> Application data from cmd
+        // Read in Networking> Application data from cmd (App~Data)
         // Send to ServerGameManager
         GameManager = new ServerGameManager(
             ApplicationData.IP(),

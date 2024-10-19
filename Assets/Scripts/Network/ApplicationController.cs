@@ -12,11 +12,13 @@ public class ApplicationController : MonoBehaviour
     [SerializeField] private HostSingleton hostPrefab;
     [SerializeField] private ServerSingleton serverPrefab;
 
+    private ApplicationData appData;
+
     async void  Start()
     {
         DontDestroyOnLoad(gameObject);
 
-        // Headless server (bool)
+        // HEADLESS DEDICATED SERVER (bool)
        await LaunchInMode(SystemInfo.graphicsDeviceType == UnityEngine.Rendering.GraphicsDeviceType.Null);
 
     }
@@ -25,6 +27,9 @@ public class ApplicationController : MonoBehaviour
     {
         if (isDedicatedServer)
         {
+            // Instanciate Application Data. runs AD constructor; returns cmd line IP, Port queries
+            appData = new ApplicationData();
+
             // Spawn in Prefab
             ServerSingleton serverSingleton = Instantiate(serverPrefab);
             // Connect UGS
