@@ -38,9 +38,24 @@ public class TankPlayer : NetworkBehaviour
     {
         if (IsServer)
         {
-            // Get Players name (Pass in OwnersId & get name) returns User data obj
-            UserData userData = 
-                HostSingleton.Instance.GameManager.NetworkServer.GetUserDataByClientId(OwnerClientId);
+
+            UserData userData = null;
+
+            if (IsHost)
+            {
+                // Get Players name (Pass in OwnersId & get name) returns User data obj
+                userData =
+                   HostSingleton.Instance.GameManager.NetworkServer.GetUserDataByClientId(OwnerClientId);
+            }
+            else
+            {
+                // DEDICATED SERVER
+                userData = 
+                    ServerSingleton.Instance.GameManager.Networkserver
+            }
+
+
+
 
             // Bexause we are server, set Value now
             // & trigger network sync

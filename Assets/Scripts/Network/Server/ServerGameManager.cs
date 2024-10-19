@@ -19,23 +19,26 @@ using Unity.Services.Matchmaker.Models;
 // queryPort: analyitics
 public class ServerGameManager : IDisposable
 {
+
+
     private string serverIP;
     private int serverPort;
     private int queryPort;
 
     private MatchplayBackfiller backfiller;
-    private NetworkServer networkServer;    // Approve connections, 
     private MultiplayAllocationService multiplayAllocationService; // Server health ping  via cmd
 
     private const string GameSceneName = "Game";
 
+
+    public NetworkServer NetworkServer { get; private set; }    // Approve connections,
 
     public ServerGameManager(string serverIP, int serverPort, int queryPort, NetworkManager manager)
     {
         this.serverIP = serverIP;
         this.serverPort = serverPort;
         this.queryPort = queryPort;
-        networkServer = new NetworkServer(manager);
+        NetworkServer = new NetworkServer(manager);
         multiplayAllocationService = new MultiplayAllocationService();
     }
 
@@ -58,8 +61,8 @@ public class ServerGameManager : IDisposable
                 //  START BACKFILLING br5.09
                 // allow players to enter after start
                 await StartBackfill(matchmakerPayload);
-                networkServer.OnUserJoined += UserJoined;
-                networkServer.OnUserLeft += UserLeft;
+                NetworkServer.OnUserJoined += UserJoined;
+                NetworkServer.OnUserLeft += UserLeft;
             }
             else
             {
@@ -73,7 +76,7 @@ public class ServerGameManager : IDisposable
         }
 
         // Open Server on this IP & Port
-        if(!networkServer.OpenConnection(serverIP, serverPort))
+        if(!NetworkServer.OpenConnection(serverIP, serverPort))
         {
             Debug.LogWarning("NetworkServer did not start. :( ");
             return;
@@ -167,11 +170,11 @@ public class ServerGameManager : IDisposable
 
     public void Dispose()
     {
-        networkServer.OnUserJoined -= UserJoined;
-        networkServer.OnUserLeft -= UserLeft;
+        NetworkServer.OnUserJoined -= UserJoined;
+        NetworkServer.OnUserLeft -= UserLeft;
 
         backfiller?.Dispose();
         multiplayAllocationService?.Dispose();
-        networkServer?.Dispose();
+        NetworkServer?.Dispose();
     }
 }
