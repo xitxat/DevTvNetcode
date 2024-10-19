@@ -4,6 +4,7 @@ using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
 using UnityEngine;
 
+//      COMPONENT OF MAINMENU/CANVAS/LOBBIESBACKGROUND  
 public class LobbiesList : MonoBehaviour
 {
     [SerializeField] private MainMenu mainMenu;
