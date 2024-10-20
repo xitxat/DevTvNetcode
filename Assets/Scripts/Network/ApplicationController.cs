@@ -83,10 +83,13 @@ public class ApplicationController : MonoBehaviour
         }
 
         // Connect UGS
-        //  Create & start dedicated server
+        //  CREATE dedicated server
         Task createServerTask =  serverSingleton.CreateServer();
-       // NoteComponent asyny so 
+        // Not asyny so Task & yield
+        yield return new WaitUntil(() => createServerTask.IsCompleted);
 
-        Task  startServerTask =  serverSingleton.GameManager.StartGameServerAsync();
+
+        // & START
+        Task startServerTask =  serverSingleton.GameManager.StartGameServerAsync();
     }
 }
