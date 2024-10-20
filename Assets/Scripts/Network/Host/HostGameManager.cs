@@ -37,7 +37,7 @@ public class HostGameManager : IDisposable
     }
 
 
-    public async Task StartHostAsync()
+    public async Task StartHostAsync(bool isPrivate)
     {
 
         //  CREATE, Assign & Store the allocation with ID# (Join Code)
@@ -77,7 +77,9 @@ public class HostGameManager : IDisposable
         try
         {
             CreateLobbyOptions lobbyOptions = new CreateLobbyOptions();
-            lobbyOptions.IsPrivate = false; // Add Check box for player's lobby. Private need Jcode
+
+            lobbyOptions.IsPrivate = isPrivate; // TOGGLE for player's lobby. Private need Jcode
+
             // Set screen readable Relay data (Alloc Jcode, visible to members of Lobby ) to Lobby 
             lobbyOptions.Data = new System.Collections.Generic.Dictionary<string, DataObject>()
             {

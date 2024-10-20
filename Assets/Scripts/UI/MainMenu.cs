@@ -14,6 +14,7 @@ public class MainMenu : MonoBehaviour
     [SerializeField] private TMP_Text findMatchButtonText;
     [SerializeField] private TMP_InputField joinCodeField;
     [SerializeField] private Toggle teamToggle; //MatchMakeAsync(teamToggle.isOn, OnMatchMade)
+    [SerializeField] private Toggle privateToggle;
 
     private float timeInQueue; // Display
     private bool isMatchMaking;
@@ -121,7 +122,7 @@ public class MainMenu : MonoBehaviour
 
         isBusy = true;
 
-        await HostSingleton.Instance.GameManager.StartHostAsync();
+        await HostSingleton.Instance.GameManager.StartHostAsync(privateToggle.isOn);
 
         // incase of Error & still onMain Menu
         isBusy = false;
