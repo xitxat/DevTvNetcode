@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
 using UnityEngine;
@@ -8,6 +9,7 @@ using UnityEngine;
 public class NetworkServer : IDisposable
 {
     private NetworkManager networkManager;
+    private NetworkObject playerPrefab;
 
     public Action<UserData> OnUserJoined; // backfilling
     public Action<UserData> OnUserLeft;
@@ -18,9 +20,10 @@ public class NetworkServer : IDisposable
     private Dictionary<string, UserData> authIdToUserData = new Dictionary<string, UserData>();
 
     // constructor
-    public NetworkServer(NetworkManager networkManager)
+    public NetworkServer(NetworkManager networkManager, NetworkObject playerPrefab)
     {
         this.networkManager = networkManager;
+        this.playerPrefab = playerPrefab; // used to delay player spawn
 
         // triggered when Server is Connected to.[contains data]
         networkManager.ConnectionApprovalCallback += ApprovalCheck;
@@ -54,21 +57,34 @@ public class NetworkServer : IDisposable
         clientIdToAuth[request.ClientNetworkId] = userData.userAuthId;
         authIdToUserData[userData.userAuthId] = userData;
         OnUserJoined?.Invoke(userData); // add to backfiller
-        Debug.Log(userData.userName);
+
+        // Use discard (`_`) for async call
+        _ = SpawnPlayerDelayed(request.ClientNetworkId, userData);
 
         // Finish connection to server
         response.Approved = true;
-
-        // Assign a random spawn position and log it
-        Vector3 randomSpawnPos = SpawnPoint.GetRandomSpawnPos();
-        response.Position = SpawnPoint.GetRandomSpawnPos();
-        response.Rotation = Quaternion.identity;
-
-        Debug.Log("Client approved with random spawn position: " + randomSpawnPos);
-
-        //  Spawn in Players
-        response.CreatePlayerObject = true;
+        //  Do NOt Spawn in Players, delay action
+        response.CreatePlayerObject = false;
     }
+
+    // DELAY SPAWN
+    // sync time, avoid racing spawner
+    private async Task SpawnPlayerDelayed(ulong clientId, UserData userData)
+    {
+        await Task.Delay(1000);
+
+        // Assign a random spawn position 
+        Vector3 randomSpawnPos = SpawnPoint.GetRandomSpawnPos();
+
+        // access MonoBehavior via GameObject & assign to client
+        NetworkObject playerInstance =
+             GameObject.Instantiate(playerPrefab, randomSpawnPos, Quaternion.identity);
+
+        playerInstance.SpawnAsPlayerObject(clientId);
+        Debug.Log($"<color=yellow>Spawned: {userData.userName} at: {randomSpawnPos}</color>");
+
+    }
+
 
     private void OnNetworkReady()
     {

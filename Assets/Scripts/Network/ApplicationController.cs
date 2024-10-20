@@ -67,12 +67,13 @@ public class ApplicationController : MonoBehaviour
         }
     }
 
-    // Load game scene well before Player spawn
-    // Before the dedicated server is spun
+    // Load client game scene  before Server
+    // Create D. Server , yield, create scene
+    // (not async together: sync issues like Leaderboard no display)
     private IEnumerator LoadGameSceneAsync(ServerSingleton serverSingleton)
     {
         //  LOAD SCENE 
-        //NetworkManager.Singleton.SceneManager.LoadScene(GameSceneName, LoadSceneMode.Single);
+        // From Find Match go straight to Game scene , not menu
         AsyncOperation   asyncOperation =  SceneManager.LoadSceneAsync(GameSceneName);
 
         // scene not loaded
@@ -91,5 +92,8 @@ public class ApplicationController : MonoBehaviour
 
         // & START
         Task startServerTask =  serverSingleton.GameManager.StartGameServerAsync();
+        yield return new WaitUntil(() => startServerTask.IsCompleted);
+
+
     }
 }
