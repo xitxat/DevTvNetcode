@@ -125,15 +125,34 @@ public class ClientGameManager : IDisposable
 
 
     // Calleed from UI "Find Match" (UI doesn't await)
-    public async void MatchMakeAsync(Action<MatchmakerPollingResult> onMatchMakeResponse)
+    public async void MatchMakeAsync(bool isTeamQueue,  Action<MatchmakerPollingResult> onMatchMakeResponse)
     {
         if (matchmaker.IsMatchmaking) { return; }
+
+        //  Add Q enum to user prefs.   ? t/f ["Find Match" Team toggle] br6.02
+        userData.userGamePreferences.gameQueue = isTeamQueue ? GameQueue.Team : GameQueue.Solo;
 
         // get match and populate matchResult enum Success /error
         MatchmakerPollingResult matchResult =  await GetMatchAsync();
 
         // send event back to caller that matchmaking has finished
         onMatchMakeResponse?.Invoke(matchResult);
+
+    }
+
+    //  MATCHMAKE
+    // br 5.07, 08
+    private async Task<MatchmakerPollingResult> GetMatchAsync()
+    {
+        MatchmakingResult matchmakingResult = await matchmaker.Matchmake(userData);
+
+        if (matchmakingResult.result == MatchmakerPollingResult.Success)
+        {
+            // Connect to dEDICATED Server
+            StartClient(matchmakingResult.ip, matchmakingResult.port);
+        }
+
+        return matchmakingResult.result;
 
     }
 
@@ -146,21 +165,7 @@ public class ClientGameManager : IDisposable
     }
 
 
-    //  MATCHMAKE
-    // br 5.07, 08
-    private async Task<MatchmakerPollingResult> GetMatchAsync()
-    {
-        MatchmakingResult matchmakingResult = await matchmaker.Matchmake(userData);
 
-        if(matchmakingResult.result == MatchmakerPollingResult.Success)
-        {
-            // Connect to dEDICATED Server
-            StartClient(matchmakingResult.ip, matchmakingResult.port);
-                }
-
-        return matchmakingResult.result;
-
-    }
 
     // Client Disconnect
     internal void Disconnect()

@@ -3,6 +3,7 @@ using TMPro;
 using Unity.Services.Lobbies.Models;
 using Unity.Services.Lobbies;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MainMenu : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class MainMenu : MonoBehaviour
     [SerializeField] private TMP_Text queueTimerText;
     [SerializeField] private TMP_Text findMatchButtonText;
     [SerializeField] private TMP_InputField joinCodeField;
+    [SerializeField] private Toggle teamToggle; //MatchMakeAsync(teamToggle.isOn, OnMatchMade)
 
     private float timeInQueue; // Display
     private bool isMatchMaking;
@@ -75,7 +77,7 @@ public class MainMenu : MonoBehaviour
         // while not alrewady in Q
         // Start Q MatchMaking
         // Pass in Event when method is called
-        ClientSingleton.Instance.GameManager.MatchMakeAsync(OnMatchMade);
+        ClientSingleton.Instance.GameManager.MatchMakeAsync(teamToggle.isOn, OnMatchMade);
         findMatchButtonText.text = "Cancel";
         queueStatusText.text = "Searching ...";
         timeInQueue = 0f;

@@ -40,7 +40,7 @@ public class GameInfo
 
 
 
-    //  UGS MATCHMAKER
+    //  UGS / MATCHMAKER / Queue
     public string ToMultiplayQueue()
     {
         return gameQueue switch
