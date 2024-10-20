@@ -57,29 +57,34 @@ public class MatchplayBackfiller : IDisposable
         BackfillLoop();
     }
 
-    public void AddPlayerToMatch(UserData userData)
-    {
-        if (!IsBackfilling)
-        {
-            Debug.LogWarning("Can't add users to the backfill ticket before it's been created");
-            return;
-        }
 
-        if (GetPlayerById(userData.userAuthId) != null)
-        {
-            Debug.LogWarningFormat("User: {0} - {1} already in Match. Ignoring add.",
-                userData.userName,
-                userData.userAuthId);
+    #region ADD PLAYERS TO A FREINDS TEAM
+    //public void AddPlayerToMatch(UserData userData)
+    //{
+    //    if (!IsBackfilling)
+    //    {
+    //        Debug.LogWarning("Can't add users to the backfill ticket before it's been created");
+    //        return;
+    //    }
+
+    //    if (GetPlayerById(userData.userAuthId) != null)
+    //    {
+    //        Debug.LogWarningFormat("User: {0} - {1} already in Match. Ignoring add.",
+    //            userData.userName,
+    //            userData.userAuthId);
                 
-            return;
-        }
+    //        return;
+    //    }
 
-        Player matchmakerPlayer = new Player(userData.userAuthId, userData.userGamePreferences);
+    //    Player matchmakerPlayer = new Player(userData.userAuthId, userData.userGamePreferences);
 
-        MatchProperties.Players.Add(matchmakerPlayer);
-        MatchProperties.Teams[0].PlayerIds.Add(matchmakerPlayer.Id);
-        localDataDirty = true;
-    }
+    //    MatchProperties.Players.Add(matchmakerPlayer);
+
+    //    // Add player to Team 0
+    //    MatchProperties.Teams[0].PlayerIds.Add(matchmakerPlayer.Id);
+    //    localDataDirty = true;
+    //}
+    #endregion
 
     public int RemovePlayerFromMatch(string userId)
     {
@@ -91,7 +96,13 @@ public class MatchplayBackfiller : IDisposable
         }
 
         MatchProperties.Players.Remove(playerToRemove);
-        MatchProperties.Teams[0].PlayerIds.Remove(userId);
+
+        // Remove player from Team 0
+        //MatchProperties.Teams[0].PlayerIds.Remove(userId);
+
+        // fIND THE tEAM player was on and REMOVE from TEAM
+        GetTeamByUserId(userId).PlayerIds.Remove(userId);
+
         localDataDirty = true;
 
         return MatchPlayerCount;
@@ -100,6 +111,14 @@ public class MatchplayBackfiller : IDisposable
     public bool NeedsPlayers()
     {
         return MatchPlayerCount < maxPlayers;
+    }
+
+    public Team GetTeamByUserId(string userId)
+    {
+        // Get Player's Team
+        return MatchProperties.Teams.FirstOrDefault<Team>(
+            // go thru teams looking for team with this playerID
+            t => t.PlayerIds.Contains(userId));   
     }
 
     private Player GetPlayerById(string userId)
