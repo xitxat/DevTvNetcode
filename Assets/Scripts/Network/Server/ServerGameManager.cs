@@ -126,7 +126,13 @@ public class ServerGameManager : IDisposable
 
     private void UserJoined(UserData user)
     {
-        backfiller.AddPlayerToMatch(user);
+        //backfiller.AddPlayerToMatch(user);
+
+        // ADD Player to Team when Joining
+        Team team = backfiller.GetTeamByUserId(user.userAuthId);
+
+        Debug.Log($"<color=yellow>tName{team.TeamName} : tID{team.TeamId}</color>");
+
         // manual update analytic service (no user data)
         multiplayAllocationService.AddPlayer();
 

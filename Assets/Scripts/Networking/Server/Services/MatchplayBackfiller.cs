@@ -59,6 +59,8 @@ public class MatchplayBackfiller : IDisposable
 
 
     #region ADD PLAYERS TO A FREINDS TEAM
+    // // CURRENTLY AUTOMATICALLY HANDLED VIA MATCHMAKER
+
     //public void AddPlayerToMatch(UserData userData)
     //{
     //    if (!IsBackfilling)
