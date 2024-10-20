@@ -83,10 +83,14 @@ public class Leaderboard : NetworkBehaviour
         }
     }
 
-    // CHANGE :SWITCH stmt, Top 5
+    // UPDATE  stmt, Top 5, cpons
     private void HandleLeaderboardEntitiesChanged(NetworkListEvent<LeaderboardEntityState> changeEvent)
     {
-        Debug.Log($"<color=yellow>Leaderboard change event type: {changeEvent.Type}, ClientId: {changeEvent.Value.ClientId}, Coins: {changeEvent.Value.Coins}</color>");        // query changeEvent if vale changed & how;ie: added, removed, updated
+        // prevent objects spilling over into Memu from Game
+        if (!gameObject.scene.isLoaded) { return; }
+
+        //Debug.Log($"<color=yellow>Leaderboard change event type: {changeEvent.Type}, ClientId: {changeEvent.Value.ClientId}, Coins: {changeEvent.Value.Coins}</color>");        // query changeEvent if vale changed & how;ie: added, removed, updated
+        
         // Add
         switch (changeEvent.Type)
         {

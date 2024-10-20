@@ -1,6 +1,7 @@
 using System;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class ProjectileLauncher : NetworkBehaviour
 
@@ -19,6 +20,11 @@ public class ProjectileLauncher : NetworkBehaviour
     //private InputReader inputReader;
     //private CoinWallet wallet;
     private bool shouldFire;
+
+    // Turn off UI element's Raycast target. to allow click thru
+    // + Leaderboard entities prefab[TMP extra settings]
+    private bool isPointerOverUI; 
+
     private float shotTimer;
     private float muzzleFlashTimer;
 
@@ -68,6 +74,9 @@ public class ProjectileLauncher : NetworkBehaviour
 
         if (!IsOwner) { return; }
 
+        // Clicking "Exit Arena" button
+        isPointerOverUI = EventSystem.current.IsPointerOverGameObject();
+
         if (shotTimer > 0) {shotTimer -= Time.deltaTime;}
 
         if (!shouldFire) { return; } // !LMB
@@ -89,7 +98,7 @@ public class ProjectileLauncher : NetworkBehaviour
 
     }
 
-    // Visuals
+    // VISUALS
     private void SpawnDummyProjectile(Vector3 spawnPos, Vector3 direction)
     {
         muzzleFlash.SetActive(true);
@@ -113,8 +122,15 @@ public class ProjectileLauncher : NetworkBehaviour
 
     }
 
+    // INPUT SHOOT
     private void HandlePrimaryFire(bool shouldFireInput)
     {
+        // LMB
+        if (shouldFireInput) 
+        {
+            if (isPointerOverUI) { return; }
+        }
+
         shouldFire = shouldFireInput;
     }
 
