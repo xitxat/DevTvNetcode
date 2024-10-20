@@ -2888,7 +2888,7 @@ MonoBehaviour:
   onValueChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_IsOn: 1
+  m_IsOn: 0
 --- !u!224 &1383614751
 RectTransform:
   m_ObjectHideFlags: 0
