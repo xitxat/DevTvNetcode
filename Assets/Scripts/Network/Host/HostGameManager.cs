@@ -20,11 +20,11 @@ public class HostGameManager : IDisposable
 {
 
     public NetworkServer NetworkServer { get; private set; } // exposed to TankPlayer (Name extraction)
+    public string JoinCode { get; private set; }
 
     private Allocation allocation;
     private NetworkObject playerPrefab;
 
-    private string joinCode;
     private string lobbyId;
     private const int MaxConnections = 20;
     private const string GameSceneName = "Game";
@@ -54,8 +54,8 @@ public class HostGameManager : IDisposable
         //  Join Code
         try
         {
-            joinCode = await Relay.Instance.GetJoinCodeAsync(allocation.AllocationId);
-            Debug.Log($"<color=teal>Join Code: {joinCode}</color>");
+            JoinCode = await Relay.Instance.GetJoinCodeAsync(allocation.AllocationId);
+            Debug.Log($"<color=teal>Join Code: {JoinCode}</color>");
         }
         catch (Exception e)
         {
@@ -85,7 +85,7 @@ public class HostGameManager : IDisposable
             {
                 { "JoinCode", new DataObject(
                     visibility: DataObject.VisibilityOptions.Member,
-                    value: joinCode)}
+                    value: JoinCode)}
             };
 
             // Ref Player Name to name scene with
