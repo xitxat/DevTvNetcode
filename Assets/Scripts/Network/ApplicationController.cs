@@ -14,6 +14,8 @@ public class ApplicationController : MonoBehaviour
     [SerializeField] private ClientSingleton clientPrefab;
     [SerializeField] private HostSingleton hostPrefab;
     [SerializeField] private ServerSingleton serverPrefab;
+    [SerializeField] private NetworkObject playerPrefab;
+
 
     private ApplicationData appData;
 
@@ -53,7 +55,7 @@ public class ApplicationController : MonoBehaviour
             //  Host(server) ~ throwing null HostSingleton  in Game Scene
             //  Both HostManager & ClientManager prefabs need to be in Scene's DontDestroyOnLoad
             HostSingleton hostSingleton = Instantiate(hostPrefab);
-            hostSingleton.CreateHost();
+            hostSingleton.CreateHost(playerPrefab);
 
             ClientSingleton clientSingleton =  Instantiate(clientPrefab);
             bool authenticated = await clientSingleton.CreateClient();
@@ -85,7 +87,7 @@ public class ApplicationController : MonoBehaviour
 
         // Connect UGS
         //  CREATE dedicated server
-        Task createServerTask =  serverSingleton.CreateServer();
+        Task createServerTask =  serverSingleton.CreateServer(playerPrefab);
         // Not asyny so Task & yield
         yield return new WaitUntil(() => createServerTask.IsCompleted);
 

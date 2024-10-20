@@ -22,10 +22,20 @@ public class HostGameManager : IDisposable
     public NetworkServer NetworkServer { get; private set; } // exposed to TankPlayer (Name extraction)
 
     private Allocation allocation;
+    private NetworkObject playerPrefab;
+
     private string joinCode;
     private string lobbyId;
     private const int MaxConnections = 20;
     private const string GameSceneName = "Game";
+
+
+    // Construct with playerPrefab to Delay PLayer Spawn (passed down from NetworkServer)
+    public HostGameManager(NetworkObject playerPrefab)
+    {
+        this.playerPrefab = playerPrefab;
+    }
+
 
     public async Task StartHostAsync()
     {
@@ -99,7 +109,7 @@ public class HostGameManager : IDisposable
         #region NETWORK SERVER
 
         // Create
-        NetworkServer = new NetworkServer(NetworkManager.Singleton);
+        NetworkServer = new NetworkServer(NetworkManager.Singleton, playerPrefab);
 
         #endregion
 

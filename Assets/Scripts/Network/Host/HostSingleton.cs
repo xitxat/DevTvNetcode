@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Unity.Netcode;
 using UnityEngine;
 
 // Singletons: Global access, no cached refs needed.
@@ -36,9 +37,9 @@ public class HostSingleton : MonoBehaviour
     }
 
     //  No need to await to create
-    public void CreateHost()
+    public void CreateHost(NetworkObject playerPrefab)
     {
-        GameManager = new HostGameManager();
+        GameManager = new HostGameManager(playerPrefab);
 
     }
 
