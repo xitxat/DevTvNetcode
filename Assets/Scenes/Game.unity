@@ -2687,7 +2687,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  lobbyCodeText: {fileID: 0}
+  lobbyCodeText: {fileID: 1612046896}
 --- !u!1 &1612046894
 GameObject:
   m_ObjectHideFlags: 0

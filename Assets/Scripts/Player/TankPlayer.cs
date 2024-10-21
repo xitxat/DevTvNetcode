@@ -61,6 +61,8 @@ public class TankPlayer : NetworkBehaviour
             // & trigger network sync
             PlayerName.Value =  userData.userName;
 
+            Debug.Log($"<color=yellow>Server set PlayerName for ClientId: {OwnerClientId} to {userData.userName}</color>");
+
             OnPlayerSpawned?.Invoke(this);
         }
 

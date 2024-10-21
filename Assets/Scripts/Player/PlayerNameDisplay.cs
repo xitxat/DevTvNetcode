@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using TMPro;
 using Unity.Collections;
 using UnityEngine;
@@ -11,18 +12,32 @@ public class PlayerNameDisplay : MonoBehaviour
 
     void Start()
     {
-        // Force reread / update of name incase of late init
-        HandlePlayerNameChanged(string.Empty, player.PlayerName.Value);
-
-        // Sub to change vale event of Name
-        player.PlayerName.OnValueChanged += HandlePlayerNameChanged;
-
+        StartCoroutine(WaitForPlayerNameSync());
     }
 
     private void HandlePlayerNameChanged(FixedString32Bytes oldName, FixedString32Bytes newName)
     {
+        Debug.Log($"<color=yellow>Player name updated: {newName.ToString()}</color>");
+
         // Set name
         playerNameText.text = newName.ToString();
+    }
+
+
+    // DELAY 4 NAME SYNC
+    private IEnumerator WaitForPlayerNameSync()
+    {
+        // Wait until the PlayerName is not empty (fully synced)
+        while (string.IsNullOrEmpty(player.PlayerName.Value.ToString()))
+        {
+            yield return null; // Wait for the next frame
+        }
+
+        // Once the player name is synced, update the display
+        HandlePlayerNameChanged(string.Empty, player.PlayerName.Value);
+
+        // Sub to change value event of Name to handle any further updates
+        player.PlayerName.OnValueChanged += HandlePlayerNameChanged;
     }
 
     void OnDestroy()
@@ -30,4 +45,7 @@ public class PlayerNameDisplay : MonoBehaviour
         
         player.PlayerName.OnValueChanged -= HandlePlayerNameChanged;
     }
+
+
+
 }
