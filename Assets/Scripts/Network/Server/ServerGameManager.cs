@@ -13,10 +13,12 @@ using System.Collections;
 using System.Text;
 using Unity.Services.Authentication;
 using Unity.Services.Matchmaker.Models;
+using System.Collections.Generic;
 
 // br 5.04
 // serverPort : game
 // queryPort: analyitics
+// Team ID
 public class ServerGameManager : IDisposable
 {
 
@@ -27,6 +29,9 @@ public class ServerGameManager : IDisposable
 
     private MatchplayBackfiller backfiller;
     private MultiplayAllocationService multiplayAllocationService; // Server health ping  via cmd
+
+    // str Matchmaker id / int out Team Index 94 colours)
+    private Dictionary<string, int> teamIdToTeamIndex = new Dictionary<string, int>();
 
 
 
@@ -126,12 +131,23 @@ public class ServerGameManager : IDisposable
 
     private void UserJoined(UserData user)
     {
-        //backfiller.AddPlayerToMatch(user);
+                //backfiller.AddPlayerToMatch(user);
 
         // ADD Player to Team when Joining
         Team team = backfiller.GetTeamByUserId(user.userAuthId);
 
-        Debug.Log($"<color=yellow>user{user.userAuthId} : tID{team.TeamId}</color>");
+        // check if user joining team is already in Dict/ or in game
+        if(!teamIdToTeamIndex.TryGetValue(team.TeamId, out int teamIndex))
+        {
+            // first person to join, add to dict
+            teamIndex = teamIdToTeamIndex.Count;
+            teamIdToTeamIndex.Add(team.TeamId, teamIndex);
+        }
+        // Do find team, assign player
+        user.teamIndex = teamIndex;
+
+
+                //Debug.Log($"<color=yellow>user{user.userAuthId} : tID{team.TeamId}</color>");
 
         // manual update analytic service (no user data)
         multiplayAllocationService.AddPlayer();

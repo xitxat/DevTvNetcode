@@ -27,8 +27,9 @@ public class TankPlayer : NetworkBehaviour
     [SerializeField] private Color ownerColor;
 
 
-    //  Sync names. Cant sync normal strings.
+    //  Sync names, Team index[colours]. Cant sync normal strings.
     public NetworkVariable<FixedString32Bytes> PlayerName = new NetworkVariable<FixedString32Bytes>();
+    public NetworkVariable<int> TeamIndex = new NetworkVariable<int>();
 
     // Server only invocation
     public static event Action<TankPlayer> OnPlayerSpawned;
@@ -60,7 +61,7 @@ public class TankPlayer : NetworkBehaviour
             // Bexause we are server, set Value now
             // & trigger network sync
             PlayerName.Value =  userData.userName;
-
+            TeamIndex.Value = userData.teamIndex;
             Debug.Log($"<color=yellow>Server set PlayerName for ClientId: {OwnerClientId} to {userData.userName}</color>");
 
             OnPlayerSpawned?.Invoke(this);

@@ -25,6 +25,7 @@ public class UserData
 
     public string userName;
     public string userAuthId;
+    public int teamIndex = -1; // solo play = -1, team set in code
 
     // What the useer wants to play
     public GameInfo userGamePreferences = new GameInfo();
