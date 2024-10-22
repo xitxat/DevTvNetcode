@@ -71,7 +71,7 @@ public class NetworkServer : IDisposable
     // sync time, avoid racing spawner
     private async Task SpawnPlayerDelayed(ulong clientId, UserData userData)
     {
-        await Task.Delay(1000);
+        await Task.Delay(1500);
 
         // Assign a random spawn position 
         Vector3 randomSpawnPos = SpawnPoint.GetRandomSpawnPos();
