@@ -62,15 +62,27 @@ public class TankPlayer : NetworkBehaviour
             // DEDICATED SERVER
             else
             {
-                if (ServerSingleton.Instance == null || ServerSingleton.Instance.GameManager == null || ServerSingleton.Instance.GameManager.NetworkServer == null)
+                // Enhanced null check with detailed logging for dedicated server
+                if (ServerSingleton.Instance == null)
                 {
-                    Debug.LogError("ServerSingleton, GameManager, or NetworkServer is null in OnNetworkSpawn on server.");
+                    Debug.LogError("ServerSingleton.Instance is null in OnNetworkSpawn on server.");
                     return;
                 }
-
-
-                userData =
-                    ServerSingleton.Instance.GameManager.NetworkServer.GetUserDataByClientId(OwnerClientId);
+                else if (ServerSingleton.Instance.GameManager == null)
+                {
+                    Debug.LogError("ServerSingleton.Instance.GameManager is null in OnNetworkSpawn on server.");
+                    return;
+                }
+                else if (ServerSingleton.Instance.GameManager.NetworkServer == null)
+                {
+                    Debug.LogError("ServerSingleton.Instance.GameManager.NetworkServer is null in OnNetworkSpawn on server.");
+                    return;
+                }
+                else
+                {
+                    // All necessary objects exist, proceed to get user data
+                    userData = ServerSingleton.Instance.GameManager.NetworkServer.GetUserDataByClientId(OwnerClientId);
+                }
             }
 
 
