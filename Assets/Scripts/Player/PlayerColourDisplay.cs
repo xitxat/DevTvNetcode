@@ -6,12 +6,14 @@ public class PlayerColourDisplay : MonoBehaviour
 {
     [SerializeField] private TeamColourLookup teamColourLookup;
     [SerializeField] private TankPlayer player;
+    // Treads Body, Turret
     [SerializeField] private SpriteRenderer[] playerSprites;
 
     void Start()
     {
         // Force Update
         HandleTeamChanged(-1, player.TeamIndex.Value);
+
         player.TeamIndex.OnValueChanged += HandleTeamChanged;
     }
 
@@ -21,8 +23,14 @@ public class PlayerColourDisplay : MonoBehaviour
 
     }
 
-    private void HandleTeamChanged(int previousValue, int newValue)
+    private void HandleTeamChanged(int oldTeamIndex, int newTeamIndex)
     {
-        throw new NotImplementedException();
+        Color teamColour = teamColourLookup.GetTeamColour(newTeamIndex);
+
+        foreach(SpriteRenderer sprite in playerSprites)
+        {
+            sprite.color = teamColour;
+        }
     }
+
 }

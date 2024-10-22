@@ -15574,10 +15574,10 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 0.25
+  m_fontSize: 0.3
   m_fontSizeBase: 0.25
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 0
   m_fontSizeMax: 72
   m_fontStyle: 0
@@ -15628,6 +15628,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1127866828773146448}
   - component: {fileID: 7371336718805641653}
+  - component: {fileID: 2362955163416909419}
   - component: {fileID: 2595088403885638078}
   - component: {fileID: 5609016051460277736}
   m_Layer: 0
@@ -15711,6 +15712,23 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &2362955163416909419
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7795541814640561098}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b892f533b7a46f94d90e772bb093c1da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  teamColourLookup: {fileID: 11400000, guid: 642b93dde2ad8074eaa8c613d47b030f, type: 2}
+  player: {fileID: 4052719424288594010}
+  playerSprites:
+  - {fileID: 6986637298275601678}
+  - {fileID: 6179481081046856094}
 --- !u!61 &2595088403885638078
 BoxCollider2D:
   m_ObjectHideFlags: 0
