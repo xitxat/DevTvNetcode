@@ -11,7 +11,7 @@ using UnityEngine;
 public class TankPlayer : NetworkBehaviour
 {
     //  Sync names, Team index[colours]. Cant sync normal strings.  .VALUE
-    public NetworkVariable<FixedString32Bytes> PlayerName = new NetworkVariable<FixedString32Bytes>("¦|");
+    public NetworkVariable<FixedString32Bytes> PlayerName = new NetworkVariable<FixedString32Bytes>(new FixedString32Bytes(""));
     public NetworkVariable<int> TeamIndex = new NetworkVariable<int>(0);
 
 
