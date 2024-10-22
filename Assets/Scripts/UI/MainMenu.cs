@@ -4,6 +4,7 @@ using Unity.Services.Lobbies.Models;
 using Unity.Services.Lobbies;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Threading.Tasks;
 
 public class MainMenu : MonoBehaviour
 {
@@ -22,10 +23,18 @@ public class MainMenu : MonoBehaviour
     private bool isCancelling;
 
 
-    private void Start()
+    private async void Start()
     {
+        // Wait until the ClientSingleton and GameManager are ready
+        while (ClientSingleton.Instance == null || ClientSingleton.Instance.GameManager == null)
+        {
+            await Task.Delay(100); // Wait 100ms and retry
+        }
+
+
+
         // Set for Clients only
-        if (ClientSingleton.Instance == null) { return;  }
+        //if (ClientSingleton.Instance == null) { return;  }
 
         // Set cursor to default
         Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
