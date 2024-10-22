@@ -8,6 +8,8 @@ using UnityEngine.SceneManagement;
 // br 5.04
 // Called by Client / Host / Server to establish Singleton
 // On Client Auth GoTo Menu scene
+
+// Refkr: Move Scene Loading after Server Initialization
 public class ApplicationController : MonoBehaviour
 {
 
@@ -45,8 +47,23 @@ public class ApplicationController : MonoBehaviour
             // Spawn in Prefab
             ServerSingleton serverSingleton = Instantiate(serverPrefab);
 
-            // Connect UGS
+            // Initialize the server before loading the scene
+            await serverSingleton.CreateServer(playerPrefab);
+
+            // Ensure GameManager is initialized
+            if (serverSingleton.GameManager == null)
+            {
+                Debug.LogError("GameManager is null after CreateServer, aborting server startup.");
+                return;
+            }
+
+
+
+            // Load the Game Scene // Connect UGS
             StartCoroutine(LoadGameSceneAsync(serverSingleton));
+
+            // Start the game server after the scene is loaded
+            await serverSingleton.GameManager.StartGameServerAsync();
 
         }
         else
