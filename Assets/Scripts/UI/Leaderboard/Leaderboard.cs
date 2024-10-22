@@ -217,6 +217,7 @@ public class Leaderboard : NetworkBehaviour
         {
             ClientId = player.OwnerClientId,
             PlayerName = player.PlayerName.Value,
+            TeamIndex = player.TeamIndex.Value,
             Coins = 0
         });
 
@@ -268,7 +269,7 @@ public class Leaderboard : NetworkBehaviour
                 // static
                 ClientId = leaderboardEntities[i].ClientId,
                 PlayerName = leaderboardEntities[i].PlayerName,
-
+                TeamIndex = leaderboardEntities[i].TeamIndex,
                 // dynamic
                 Coins = newCoins
             };
