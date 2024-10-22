@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Unity.Netcode;
 using Unity.Services.Core;
@@ -43,19 +44,38 @@ public class ServerSingleton : MonoBehaviour
     //  UGS
     public async Task CreateServer(NetworkObject playerPrefab)
     {
-        await UnityServices.InitializeAsync();
+        try
+        {
+            await UnityServices.InitializeAsync();
 
-        // Read in Networking> Application data from cmd (App~Data)
-        // Send to ServerGameManager
-        GameManager = new ServerGameManager(
-            ApplicationData.IP(),
-            ApplicationData.Port(),
-            ApplicationData.QPort(),
-            NetworkManager.Singleton,
-            playerPrefab
+            if (NetworkManager.Singleton == null)
+            {
+                Debug.LogError("NetworkManager is null, server cannot start.");
+                return;
+            }
+
+            GameManager = new ServerGameManager(
+                ApplicationData.IP(),
+                ApplicationData.Port(),
+                ApplicationData.QPort(),
+                NetworkManager.Singleton,
+                playerPrefab
             );
 
+            Debug.Log("ServerGameManager created successfully.");
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"Error initializing the server: {e.Message}");
+            GameManager = null; // Explicitly set to null in case of failure
+        }
+
+        if (GameManager == null)
+        {
+            Debug.LogError("GameManager is null after CreateServer. Check initialization.");
+        }
     }
+
 
     private void OnDestroy()
     {

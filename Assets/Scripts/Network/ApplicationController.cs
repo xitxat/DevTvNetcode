@@ -58,7 +58,6 @@ public class ApplicationController : MonoBehaviour
             }
 
 
-
             // Load the Game Scene // Connect UGS
             StartCoroutine(LoadGameSceneAsync(serverSingleton));
 
