@@ -206,6 +206,28 @@ public class Leaderboard : NetworkBehaviour
                     myDisplay.gameObject.SetActive(true);
                 }
             }
+
+            if (!teamLeaderboardBackground.activeSelf) { return; }
+
+            // get team we belong to
+            LeaderboardEntityDisplay teamDisplay =
+                teamEntityDisplays.FirstOrDefault(x => x.TeamIndex == changeEvent.Value.TeamIndex);
+
+            // Add player points to team points
+            if(teamDisplay != null)
+            {
+                // Player Leaves game
+                if(changeEvent.Type == NetworkListEvent<LeaderboardEntityState>.EventType.Remove)
+                {
+                    // Remove their coins
+                    teamDisplay.UpdateCoins(teamDisplay.Coins - changeEvent.Value.Coins);
+                }
+                else
+                { // Update team coins with your + / - coin value
+                    teamDisplay.UpdateCoins(
+                        teamDisplay.Coins + (changeEvent.Value.Coins - changeEvent.PreviousValue.Coins));
+                }
+            }
         }
     }
 
