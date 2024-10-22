@@ -7,7 +7,7 @@ public class ProjectileLauncher : NetworkBehaviour
 
 {
     [Header("References")]
-    //[SerializeField] private TankPlayer player;
+    [SerializeField] private TankPlayer player; // ref team index
     [SerializeField] private InputReader inputReader;
     [SerializeField] private CoinWallet wallet;
     [SerializeField] private Transform projectileSpawnPoint;
@@ -91,36 +91,13 @@ public class ProjectileLauncher : NetworkBehaviour
         //  make visable THIS clients projectiles to all other clients
         PrimaryFireServerRpc(projectileSpawnPoint.position, projectileSpawnPoint.up);
         //   This client see's its proj
-        SpawnDummyProjectile(projectileSpawnPoint.position, projectileSpawnPoint.up);
+        SpawnDummyProjectile(projectileSpawnPoint.position, projectileSpawnPoint.up, player.TeamIndex.Value);
 
         //  Reset Fire rate
         shotTimer = timeBetweenShots;
 
     }
 
-    // VISUALS
-    private void SpawnDummyProjectile(Vector3 spawnPos, Vector3 direction)
-    {
-        muzzleFlash.SetActive(true);
-        muzzleFlashTimer = muzzleFlashDuration;
-
-        GameObject projectileInstance = Instantiate(
-            clientProjectilePrefab, 
-            spawnPos, 
-            Quaternion.identity);
-
-        projectileInstance.transform.up = direction; // same as barrel
-
-        // Dont shoot self
-        Physics2D.IgnoreCollision(playerCollider, projectileInstance.GetComponent<Collider2D>());
-
-        // Move Projectile / access via out. 2D:.up, 3D:forward
-        if(projectileInstance.TryGetComponent<Rigidbody2D>(out Rigidbody2D rb))
-        {
-            rb.linearVelocity = rb.transform.up * projectileSpeed;
-        }
-
-    }
 
     // INPUT SHOOT
     private void HandlePrimaryFire(bool shouldFireInput)
@@ -157,12 +134,20 @@ public class ProjectileLauncher : NetworkBehaviour
         Physics2D.IgnoreCollision(playerCollider, projectileInstance.GetComponent<Collider2D>());
 
 
-        //  DEAL DAMAGE
-        if (projectileInstance.TryGetComponent<DealDamageOnContact>(out DealDamageOnContact dealDamage))
+        //  FRIENDLY FIRE
+        if (projectileInstance.TryGetComponent<Projectile>(out Projectile projectile))
         {
-            // this scripts owner Id / ie; Parent
-            dealDamage.SetOwner(OwnerClientId);
+            // set owner
+            projectile.Initialise(player.TeamIndex.Value);
         }
+
+
+        ////  DEAL DAMAGE
+        //if (projectileInstance.TryGetComponent<DealDamageOnContact>(out DealDamageOnContact dealDamage))
+        //{
+        //    // this scripts owner Id / ie; Parent
+        //    dealDamage.SetOwner(OwnerClientId);
+        //}
 
 
         // MOVE PROJECTILE / access via out
@@ -171,20 +156,49 @@ public class ProjectileLauncher : NetworkBehaviour
             rb.linearVelocity = rb.transform.up * projectileSpeed;
         }
 
-        SpawnDummyProjectileClientRpc( spawnPos,  direction);
+        SpawnDummyProjectileClientRpc( spawnPos,  direction, player.TeamIndex.Value);
     }
 
     // Update CLIENTs & swap in dummy projectile
     [ClientRpc]
-    private void SpawnDummyProjectileClientRpc(Vector3 spawnPos, Vector3 direction)
+    private void SpawnDummyProjectileClientRpc(Vector3 spawnPos, Vector3 direction, int teamIndex)
     {
         // Owner already has the dummy obj
         if (IsOwner) { return; }
         
-        SpawnDummyProjectile(spawnPos, direction); 
+        SpawnDummyProjectile(spawnPos, direction, teamIndex); 
 
     }
 
+    // VISUALS
+    private void SpawnDummyProjectile(Vector3 spawnPos, Vector3 direction, int teamIndex)
+    {
+        muzzleFlash.SetActive(true);
+        muzzleFlashTimer = muzzleFlashDuration;
 
+        GameObject projectileInstance = Instantiate(
+            clientProjectilePrefab,
+            spawnPos,
+            Quaternion.identity);
+
+        projectileInstance.transform.up = direction; // same as barrel
+
+        // Dont shoot self
+        Physics2D.IgnoreCollision(playerCollider, projectileInstance.GetComponent<Collider2D>());
+
+        //  FRIENDLY FIRE
+        if (projectileInstance.TryGetComponent<Projectile>(out Projectile projectile))
+        {
+            // set owner
+            projectile.Initialise(teamIndex);
+        }
+
+        // Move Projectile / access via out. 2D:.up, 3D:forward
+        if (projectileInstance.TryGetComponent<Rigidbody2D>(out Rigidbody2D rb))
+        {
+            rb.linearVelocity = rb.transform.up * projectileSpeed;
+        }
+
+    }
 
 }

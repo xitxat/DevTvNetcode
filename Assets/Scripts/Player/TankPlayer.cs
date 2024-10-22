@@ -10,6 +10,10 @@ using UnityEngine;
 //      COLOURS [Team index]
 public class TankPlayer : NetworkBehaviour
 {
+    //  Sync names, Team index[colours]. Cant sync normal strings.  .VALUE
+    public NetworkVariable<FixedString32Bytes> PlayerName = new NetworkVariable<FixedString32Bytes>();
+    public NetworkVariable<int> TeamIndex = new NetworkVariable<int>();
+
 
     [Header("Refs")]
     [SerializeField] private CinemachineCamera virtualCamera;
@@ -28,9 +32,6 @@ public class TankPlayer : NetworkBehaviour
     [SerializeField] private Color ownerColor;
 
 
-    //  Sync names, Team index[colours]. Cant sync normal strings.
-    public NetworkVariable<FixedString32Bytes> PlayerName = new NetworkVariable<FixedString32Bytes>();
-    public NetworkVariable<int> TeamIndex = new NetworkVariable<int>();
 
     // Server only invocation
     public static event Action<TankPlayer> OnPlayerSpawned;
