@@ -8,10 +8,14 @@ public class DestroySelfOnContact : MonoBehaviour
         // If NOT playing SOLO
         if (projectile.TeamIndex != -1)
         {
-            // Friendly Fire check for teams
-            if (collision.TryGetComponent<TankPlayer>(out TankPlayer player))
+            // Only interact with Rigidbodies
+            if (collision.attachedRigidbody != null)
             {
-                if (player.TeamIndex.Value == projectile.TeamIndex) { return; }
+                // Friendly Fire check for teams
+                if (collision.attachedRigidbody.TryGetComponent<TankPlayer>(out TankPlayer player))
+                {
+                    if (player.TeamIndex.Value == projectile.TeamIndex) { return; }
+                }
             }
         }
 

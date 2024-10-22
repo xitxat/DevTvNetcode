@@ -1,31 +1,33 @@
 using Unity.Netcode;
 using UnityEngine;
 
+
 //  ADD CALL FROM PROJECTILE LAUNCHER SERVER RPC
 //  ADD TO SERVER PROJECTILE PREFAB
+
 public class DealDamageOnContact : MonoBehaviour
 {
-
+    [SerializeField] private Projectile projectile;
     [SerializeField] private int damage = 5;
 
 
-    private ulong ownerClientId;
 
-    //  Currently we own: Ourself and Projectiles
-    public void SetOwner(ulong ownerClientId)
-    {
-        this.ownerClientId = ownerClientId;
-    }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.attachedRigidbody == null) { return; }
 
-        //  Don't damage self via ClientId ulong
-        if (collision.attachedRigidbody.TryGetComponent<NetworkObject>(out NetworkObject netObj))
+        // If Playing TEAMS
+        if(projectile.TeamIndex != -1)
         {
-            if (ownerClientId == netObj.OwnerClientId) { return; }
+            //  Don't damage self & teammates
+            if (collision.attachedRigidbody.TryGetComponent<TankPlayer>(out TankPlayer player))
+            {
+                if (player.TeamIndex.Value == projectile.TeamIndex) { return; }
+            }
         }
+
+
 
         //  Pass on damage value
         if (collision.attachedRigidbody.TryGetComponent<Health>(out Health health))
