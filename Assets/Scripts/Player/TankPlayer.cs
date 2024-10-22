@@ -41,18 +41,34 @@ public class TankPlayer : NetworkBehaviour
     {
         if (IsServer)
         {
+            Debug.Log("OnNetworkSpawn called on the server");
 
             UserData userData = null;
 
+            // HOST
             if (IsHost)
             {
+                if (HostSingleton.Instance == null || HostSingleton.Instance.GameManager == null || HostSingleton.Instance.GameManager.NetworkServer == null)
+                {
+                    Debug.LogError("HostSingleton, GameManager, or NetworkServer is null in OnNetworkSpawn on server.");
+                    return;
+                }
+
                 // Get Players name (Pass in OwnersId & get name) returns User data obj
                 userData =
                    HostSingleton.Instance.GameManager.NetworkServer.GetUserDataByClientId(OwnerClientId);
             }
+
+            // DEDICATED SERVER
             else
             {
-                // DEDICATED SERVER
+                if (ServerSingleton.Instance == null || ServerSingleton.Instance.GameManager == null || ServerSingleton.Instance.GameManager.NetworkServer == null)
+                {
+                    Debug.LogError("ServerSingleton, GameManager, or NetworkServer is null in OnNetworkSpawn on server.");
+                    return;
+                }
+
+
                 userData =
                     ServerSingleton.Instance.GameManager.NetworkServer.GetUserDataByClientId(OwnerClientId);
             }
@@ -60,11 +76,53 @@ public class TankPlayer : NetworkBehaviour
 
 
 
-            // Bexause we are server, set Value now
+            // Because we are server, set Value now
             // & trigger network sync
-            PlayerName.Value =  userData.userName;
-            TeamIndex.Value = userData.teamIndex;
-            Debug.Log($"<color=yellow>Server set PlayerName for ClientId: {OwnerClientId} to {userData.userName}</color>");
+            //PlayerName.Value =  userData.userName;
+            //TeamIndex.Value = userData.teamIndex;
+            //Debug.Log($"<color=yellow>Server set PlayerName for ClientId: {OwnerClientId} to {userData.userName}</color>");
+
+            if (userData == null)
+            {
+                Debug.LogError($"UserData for ClientId {OwnerClientId} is null on the server.");
+                return;
+            }
+
+            // Check if PlayerName or TeamIndex is null before accessing them
+            if (PlayerName == null)
+            {
+                Debug.LogError($"PlayerName NetworkVariable is null for ClientId {OwnerClientId} on the server.");
+            }
+            else
+            {
+                try
+                {
+                    PlayerName.Value = userData.userName;
+                    Debug.Log($"<color=yellow>Server set PlayerName for ClientId {OwnerClientId} to {userData.userName}</color>");
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogError($"Exception setting PlayerName for ClientId {OwnerClientId} on server: {ex.Message}");
+                }
+            }
+
+            if (TeamIndex == null)
+            {
+                Debug.LogError($"TeamIndex NetworkVariable is null for ClientId {OwnerClientId} on the server.");
+            }
+            else
+            {
+                try
+                {
+                    TeamIndex.Value = userData.teamIndex;
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogError($"Exception setting TeamIndex for ClientId {OwnerClientId} on server: {ex.Message}");
+                }
+            }
+
+
 
             OnPlayerSpawned?.Invoke(this);
         }
@@ -78,12 +136,11 @@ public class TankPlayer : NetworkBehaviour
 
             // V2: middle of Cursor circle
             Cursor.SetCursor(crosshair, new Vector2(
-                crosshair.width / 2, 
+                crosshair.width / 2,
                 crosshair.height / 2),
                 CursorMode.Auto);
         }
     }
-
     public override void OnNetworkDespawn()
     {
         if (IsServer)
