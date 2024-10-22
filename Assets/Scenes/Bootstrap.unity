@@ -649,7 +649,7 @@ GameObject:
   - component: {fileID: 585324710}
   - component: {fileID: 585324709}
   m_Layer: 0
-  m_Name: ConnectButton
+  m_Name: SetNameButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1419,7 +1419,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd9cf71726c8a0f4fbc2239f29241b6b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  queueStatusText: {fileID: 0}
+  queueTimerText: {fileID: 0}
+  findMatchButtonText: {fileID: 0}
   joinCodeField: {fileID: 0}
+  teamToggle: {fileID: 0}
+  privateToggle: {fileID: 0}
 --- !u!1 &1555198098
 GameObject:
   m_ObjectHideFlags: 0
