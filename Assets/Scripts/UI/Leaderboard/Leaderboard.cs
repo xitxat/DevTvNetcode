@@ -227,6 +227,15 @@ public class Leaderboard : NetworkBehaviour
                     teamDisplay.UpdateCoins(
                         teamDisplay.Coins + (changeEvent.Value.Coins - changeEvent.PreviousValue.Coins));
                 }
+
+                // SORT
+                teamEntityDisplays.Sort((x, y) => y.Coins.CompareTo(x.Coins));
+
+                for (int i = 0; i < teamEntityDisplays.Count; i++)
+                {
+                    teamEntityDisplays[i].transform.SetSiblingIndex(i);
+                    teamEntityDisplays[i].UpdateText();
+                }
             }
         }
     }
