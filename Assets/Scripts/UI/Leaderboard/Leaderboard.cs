@@ -231,10 +231,10 @@ public class Leaderboard : NetworkBehaviour
                 // SORT
                 teamEntityDisplays.Sort((x, y) => y.Coins.CompareTo(x.Coins));
 
-                for (int i = 0; i < teamEntityDisplays.Count; i++)
+                for (int k = 0; k < teamEntityDisplays.Count; k++)
                 {
-                    teamEntityDisplays[i].transform.SetSiblingIndex(i);
-                    teamEntityDisplays[i].UpdateText();
+                    teamEntityDisplays[k].transform.SetSiblingIndex(k);
+                    teamEntityDisplays[k].UpdateText();
                 }
             }
         }
