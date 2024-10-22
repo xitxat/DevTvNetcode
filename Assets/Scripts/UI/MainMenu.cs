@@ -54,6 +54,20 @@ public class MainMenu : MonoBehaviour
     {
         if (isCancelling) { return; }
 
+        // L81 Checks
+        if (ClientSingleton.Instance == null)
+        {
+            Debug.LogError("ClientSingleton.Instance is null!");
+            return;
+        }
+
+        if (ClientSingleton.Instance.GameManager == null)
+        {
+            Debug.LogError("ClientSingleton.Instance.GameManager is null!");
+            return;
+        }
+
+
         // Qing
         if (isMatchMaking) 
         {
