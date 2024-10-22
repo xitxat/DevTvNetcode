@@ -1,0 +1,23 @@
+Steps to Solve the Issue:
+Restructured Server Initialization Flow:
+
+Moved the CreateServer call to before the scene load in ApplicationController.cs, ensuring that the ServerGameManager and all server-related components are initialized before any networked objects are spawned in the scene.
+Ensured GameManager is Not Null Before Proceeding:
+
+Added explicit checks to confirm that GameManager is properly initialized after calling CreateServer.
+If GameManager is null after initialization, we log an error and stop further execution, preventing potential runtime failures.
+Enhanced Error Logging for Server Creation:
+
+In CreateServer, added more detailed error handling to catch any issues that may prevent the ServerGameManager from being initialized. This ensures that failures during server setup are clearly visible in the logs.
+Adjusted the Flow of Scene Loading:
+
+Modified the flow to:
+Instantiate the ServerSingleton.
+Initialize the server by calling CreateServer.
+Ensure that GameManager is properly initialized.
+Only then, load the game scene and start the server.
+Added Detailed Execution Flow for "Find Match" Button:
+
+Documented the full execution order from the "Find Match" button press, through server instantiation, scene loading, and network server startup.
+Outcome:
+With these changes, we ensure that ServerSingleton.Instance.GameManager is properly initialized before any network operations, preventing null reference errors during player spawning.
