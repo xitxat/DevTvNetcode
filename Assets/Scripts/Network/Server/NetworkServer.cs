@@ -5,7 +5,14 @@ using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
 using UnityEngine;
 
-// HostGameManager creates this class
+//  NetworkServer:critical component needed for the server to operate properly.
+//  ServerGameManager is responsible for starting the network server:
+//  HostGameManager creates this class
+//
+//      client connections
+//      user data
+//      player spawning
+
 public class NetworkServer : IDisposable
 {
     private NetworkManager networkManager;
