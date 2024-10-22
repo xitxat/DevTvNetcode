@@ -15206,9 +15206,9 @@ GameObject:
   - component: {fileID: 7326978714324283321}
   - component: {fileID: 3480034870280590461}
   - component: {fileID: 4052719424288594010}
+  - component: {fileID: -2516197265674479019}
   - component: {fileID: 858216611189300459}
   - component: {fileID: 410092431257504717}
-  - component: {fileID: -2516197265674479019}
   - component: {fileID: 7614312315832765601}
   - component: {fileID: 8896915746589266054}
   m_Layer: 0
@@ -15250,7 +15250,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 3497915201
+  GlobalObjectIdHash: 4130735069
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -15339,13 +15339,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  virtualCamera: {fileID: 9048162145284919357}
-  minimapIconRenderer: {fileID: 6243822134143807579}
-  crosshair: {fileID: 2800000, guid: 0a07aa6c8e0036a4e986443af5afbbd3, type: 3}
-  <Health>k__BackingField: {fileID: 7614312315832765601}
-  <Wallet>k__BackingField: {fileID: 8896915746589266054}
-  ownerPriority: 15
-  ownerColor: {r: 0, g: 0.9301295, b: 1, a: 1}
   PlayerName:
     m_InternalValue:
       utf8LengthInBytes: 0
@@ -15383,6 +15376,38 @@ MonoBehaviour:
         byte0029: 0
   TeamIndex:
     m_InternalValue: 0
+  virtualCamera: {fileID: 9048162145284919357}
+  minimapIconRenderer: {fileID: 6243822134143807579}
+  crosshair: {fileID: 2800000, guid: 0a07aa6c8e0036a4e986443af5afbbd3, type: 3}
+  <Health>k__BackingField: {fileID: 7614312315832765601}
+  <Wallet>k__BackingField: {fileID: 8896915746589266054}
+  ownerPriority: 15
+  ownerColor: {r: 0, g: 0.9301295, b: 1, a: 1}
+--- !u!114 &-2516197265674479019
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6364961043030692070}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2fac1cb891f6f4341888d0bcceb66d70, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  player: {fileID: 4052719424288594010}
+  inputReader: {fileID: 11400000, guid: ad3991ec657e55747981b799ecef4291, type: 2}
+  wallet: {fileID: 8896915746589266054}
+  projectileSpawnPoint: {fileID: 2598315931960266877}
+  clientProjectilePrefab: {fileID: 6090261579438306371, guid: 6752bbf1682801140bbc7e19a2698eeb, type: 3}
+  serverProjectilePrefab: {fileID: 4908301232823005165, guid: 7f93c51add1296446a507ccfd85ec347, type: 3}
+  muzzleFlash: {fileID: 5952233466444134703}
+  playerCollider: {fileID: 2595088403885638078}
+  projectileSpeed: 30
+  fireRate: 1
+  muzzleFlashDuration: 0.1
+  costToFire: 2
 --- !u!114 &858216611189300459
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15418,30 +15443,6 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   inputReader: {fileID: 11400000, guid: ad3991ec657e55747981b799ecef4291, type: 2}
   turretTransform: {fileID: 4356765154840552022}
---- !u!114 &-2516197265674479019
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6364961043030692070}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2fac1cb891f6f4341888d0bcceb66d70, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  inputReader: {fileID: 11400000, guid: ad3991ec657e55747981b799ecef4291, type: 2}
-  wallet: {fileID: 8896915746589266054}
-  projectileSpawnPoint: {fileID: 2598315931960266877}
-  clientProjectilePrefab: {fileID: 6090261579438306371, guid: 6752bbf1682801140bbc7e19a2698eeb, type: 3}
-  serverProjectilePrefab: {fileID: 4908301232823005165, guid: 7f93c51add1296446a507ccfd85ec347, type: 3}
-  muzzleFlash: {fileID: 5952233466444134703}
-  playerCollider: {fileID: 2595088403885638078}
-  projectileSpeed: 30
-  fireRate: 1
-  muzzleFlashDuration: 0.1
-  costToFire: 2
 --- !u!114 &7614312315832765601
 MonoBehaviour:
   m_ObjectHideFlags: 0
