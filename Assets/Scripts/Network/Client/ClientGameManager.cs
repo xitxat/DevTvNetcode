@@ -15,11 +15,11 @@ using Unity.Services.Authentication;
 //  IDisposable: gain access to monobehaviours
 public class ClientGameManager : IDisposable
 {
+    public UserData UserData { get; private set; }
 
     private JoinAllocation allocation;
     private NetworkClient networkClient;
     private MatchplayMatchmaker matchmaker; //>Services
-    private UserData userData;
 
     private const string MenuSceneName = "Menu";
     private const string GameSceneName = "Game";
@@ -46,7 +46,7 @@ public class ClientGameManager : IDisposable
         {
             // Set Data from Network Server ApprovalCheck()
             // user prefs like solo, team
-            userData = new UserData
+            UserData = new UserData
             {
                 userName = PlayerPrefs.GetString(NameSelector.PlayerNameKey, "NoNameO"),
                 userAuthId = AuthenticationService.Instance.PlayerId
@@ -108,7 +108,7 @@ public class ClientGameManager : IDisposable
     {
         // Generic Server Connection
         // Repackage Package: JSON <=> Byte Array
-        string payload = JsonUtility.ToJson(userData);
+        string payload = JsonUtility.ToJson(UserData);
         byte[] payloadBytes = Encoding.UTF8.GetBytes(payload);
 
         // Send over network on Connecting to Server
@@ -130,7 +130,7 @@ public class ClientGameManager : IDisposable
         if (matchmaker.IsMatchmaking) { return; }
 
         //  Add Q enum to user prefs.   ? t/f ["Find Match" Team toggle] br6.02
-        userData.userGamePreferences.gameQueue = isTeamQueue ? GameQueue.Team : GameQueue.Solo;
+        UserData.userGamePreferences.gameQueue = isTeamQueue ? GameQueue.Team : GameQueue.Solo;
 
         // get match and populate matchResult enum Success /error
         MatchmakerPollingResult matchResult =  await GetMatchAsync();
@@ -144,7 +144,7 @@ public class ClientGameManager : IDisposable
     // br 5.07, 08
     private async Task<MatchmakerPollingResult> GetMatchAsync()
     {
-        MatchmakingResult matchmakingResult = await matchmaker.Matchmake(userData);
+        MatchmakingResult matchmakingResult = await matchmaker.Matchmake(UserData);
 
         if (matchmakingResult.result == MatchmakerPollingResult.Success)
         {
