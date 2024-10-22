@@ -7,6 +7,7 @@ using UnityEngine;
 //          CUSTOMISE .THIS PLAYER
 //      NAME
 //      CINEMACHINE
+//      COLOURS [Team index]
 public class TankPlayer : NetworkBehaviour
 {
 

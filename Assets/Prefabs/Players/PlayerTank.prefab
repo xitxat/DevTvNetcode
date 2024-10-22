@@ -15250,7 +15250,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 4130735069
+  GlobalObjectIdHash: 3497915201
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -15381,6 +15381,8 @@ MonoBehaviour:
         byte0027: 0
         byte0028: 0
         byte0029: 0
+  TeamIndex:
+    m_InternalValue: 0
 --- !u!114 &858216611189300459
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15545,10 +15547,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 
+  m_text: 12345679
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: d0ee2986a9228714a943bc8154f25146, type: 2}
-  m_sharedMaterial: {fileID: -932232549219511178, guid: d0ee2986a9228714a943bc8154f25146, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 5302535af1044152a457ed104f1f4b91, type: 2}
+  m_sharedMaterial: {fileID: 2164040, guid: 5302535af1044152a457ed104f1f4b91, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -15572,10 +15574,10 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 14
-  m_fontSizeBase: 14
+  m_fontSize: 0.25
+  m_fontSizeBase: 0.25
   m_fontWeight: 400
-  m_enableAutoSizing: 1
+  m_enableAutoSizing: 0
   m_fontSizeMin: 0
   m_fontSizeMax: 72
   m_fontStyle: 0
