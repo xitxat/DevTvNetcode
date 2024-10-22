@@ -64,7 +64,19 @@ public class ApplicationController : MonoBehaviour
             // Go to menu
             if (authenticated)
             {
-                clientSingleton.GameManager.GoToMenu();
+                // Ensure GameManager is initialized
+                if (clientSingleton.GameManager == null)
+                {
+                    Debug.LogError("GameManager not initialized after client authentication.");
+                }
+                else
+                {
+                    clientSingleton.GameManager.GoToMenu();
+                }
+            }
+            else
+            {
+                Debug.LogError("Client authentication failed.");
             }
         }
     }
