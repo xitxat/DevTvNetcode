@@ -13,8 +13,14 @@ public class Leaderboard : NetworkBehaviour
 {
 
     [SerializeField] private Transform leaderboardEntityHolder;
+    [SerializeField] private Transform teamLeaderboardEntityHolder;
+    [SerializeField] private GameObject teamLeaderboardBackground;
     [SerializeField] private LeaderboardEntityDisplay leaderboardEntityPrefab;
     [SerializeField] private int entitiesToDisplay = 5; //Top 5
+    [SerializeField] private Color ownerColour;
+    [SerializeField] private string[] teamNames;
+    [SerializeField] private TeamColourLookup teamColourLookup;
+
 
     // Server Stores & Syncs a LIST of all PLAYER DATA: Ids, names, coins
     // Custom Network List <T> Server syncs clients
@@ -23,6 +29,7 @@ public class Leaderboard : NetworkBehaviour
     // List of lb prefabs for use in SWITCH
     // init here (!Network obj)
     private List<LeaderboardEntityDisplay> entityDisplays = new List<LeaderboardEntityDisplay>();
+    private List<LeaderboardEntityDisplay> teamEntityDisplays = new List<LeaderboardEntityDisplay>();
 
     private void Awake()
     {
@@ -35,6 +42,27 @@ public class Leaderboard : NetworkBehaviour
         // GET CLIENTS TO lISTEN
         if (IsClient)
         {
+            // Is on TEAM
+            if(ClientSingleton.Instance.GameManager.UserData.userGamePreferences.gameQueue
+                == GameQueue.Team)
+            {
+                teamLeaderboardBackground.SetActive(true);
+
+                for (int i = 0; i < teamNames.Length; i++)
+                {
+                    LeaderboardEntityDisplay teamLeaderboardEntity = 
+                        Instantiate(leaderboardEntityPrefab, teamLeaderboardEntityHolder);
+
+                    teamLeaderboardEntity.Initialise(i, teamNames[i], 0);
+
+                    // colour
+                    Color teamColour = teamColourLookup.GetTeamColour(i);
+                    teamLeaderboardEntity.SetColour(teamColour);
+
+                    teamEntityDisplays.Add(teamLeaderboardEntity);
+                }
+            }
+
             leaderboardEntities.OnListChanged += HandleLeaderboardEntitiesChanged;
 
             // Already added Self check
@@ -107,6 +135,11 @@ public class Leaderboard : NetworkBehaviour
                         changeEvent.Value.ClientId,
                         changeEvent.Value.PlayerName,
                         changeEvent.Value.Coins);
+                     // if player added is us
+                     if(NetworkManager.Singleton.LocalClientId == changeEvent.Value.ClientId)
+                    {
+                        leaderboardEntity.SetColour(ownerColour);
+                    }
 
                     entityDisplays.Add(leaderboardEntity);
                 }
