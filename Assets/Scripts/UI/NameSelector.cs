@@ -30,10 +30,10 @@ public class NameSelector : MonoBehaviour
             // if T, set into txt field
             nameField.text =  PlayerPrefs.GetString(PlayerNameKey, string.Empty);
 
-        HandleNameChange();
+        HandleNameChanged();
     }
 
-    public void HandleNameChange()
+    public void HandleNameChanged()
     {
         connectButton.interactable =
             nameField.text.Length >= minNameLength &&
