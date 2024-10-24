@@ -167,11 +167,11 @@ public class HostGameManager : IDisposable
     // Handle unexpected server shutdown & Exit Arena
     public void Dispose()
     {
-         ShutDown();
+         Shutdown();
 
     }
 
-    public async void ShutDown()
+    public async void Shutdown()
     {
 
         // Stop Lobby

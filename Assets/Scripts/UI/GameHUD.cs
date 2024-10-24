@@ -48,7 +48,7 @@ public class GameHUD : NetworkBehaviour
         // For Self Hosting
         if (NetworkManager.Singleton.IsHost)
         {
-            HostSingleton.Instance.GameManager.ShutDown();
+            HostSingleton.Instance.GameManager.Shutdown();
         }
 
         // For Client wanting to Leave
