@@ -2,7 +2,8 @@
   "PlayerTags": [
     "Server",
     "Player1",
-    "Player2"
+    "Player2",
+    "Editor"
   ],
   "version": "1.2.2"
 }
