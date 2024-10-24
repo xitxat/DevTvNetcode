@@ -51,7 +51,7 @@ public class ServerSingleton : MonoBehaviour
 
             if (NetworkManager.Singleton == null)
             {
-                Debug.LogError("NetworkManager is null, server cannot start.");
+                Debug.LogError("NetworkManager Singleton is null, server cannot start.");
                 return;
             }
 
