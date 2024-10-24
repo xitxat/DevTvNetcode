@@ -62,7 +62,6 @@ public class TankPlayer : NetworkBehaviour
             // DEDICATED SERVER
             else
             {
-
                 // All necessary objects exist, proceed to get user data
                 userData = ServerSingleton.Instance.GameManager.NetworkServer.GetUserDataByClientId(OwnerClientId);
             }
@@ -77,13 +76,8 @@ public class TankPlayer : NetworkBehaviour
 
          }
 
-
-
-        
-
         if (IsOwner)
         {
-
             virtualCamera.Priority = ownerPriority;
 
             minimapIconRenderer.color = ownerColor;
