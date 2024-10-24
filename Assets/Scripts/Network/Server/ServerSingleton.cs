@@ -22,7 +22,8 @@ public class ServerSingleton : MonoBehaviour
         {
             if (instance != null) { return instance; }
 
-            instance = FindAnyObjectByType<ServerSingleton>();
+            //DEpreciation <FindObjectOfType>
+            instance = FindFirstObjectByType<ServerSingleton>();
 
             if (instance == null)
             {

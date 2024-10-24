@@ -128,7 +128,6 @@ public class ServerGameManager : IDisposable
 
     }
 
-
     private void UserJoined(UserData user)
     {
                 //backfiller.AddPlayerToMatch(user);
