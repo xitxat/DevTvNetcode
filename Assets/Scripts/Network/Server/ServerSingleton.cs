@@ -12,34 +12,21 @@ using UnityEngine;
 public class ServerSingleton : MonoBehaviour
 {
 
+    public static ServerSingleton Instance { get; private set; }
     public ServerGameManager GameManager { get; private set; }
 
-    private static ServerSingleton instance;
 
-    public static ServerSingleton Instance
+    private void Awake()
     {
-        get
+        if (Instance == null)
         {
-            if (instance != null) { return instance; }
-
-            //Depreciation <FindObjectOfType>
-            instance = FindFirstObjectByType<ServerSingleton>();
-
-            if (instance == null)
-            {
-                //Debug.LogError("<color=orange>No <ServerSingleton> in Scene!</color>");
-                return null;
-            }
-
-            return instance;
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
         }
-    }
-
-
-    void Start()
-    {
-        DontDestroyOnLoad(gameObject);
-
+        else
+        {
+            Destroy(gameObject); // Ensure only one instance exists
+        }
     }
 
     //  UGS
