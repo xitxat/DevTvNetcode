@@ -104,18 +104,32 @@ public class TankPlayer : NetworkBehaviour
 
     private IEnumerator WaitForSync()
     {
-        // Wait until PlayerName is not empty and properly synced
-        while (string.IsNullOrEmpty(PlayerName.Value.ToString()))
+        int retries = 0;
+        int maxRetries = 100; // 10 secs
+        float retryDelay = 0.1f; //  (100 ms)
+
+        // Wait until PlayerName is not empty and properly synced or retry limit is reached
+        while (string.IsNullOrEmpty(PlayerName.Value.ToString()) && retries < maxRetries)
         {
-            Debug.Log("<color=teal>Waiting for PlayerName to sync...<color=teal>");
-            yield return new WaitForSeconds(0.1f); // Wait 100 ms before checking again
+            Debug.Log($"<color=yellow>Attempt {retries + 1}/{maxRetries}: Waiting for PlayerName to sync...</color>");
+
+            retries++;
+            yield return new WaitForSeconds(retryDelay); // Wait 100 ms before checking again
         }
 
-        Debug.Log($"<color=orange>Player name synced: {PlayerName.Value}<color=teal>");
-
-        // Now that sync is complete, invoke the OnPlayerSpawned event
-        OnPlayerSpawned?.Invoke(this);
+        if (!string.IsNullOrEmpty(PlayerName.Value.ToString()))
+        {
+            Debug.Log($"Player name synced: {PlayerName.Value}");
+            // Now that sync is complete, invoke the OnPlayerSpawned event
+            OnPlayerSpawned?.Invoke(this);
+        }
+        else
+        {
+            Debug.LogError("Failed to sync PlayerName within the retry limit.");
+            // Handle the failure case, e.g., notify the player, retry connection, etc.
+        }
     }
+
 
 
 }
