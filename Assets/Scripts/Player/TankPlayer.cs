@@ -62,82 +62,24 @@ public class TankPlayer : NetworkBehaviour
             // DEDICATED SERVER
             else
             {
-                // Enhanced null check with detailed logging for dedicated server
-                if (ServerSingleton.Instance == null)
-                {
-                    Debug.LogError("ServerSingleton.Instance is null in OnNetworkSpawn on server.");
-                    return;
-                }
-                else if (ServerSingleton.Instance.GameManager == null)
-                {
-                    Debug.LogError("ServerSingleton.Instance.GameManager is null in OnNetworkSpawn on server.");
-                    return;
-                }
-                else if (ServerSingleton.Instance.GameManager.NetworkServer == null)
-                {
-                    Debug.LogError("ServerSingleton.Instance.GameManager.NetworkServer is null in OnNetworkSpawn on server.");
-                    return;
-                }
-                else
-                {
-                    // All necessary objects exist, proceed to get user data
-                    userData = ServerSingleton.Instance.GameManager.NetworkServer.GetUserDataByClientId(OwnerClientId);
-                }
+
+                // All necessary objects exist, proceed to get user data
+                userData = ServerSingleton.Instance.GameManager.NetworkServer.GetUserDataByClientId(OwnerClientId);
             }
 
+                // Because we are server, set Value now
+                // & trigger network sync
+                PlayerName.Value = userData.userName;
+                TeamIndex.Value = userData.teamIndex;
+                Debug.Log($"<color=yellow>Server set PlayerName for ClientId: {OwnerClientId} to {userData.userName}</color>");
+
+                OnPlayerSpawned?.Invoke(this);
+
+         }
 
 
 
-            // Because we are server, set Value now
-            // & trigger network sync
-            //PlayerName.Value =  userData.userName;
-            //TeamIndex.Value = userData.teamIndex;
-            //Debug.Log($"<color=yellow>Server set PlayerName for ClientId: {OwnerClientId} to {userData.userName}</color>");
-
-            if (userData == null)
-            {
-                Debug.LogError($"UserData for ClientId {OwnerClientId} is null on the server.");
-                return;
-            }
-
-            // Check if PlayerName or TeamIndex is null before accessing them
-            if (PlayerName == null)
-            {
-                Debug.LogError($"PlayerName NetworkVariable is null for ClientId {OwnerClientId} on the server.");
-            }
-            else
-            {
-                try
-                {
-                    PlayerName.Value = userData.userName;
-                    Debug.Log($"<color=yellow>Server set PlayerName for ClientId {OwnerClientId} to {userData.userName}</color>");
-                }
-                catch (Exception ex)
-                {
-                    Debug.LogError($"Exception setting PlayerName for ClientId {OwnerClientId} on server: {ex.Message}");
-                }
-            }
-
-            if (TeamIndex == null)
-            {
-                Debug.LogError($"TeamIndex NetworkVariable is null for ClientId {OwnerClientId} on the server.");
-            }
-            else
-            {
-                try
-                {
-                    TeamIndex.Value = userData.teamIndex;
-                }
-                catch (Exception ex)
-                {
-                    Debug.LogError($"Exception setting TeamIndex for ClientId {OwnerClientId} on server: {ex.Message}");
-                }
-            }
-
-
-
-            OnPlayerSpawned?.Invoke(this);
-        }
+        
 
         if (IsOwner)
         {

@@ -24,7 +24,7 @@ public class MainMenu : MonoBehaviour
 
     private void Start()
     {
-        // Set for Clients only
+        // Set for Client / Host only
         if (ClientSingleton.Instance == null) { return;  }
 
         // Set cursor to default
