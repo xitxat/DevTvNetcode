@@ -40,21 +40,17 @@ public class TankPlayer : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
+        Debug.Log($"[OnNetworkSpawn] ClientId: {OwnerClientId}, IsServer: {IsServer}, IsOwner: {IsOwner}");
+
         if (IsServer)
         {
-            Debug.Log("OnNetworkSpawn called on the server");
-
+            Debug.Log($"[Server] OnNetworkSpawn for player with ClientId: {OwnerClientId}");
+            
             UserData userData = null;
 
             // HOST
             if (IsHost)
             {
-                if (HostSingleton.Instance == null || HostSingleton.Instance.GameManager == null || HostSingleton.Instance.GameManager.NetworkServer == null)
-                {
-                    Debug.LogError("HostSingleton, GameManager, or NetworkServer is null in OnNetworkSpawn on server.");
-                    return;
-                }
-
                 // Get Players name (Pass in OwnersId & get name) returns User data obj
                 userData =
                    HostSingleton.Instance.GameManager.NetworkServer.GetUserDataByClientId(OwnerClientId);
@@ -71,15 +67,22 @@ public class TankPlayer : NetworkBehaviour
             // & trigger network sync
             PlayerName.Value = userData.userName;
             TeamIndex.Value = userData.teamIndex;
-            Debug.Log($"<color=yellow>Server set PlayerName for ClientId: {OwnerClientId} to {userData.userName}</color>");
 
-            // Start coroutine to ensure player data is fully synchronized before using it
-            StartCoroutine(WaitForSync());
+            Debug.LogWarning($"[Server] Set PlayerName: {userData.userName} for ClientId: {OwnerClientId}");
 
-                //moved into coroutine
-                //OnPlayerSpawned?.Invoke(this);
+            // We don't call OnPlayerSpawned immediately; instead, let it be triggered by the OnValueChanged event
 
-         }
+            //moved into HandlePlayerNameChanged Event
+            //OnPlayerSpawned?.Invoke(this);
+
+        }
+
+        // Register OnValueChanged event on the client side to listen for PlayerName changes
+        if (IsClient)
+        {
+            PlayerName.OnValueChanged += OnPlayerNameUpdated;
+        }
+
 
         if (IsOwner)
         {
@@ -92,43 +95,29 @@ public class TankPlayer : NetworkBehaviour
                 crosshair.width / 2,
                 crosshair.height / 2),
                 CursorMode.Auto);
+
+            Debug.LogWarning($"[Owner] Player is owner, ClientId: {OwnerClientId}. Camera and crosshair set.");
         }
     }
     public override void OnNetworkDespawn()
     {
+        if (IsClient)
+        {
+            PlayerName.OnValueChanged -= OnPlayerNameUpdated;
+        }
+
         if (IsServer)
         {
             OnPlayerDespawned?.Invoke(this);
         }
     }
 
-    private IEnumerator WaitForSync()
+    private void OnPlayerNameUpdated(FixedString32Bytes oldName, FixedString32Bytes newName)
     {
-        int retries = 0;
-        int maxRetries = 100; // 10 secs
-        float retryDelay = 0.1f; //  (100 ms)
-
-        // Wait until PlayerName is not empty and properly synced or retry limit is reached
-        while (string.IsNullOrEmpty(PlayerName.Value.ToString()) && retries < maxRetries)
-        {
-            Debug.Log($"<color=yellow>Attempt {retries + 1}/{maxRetries}: Waiting for PlayerName to sync...</color>");
-
-            retries++;
-            yield return new WaitForSeconds(retryDelay); // Wait 100 ms before checking again
-        }
-
-        if (!string.IsNullOrEmpty(PlayerName.Value.ToString()))
-        {
-            Debug.Log($"Player name synced: {PlayerName.Value}");
-            // Now that sync is complete, invoke the OnPlayerSpawned event
-            OnPlayerSpawned?.Invoke(this);
-        }
-        else
-        {
-            Debug.LogError("Failed to sync PlayerName within the retry limit.");
-            // Handle the failure case, e.g., notify the player, retry connection, etc.
-        }
+        Debug.LogWarning($"[Client] PlayerName updated from {oldName} to {newName} for ClientId: {OwnerClientId}"); OnPlayerSpawned?.Invoke(this);
     }
+
+
 
 
 
