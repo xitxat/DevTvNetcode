@@ -33,7 +33,16 @@ public class NetworkServer : IDisposable
         this.playerPrefab = playerPrefab; // used to delay player spawn
 
         // triggered when Server is Connected to.[contains data]
-        networkManager.ConnectionApprovalCallback += ApprovalCheck;
+        //networkManager.ConnectionApprovalCallback += ApprovalCheck;
+
+        // Old code: Using += here caused multiple registrations of the ConnectionApprovalCallback, 
+        // which led to errors such as "Only one ConnectionApprovalCallback can be registered at a time".
+        // The ConnectionApprovalCallback is a delegate, not an event, so using = ensures 
+        // only one registration happens and prevents conflicts.
+        // networkManager.ConnectionApprovalCallback += ApprovalCheck;
+
+        networkManager.ConnectionApprovalCallback = ApprovalCheck; // Corrected to assign the callback once.
+
 
         networkManager.OnServerStarted += OnNetworkReady;
     }
@@ -93,11 +102,21 @@ public class NetworkServer : IDisposable
     }
 
 
+    //  Called when Player Disconnects
+    // Old code: Using += without any safeguards could lead to multiple registrations 
+    // if OnNetworkReady is called more than once.
+    // networkManager.OnClientDisconnectCallback += OnClientDisconnect;
+    private bool isClientDisconnectCallbackRegistered = false;
+
     private void OnNetworkReady()
     {
-        //  Called when Player Disconnects
-        networkManager.OnClientDisconnectCallback += OnClientDisconnect;
+        if (!isClientDisconnectCallbackRegistered)
+        {
+            networkManager.OnClientDisconnectCallback += OnClientDisconnect;
+            isClientDisconnectCallbackRegistered = true;
+        }
     }
+
 
     // Remove player data from List
     private void OnClientDisconnect(ulong clientId)
@@ -146,7 +165,11 @@ public class NetworkServer : IDisposable
         if(networkManager == null) { return; }
 
         //  Unsub from all NetworkServer events
-        networkManager.ConnectionApprovalCallback -= ApprovalCheck;
+        // networkManager.ConnectionApprovalCallback -= ApprovalCheck;
+
+        // ConnectionApprovalCallback is a delegate,  instead of using -=.
+        networkManager.ConnectionApprovalCallback = null;
+
         networkManager.OnClientDisconnectCallback -= OnClientDisconnect;
         networkManager.OnServerStarted -= OnNetworkReady;
 
