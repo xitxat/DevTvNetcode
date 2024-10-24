@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using Unity.Cinemachine;
 using Unity.Collections;
 using Unity.Netcode;
@@ -66,13 +67,17 @@ public class TankPlayer : NetworkBehaviour
                 userData = ServerSingleton.Instance.GameManager.NetworkServer.GetUserDataByClientId(OwnerClientId);
             }
 
-                // Because we are server, set Value now
-                // & trigger network sync
-                PlayerName.Value = userData.userName;
-                TeamIndex.Value = userData.teamIndex;
-                Debug.Log($"<color=yellow>Server set PlayerName for ClientId: {OwnerClientId} to {userData.userName}</color>");
+            // Because we are server, set Value now
+            // & trigger network sync
+            PlayerName.Value = userData.userName;
+            TeamIndex.Value = userData.teamIndex;
+            Debug.Log($"<color=yellow>Server set PlayerName for ClientId: {OwnerClientId} to {userData.userName}</color>");
 
-                OnPlayerSpawned?.Invoke(this);
+            // Start coroutine to ensure player data is fully synchronized before using it
+            StartCoroutine(WaitForSync());
+
+                //moved into coroutine
+                //OnPlayerSpawned?.Invoke(this);
 
          }
 
@@ -96,4 +101,21 @@ public class TankPlayer : NetworkBehaviour
             OnPlayerDespawned?.Invoke(this);
         }
     }
+
+    private IEnumerator WaitForSync()
+    {
+        // Wait until PlayerName is not empty and properly synced
+        while (string.IsNullOrEmpty(PlayerName.Value.ToString()))
+        {
+            Debug.Log("<color=teal>Waiting for PlayerName to sync...<color=teal>");
+            yield return new WaitForSeconds(0.1f); // Wait 100 ms before checking again
+        }
+
+        Debug.Log($"<color=orange>Player name synced: {PlayerName.Value}<color=teal>");
+
+        // Now that sync is complete, invoke the OnPlayerSpawned event
+        OnPlayerSpawned?.Invoke(this);
+    }
+
+
 }

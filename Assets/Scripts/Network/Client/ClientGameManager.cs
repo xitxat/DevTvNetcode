@@ -76,7 +76,7 @@ public class ClientGameManager : IDisposable
                 
     }
 
-    //  START CLIENT    
+    //  START CLIENT    ======== NETWORK TRAFFIC STARTS ========
     // Called by Menu Button
     // jOINsERVER VIA Lobby and Relay
     public async Task StartClientAsync(string joinCode)
@@ -100,7 +100,10 @@ public class ClientGameManager : IDisposable
         RelayServerData relayServerData = new RelayServerData(allocation, "dtls");
         transport.SetRelayServerData(relayServerData);
 
-        ConnectClient();
+        // Delay before starting the client to ensure proper synchronization
+        await Task.Delay(250); //  ms delay
+
+        ConnectClient(); // This is where network traffic starts and syncing happens
 
     }
 

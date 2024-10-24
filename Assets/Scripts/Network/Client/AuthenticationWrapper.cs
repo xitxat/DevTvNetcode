@@ -99,8 +99,9 @@ public enum AuthState
     NotAuthenticated,
     Authenticating,
     Authenticated,
-    TimeOut,
-    Error
+    Error,
+    TimeOut
+    
 
 
 }

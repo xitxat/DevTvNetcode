@@ -1,6 +1,5 @@
 using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class ClientSingleton : MonoBehaviour
 {
@@ -15,7 +14,9 @@ public class ClientSingleton : MonoBehaviour
         {
             if(instance != null) { return instance; }
 
-            instance = FindAnyObjectByType<ClientSingleton>();
+                // Depreciated
+                //instance = FindObjectOfType<ClientSingleton>();
+            instance = FindFirstObjectByType<ClientSingleton>();
 
             if(instance == null)
             {
