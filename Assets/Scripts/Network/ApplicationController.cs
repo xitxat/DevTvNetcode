@@ -6,10 +6,10 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 // br 5.04
-// Called by Client / Host / Server to establish Singleton
-// On Client Auth GoTo Menu scene
-
-// Refkr: Move Scene Loading after Server Initialization
+// The ApplicationController is responsible for initializing the application in different modes:
+// - Dedicated Server Mode
+// - Host Mode
+// It handles the loading of scenes and the initialization of singletons like ServerSingleton and HostSingleton.
 public class ApplicationController : MonoBehaviour
 {
 
@@ -24,16 +24,20 @@ public class ApplicationController : MonoBehaviour
     private const string GameSceneName = "Game";
 
 
-    // Entry to Dedicated server
+    // The entry point of the application.
+    // Determines if the application is running as a dedicated server or client/host.
     async void  Start()
     {
         DontDestroyOnLoad(gameObject);
 
         // HEADLESS DEDICATED SERVER (bool)
-       await LaunchInMode(SystemInfo.graphicsDeviceType == UnityEngine.Rendering.GraphicsDeviceType.Null);
+        bool isDedicatedServer = SystemInfo.graphicsDeviceType == UnityEngine.Rendering.GraphicsDeviceType.Null;
 
+        // Launch the application in the appropriate mode.
+        await LaunchInMode(isDedicatedServer);
     }
 
+    // Launches the application in either dedicated server mode or client/host mode.
     private async Task LaunchInMode(bool isDedicatedServer)
     {
         if (isDedicatedServer)
@@ -43,6 +47,9 @@ public class ApplicationController : MonoBehaviour
 
             // Instanciate Application Data. runs AD constructor; returns cmd line IP, Port queries
             appData = new ApplicationData();
+
+            // Load the Game Scene first
+            await LoadGameSceneAsync();
 
             // Spawn in Prefab
             ServerSingleton serverSingleton = Instantiate(serverPrefab);
@@ -58,8 +65,8 @@ public class ApplicationController : MonoBehaviour
             }
 
 
-            // Load the Game Scene // Connect UGS
-            StartCoroutine(LoadGameSceneAsync(serverSingleton));
+                    // Load the Game Scene // Connect UGS
+                    //StartCoroutine(LoadGameSceneAsync(serverSingleton));
 
             // Start the game server after the scene is loaded
             await serverSingleton.GameManager.StartGameServerAsync();
@@ -67,9 +74,9 @@ public class ApplicationController : MonoBehaviour
         }
         else
         {
-            //  Spawn HostSingleton first otherwise Client will start game before 
-            //  Host(server) ~ throwing null HostSingleton  in Game Scene
-            //  Both HostManager & ClientManager prefabs need to be in Scene's DontDestroyOnLoad
+            // Host mode (client and server running in the same process).
+
+            // Instantiate the HostSingleton and create the host (server).
             HostSingleton hostSingleton = Instantiate(hostPrefab);
             hostSingleton.CreateHost(playerPrefab);
 
@@ -88,30 +95,19 @@ public class ApplicationController : MonoBehaviour
     // Load client game scene  before Server
     // Create D. Server , yield, create scene
     // (not async together: sync issues like Leaderboard no display)
-    private IEnumerator LoadGameSceneAsync(ServerSingleton serverSingleton)
+    private async Task LoadGameSceneAsync()
     {
-        //  LOAD SCENE 
-        // From Find Match go straight to Game scene , not menu
-        AsyncOperation   asyncOperation =  SceneManager.LoadSceneAsync(GameSceneName);
+        // Start loading the Game scene asynchronously.
+        AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(GameSceneName);
 
-        // scene not loaded
+        // Wait until the scene loading is complete.
         while (!asyncOperation.isDone)
         {
-            // skip to next frame untill scene loaded
-            yield return null;
+            // Yield control back to the calling context to prevent blocking.
+            await Task.Yield();
         }
 
-        // Connect UGS
-        //  CREATE dedicated server
-        Task createServerTask =  serverSingleton.CreateServer(playerPrefab);
-        // Not asyny so Task & yield
-        yield return new WaitUntil(() => createServerTask.IsCompleted);
-
-
-        // & START
-        Task startServerTask =  serverSingleton.GameManager.StartGameServerAsync();
-        yield return new WaitUntil(() => startServerTask.IsCompleted);
-
-
+        // Optionally, you can add a delay to ensure all scene objects are initialized.
+        // await Task.Delay(100); // Delay for 100 milliseconds.
     }
 }
