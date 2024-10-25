@@ -116,7 +116,11 @@ public class Leaderboard : NetworkBehaviour
     private void HandleLeaderboardEntitiesChanged(NetworkListEvent<LeaderboardEntityState> changeEvent)
     {
         // prevent objects spilling over into Memu from Game
-        if (!gameObject.scene.isLoaded) { return; }
+        if (!gameObject.scene.isLoaded)
+        {
+            Debug.LogWarning($"<color=red>Leaderboard update skipped: Scene not loaded for ClientId: {changeEvent.Value.ClientId}</color>");
+            return;
+        }
 
         Debug.Log($"<color=yellow>Leaderboard change event type: {changeEvent.Type}, ClientId: {changeEvent.Value.ClientId}, Coins: {changeEvent.Value.Coins}</color>");        // query changeEvent if vale changed & how;ie: added, removed, updated
         
@@ -129,8 +133,8 @@ public class Leaderboard : NetworkBehaviour
                 // Sort / Filter Linq. where => [foreach oneliner]
                 if(!entityDisplays.Any(x => x.ClientId == changeEvent.Value.ClientId))
                 {
-                    // store to List entityDisplays & spawn it
-                   LeaderboardEntityDisplay leaderboardEntity = 
+                    // store to List entityDisplays & SPAWN LeaderboardEntityDisplay prefab
+                    LeaderboardEntityDisplay leaderboardEntity = 
                         Instantiate(leaderboardEntityPrefab, leaderboardEntityHolder);
                     leaderboardEntity.Initialise(
                         changeEvent.Value.ClientId,
