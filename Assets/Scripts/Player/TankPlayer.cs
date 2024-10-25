@@ -12,7 +12,9 @@ using UnityEngine;
 public class TankPlayer : NetworkBehaviour
 {
     //  Sync names, Team index[colours]. Cant sync normal strings.  .VALUE
-    public NetworkVariable<FixedString32Bytes> PlayerName = new NetworkVariable<FixedString32Bytes>(new FixedString32Bytes(""));
+    public NetworkVariable<FixedString32Bytes> PlayerName = new NetworkVariable<FixedString32Bytes>(
+        writePerm: NetworkVariableWritePermission.Server,
+        readPerm: NetworkVariableReadPermission.Everyone);
     public NetworkVariable<int> TeamIndex = new NetworkVariable<int>(0);
 
 
@@ -59,16 +61,25 @@ public class TankPlayer : NetworkBehaviour
             // DEDICATED SERVER
             else
             {
+                Debug.Log("<TankPlayer> Running as Dedicated Server, getting UserData from ServerSingleton.");
+
                 // All necessary objects exist, proceed to get user data
                 userData = ServerSingleton.Instance.GameManager.NetworkServer.GetUserDataByClientId(OwnerClientId);
             }
 
             // Because we are server, set Value now
             // & trigger network sync
-            PlayerName.Value = userData.userName;
-            TeamIndex.Value = userData.teamIndex;
-
-            Debug.LogWarning($"<color=teal>[Server] Set PlayerName: {userData.userName} for ClientId: {OwnerClientId}</color>");
+            if (userData != null)
+            {
+                PlayerName.Value = userData.userName;
+                OnPlayerNameUpdated(default, userData.userName);  // Manually trigger to simulate synchronization
+                TeamIndex.Value = userData.teamIndex;
+                Debug.LogWarning($"<TankPlayer>[Server] Set PlayerName: {userData.userName} for ClientId: {OwnerClientId}");
+            }
+            else
+            {
+                Debug.LogError($"<TankPlayer>[Server] Failed to get UserData for ClientId: {OwnerClientId}");
+            }
 
             // We don't call OnPlayerSpawned immediately; instead, let it be triggered by the OnValueChanged event
 

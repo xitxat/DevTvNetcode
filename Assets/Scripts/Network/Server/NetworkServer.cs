@@ -63,15 +63,19 @@ public class NetworkServer : IDisposable
         //  Package: JSON <=> Byte Array | Serialization/DeSerialization
         //  returns Object with data
         string payload = System.Text.Encoding.UTF8.GetString(request.Payload);
+        Debug.Log($"<NetworkServer> ApprovalCheck called for ClientNetworkId: {request.ClientNetworkId}, Payload: {payload}");
 
         // Retrieve Data <Our custom filter>
         UserData userData = JsonUtility.FromJson<UserData>(payload);
+        Debug.Log($"<NetworkServer> UserData extracted: {userData.userName}, userAuthId: {userData.userAuthId}");
 
         //  Store User ID and data
         //  Request to set Value:    Key         | Value
         //  Auto .add ~ update if already exists
         clientIdToAuth[request.ClientNetworkId] = userData.userAuthId;
         authIdToUserData[userData.userAuthId] = userData;
+        Debug.Log($"<NetworkServer> ClientId to Auth mapping updated for ClientNetworkId: {request.ClientNetworkId}, userAuthId: {userData.userAuthId}");
+
         OnUserJoined?.Invoke(userData); // add to backfiller
 
         // Use discard (`_`) for async call
@@ -81,6 +85,8 @@ public class NetworkServer : IDisposable
         response.Approved = true;
         //  Do NOt Spawn in Players, delay action
         response.CreatePlayerObject = false;
+
+        Debug.Log($"<NetworkServer> Approval response for ClientId {request.ClientNetworkId}: Approved={response.Approved}");
     }
 
     // DELAY SPAWN
@@ -146,17 +152,25 @@ public class NetworkServer : IDisposable
     // if2: UserData out  contains name
     public UserData GetUserDataByClientId(ulong clientId)
     {
-        if(clientIdToAuth.TryGetValue(clientId, out string authId))
+        Debug.Log($"<NetworkServer> GetUserDataByClientId called for ClientId: {clientId}");
+
+        if (clientIdToAuth.TryGetValue(clientId, out string authId))
         {
-            if(authIdToUserData.TryGetValue(authId, out UserData data))
+            Debug.Log($"<NetworkServer> AuthId found for ClientId: {clientId}, authId: {authId}");
+
+            if (authIdToUserData.TryGetValue(authId, out UserData data))
             {
+                Debug.Log($"<NetworkServer> UserData retrieved for AuthId: {authId}, PlayerName: {data.userName}");
+
                 // contains Player Name
                 return data;
             }
 
+            Debug.LogWarning($"<NetworkServer> No UserData found for AuthId: {authId}");
             return null;
         }
 
+        Debug.LogWarning($"<NetworkServer> No AuthId found for ClientId: {clientId}");
         return null;
     }
 
