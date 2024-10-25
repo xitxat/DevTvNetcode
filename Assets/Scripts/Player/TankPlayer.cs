@@ -40,11 +40,11 @@ public class TankPlayer : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-        Debug.Log($"[OnNetworkSpawn] ClientId: {OwnerClientId}, IsServer: {IsServer}, IsOwner: {IsOwner}");
+        Debug.Log($"<color=teal>[OnNetworkSpawn] ClientId: {OwnerClientId}, IsServer: {IsServer}, IsOwner: {IsOwner}</color>");
 
         if (IsServer)
         {
-            Debug.Log($"[Server] OnNetworkSpawn for player with ClientId: {OwnerClientId}");
+            Debug.Log($"<color=teal>[Server] OnNetworkSpawn for player with ClientId: {OwnerClientId}</color>");
             
             UserData userData = null;
 
@@ -68,13 +68,12 @@ public class TankPlayer : NetworkBehaviour
             PlayerName.Value = userData.userName;
             TeamIndex.Value = userData.teamIndex;
 
-            Debug.LogWarning($"[Server] Set PlayerName: {userData.userName} for ClientId: {OwnerClientId}");
+            Debug.LogWarning($"<color=teal>[Server] Set PlayerName: {userData.userName} for ClientId: {OwnerClientId}</color>");
 
             // We don't call OnPlayerSpawned immediately; instead, let it be triggered by the OnValueChanged event
 
-            //moved into HandlePlayerNameChanged Event
-            //OnPlayerSpawned?.Invoke(this);
-
+            // Immediately invoke the OnPlayerSpawned event after setting PlayerName and TeamIndex
+            OnPlayerSpawned?.Invoke(this);
         }
 
         // Register OnValueChanged event on the client side to listen for PlayerName changes
@@ -96,16 +95,11 @@ public class TankPlayer : NetworkBehaviour
                 crosshair.height / 2),
                 CursorMode.Auto);
 
-            Debug.LogWarning($"[Owner] Player is owner, ClientId: {OwnerClientId}. Camera and crosshair set.");
+            Debug.LogWarning($"<color=teal>[Owner] Player is owner, ClientId: {OwnerClientId}. Camera and crosshair set.</color>");
         }
     }
     public override void OnNetworkDespawn()
     {
-        if (IsClient)
-        {
-            PlayerName.OnValueChanged -= OnPlayerNameUpdated;
-        }
-
         if (IsServer)
         {
             OnPlayerDespawned?.Invoke(this);
@@ -114,11 +108,7 @@ public class TankPlayer : NetworkBehaviour
 
     private void OnPlayerNameUpdated(FixedString32Bytes oldName, FixedString32Bytes newName)
     {
-        Debug.LogWarning($"[Client] PlayerName updated from {oldName} to {newName} for ClientId: {OwnerClientId}"); OnPlayerSpawned?.Invoke(this);
+        Debug.LogWarning($"<color=teal>[Client] PlayerName updated from {oldName} to {newName} for ClientId: {OwnerClientId}</color>");
+        OnPlayerSpawned?.Invoke(this);
     }
-
-
-
-
-
 }

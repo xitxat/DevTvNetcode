@@ -64,8 +64,11 @@ public class Leaderboard : NetworkBehaviour
 
             leaderboardEntities.OnListChanged += HandleLeaderboardEntitiesChanged;
 
+            Debug.Log($"<color=yellow>Leaderboard OnNetworkSpawn: Subscribed to OnListChanged event</color>");
+
+
             // Already added Self check
-            foreach(LeaderboardEntityState entity in leaderboardEntities)
+            foreach (LeaderboardEntityState entity in leaderboardEntities)
             {
                 HandleLeaderboardEntitiesChanged( new NetworkListEvent<LeaderboardEntityState>
                     {
