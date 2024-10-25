@@ -58,7 +58,7 @@ public class ServerSingleton : MonoBehaviour
 
             if (NetworkManager.Singleton == null)
             {
-                Debug.LogError("¦| NetworkManager Singleton is null, server cannot start.");
+                Debug.LogError("¦| <ServerSingleton> NetworkManager Singleton is null, server cannot start. ¦|");
                 return;
             }
 
@@ -70,17 +70,22 @@ public class ServerSingleton : MonoBehaviour
                 playerPrefab
             );
 
-            Debug.Log("¦| ServerGameManager created successfully.");
+            Debug.Log("¦| <ServerSingleton> ServerGameManager created successfully. ¦|");
         }
         catch (Exception e)
         {
-            Debug.LogError($"¦| Error initializing the server: {e.Message}");
+            Debug.LogError($"¦| <ServerSingleton> Error initializing the server: {e.Message} ¦|");
             GameManager = null; // Explicitly set to null in case of failure
         }
 
         if (GameManager == null)
         {
-            Debug.LogError("¦| GameManager is null after CreateServer. Check initialization.");
+            Debug.LogError("¦| <ServerSingleton> GameManager is null after CreateServer. Check initialization. ¦|");
+        }
+
+        if (GameManager != null)
+        {
+            Debug.Log("<ServerSingleton> ¦| Server fully initialized and ready.");
         }
     }
 
