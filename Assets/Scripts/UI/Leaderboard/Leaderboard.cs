@@ -82,6 +82,8 @@ public class Leaderboard : NetworkBehaviour
         
             foreach (TankPlayer player in players)
             {
+                Debug.Log($"<color=orange>Adding player to leaderboard from OnNetworkSpawn: ClientId {player.OwnerClientId}, PlayerName {player.PlayerName.Value}</color>");
+
                 // Makes sure host is on LEaderboard
                 HandlePlayerSpawned(player);
             }
@@ -116,7 +118,7 @@ public class Leaderboard : NetworkBehaviour
         // prevent objects spilling over into Memu from Game
         if (!gameObject.scene.isLoaded) { return; }
 
-        //Debug.Log($"<color=yellow>Leaderboard change event type: {changeEvent.Type}, ClientId: {changeEvent.Value.ClientId}, Coins: {changeEvent.Value.Coins}</color>");        // query changeEvent if vale changed & how;ie: added, removed, updated
+        Debug.Log($"<color=yellow>Leaderboard change event type: {changeEvent.Type}, ClientId: {changeEvent.Value.ClientId}, Coins: {changeEvent.Value.Coins}</color>");        // query changeEvent if vale changed & how;ie: added, removed, updated
         
         // Add
         switch (changeEvent.Type)
@@ -241,6 +243,8 @@ public class Leaderboard : NetworkBehaviour
 
     private void HandlePlayerSpawned(TankPlayer player)
     {
+        Debug.Log($"<color=orange>HandlePlayerSpawned called: Adding player to leaderboard. ClientId: {player.OwnerClientId}, PlayerName: {player.PlayerName.Value}</color>");
+
         // Publish to Leaderboard
         // Add to LIst
         leaderboardEntities.Add(new LeaderboardEntityState

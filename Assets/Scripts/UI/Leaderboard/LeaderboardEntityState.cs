@@ -1,10 +1,8 @@
-// Networkwork Data Sync variable has to be a struct ~ not a class with refs
-
 using System;
 using Unity.Collections;
 using Unity.Netcode;
 
-
+// Networkwork Data Sync variable has to be a struct ~ not a class with refs
 //  + Impliment a serializable state
 // Transform State data into bytes, send over network, deserialize via ()NetworkSerialize
 // IEquatable compares equality of data types ()Equals. Looking for change.
