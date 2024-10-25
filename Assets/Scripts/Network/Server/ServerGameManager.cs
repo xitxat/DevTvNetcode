@@ -176,12 +176,19 @@ public class ServerGameManager : IDisposable
 
     private async void CloseServer()
     {
-        if (backfiller != null)
+        try
         {
-            await backfiller.StopBackfill();
+            if (backfiller != null)
+            {
+                await backfiller.StopBackfill();
+            }
+            Dispose();
+            Application.Quit();
         }
-        Dispose();
-        Application.Quit(); // Server
+        catch (Exception e)
+        {
+            Debug.LogError($"<ServerGameManager> Error while closing server: {e.Message}");
+        }
     }
 
     public void Dispose()
