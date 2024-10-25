@@ -27,7 +27,7 @@ public class ServerSingleton : MonoBehaviour
 
             if (instance == null)
             {
-                //Debug.LogError("<color=orange>No <ServerSingleton> in Scene!</color>");
+                //Debug.LogError("No <ServerSingleton> in Scene!");
                 return null;
             }
 
@@ -36,10 +36,17 @@ public class ServerSingleton : MonoBehaviour
     }
 
 
-    void Start()
+    private void Awake()
     {
-        DontDestroyOnLoad(gameObject);
-
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
     //  UGS
@@ -51,7 +58,7 @@ public class ServerSingleton : MonoBehaviour
 
             if (NetworkManager.Singleton == null)
             {
-                Debug.LogError("NetworkManager Singleton is null, server cannot start.");
+                Debug.LogError("¦| NetworkManager Singleton is null, server cannot start.");
                 return;
             }
 
@@ -63,17 +70,17 @@ public class ServerSingleton : MonoBehaviour
                 playerPrefab
             );
 
-            Debug.Log("ServerGameManager created successfully.");
+            Debug.Log("¦| ServerGameManager created successfully.");
         }
         catch (Exception e)
         {
-            Debug.LogError($"Error initializing the server: {e.Message}");
+            Debug.LogError($"¦| Error initializing the server: {e.Message}");
             GameManager = null; // Explicitly set to null in case of failure
         }
 
         if (GameManager == null)
         {
-            Debug.LogError("GameManager is null after CreateServer. Check initialization.");
+            Debug.LogError("¦| GameManager is null after CreateServer. Check initialization.");
         }
     }
 

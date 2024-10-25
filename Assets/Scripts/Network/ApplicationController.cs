@@ -10,6 +10,9 @@ using UnityEngine.SceneManagement;
 // On Client Auth GoTo Menu scene
 
 // Refkr: Move Scene Loading after Server Initialization
+// 1. Instantiate the ServerSingleton Prefab
+// 2. Load the Scene Asynchronously
+// 3. Create and Start the Server After Scene Load
 public class ApplicationController : MonoBehaviour
 {
 
@@ -44,11 +47,11 @@ public class ApplicationController : MonoBehaviour
             // Instanciate Application Data. runs AD constructor; returns cmd line IP, Port queries
             appData = new ApplicationData();
 
-            // Spawn in Prefab
+            // Instantiate the server prefab to use after the scene is loaded
             ServerSingleton serverSingleton = Instantiate(serverPrefab);
 
-            // Initialize the server before loading the scene
-            await serverSingleton.CreateServer(playerPrefab);
+            // Start scene loading AFTER instantiating the server prefab
+            StartCoroutine(LoadGameSceneAsync(serverSingleton));
 
             // Ensure GameManager is initialized
             if (serverSingleton.GameManager == null)
@@ -58,11 +61,7 @@ public class ApplicationController : MonoBehaviour
             }
 
 
-            // Load the Game Scene // Connect UGS
-            StartCoroutine(LoadGameSceneAsync(serverSingleton));
 
-            // Start the game server after the scene is loaded
-            await serverSingleton.GameManager.StartGameServerAsync();
 
         }
         else
@@ -102,7 +101,7 @@ public class ApplicationController : MonoBehaviour
         }
 
         // Connect UGS
-        //  CREATE dedicated server
+        //  CREATE dedicated server AFTER the game scene is loaded
         Task createServerTask =  serverSingleton.CreateServer(playerPrefab);
         // Not asyny so Task & yield
         yield return new WaitUntil(() => createServerTask.IsCompleted);
@@ -112,6 +111,6 @@ public class ApplicationController : MonoBehaviour
         Task startServerTask =  serverSingleton.GameManager.StartGameServerAsync();
         yield return new WaitUntil(() => startServerTask.IsCompleted);
 
-
+        Debug.Log("¦| Server fully initialized and started.");
     }
 }
