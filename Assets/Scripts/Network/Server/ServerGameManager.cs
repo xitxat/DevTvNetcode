@@ -26,15 +26,11 @@ public class ServerGameManager : IDisposable
     private string serverIP;
     private int serverPort;
     private int queryPort;
-
     private MatchplayBackfiller backfiller;
     private MultiplayAllocationService multiplayAllocationService; // Server health ping  via cmd
 
     // str Matchmaker id / int out Team Index 94 colours)
     private Dictionary<string, int> teamIdToTeamIndex = new Dictionary<string, int>();
-
-
-
     public NetworkServer NetworkServer { get; private set; }    // Approve connections,
 
     public ServerGameManager(string serverIP, int serverPort, int queryPort, 
@@ -52,12 +48,12 @@ public class ServerGameManager : IDisposable
     // Match made. spin up server
     public async Task StartGameServerAsync()
     {
-        // Server status. Players in, Server Health
-        await multiplayAllocationService.BeginServerCheck();
-
         // API calls
         try
         {
+            // Server status. Players in, Server Health
+            await multiplayAllocationService.BeginServerCheck();
+
             // return matchmaking data
             MatchmakingResults matchmakerPayload =  await GetMatchmakerPayload();
 
@@ -71,20 +67,19 @@ public class ServerGameManager : IDisposable
             }
             else
             {
-            Debug.LogWarning("Matchmaker payload timed out ;(");
-
+                Debug.LogWarning("¦| <ServerGameManager> Matchmaker payload timed out. Proceeding without backfill. ¦|");
             }
+            if (!NetworkServer.OpenConnection(serverIP, serverPort))
+            {
+                Debug.LogError("¦| <ServerGameManager> NetworkServer did not start as expected. Please check configuration. ¦|");
+                return;
+            }
+
+            Debug.Log("¦| <ServerGameManager> Server successfully started and awaiting connections. ¦|");
         }
         catch(Exception e)
         {
-            Debug.LogWarning(e);
-        }
-
-        // Open Server on this IP & Port
-        if(!NetworkServer.OpenConnection(serverIP, serverPort))
-        {
-            Debug.LogWarning("NetworkServer did not start. :( ");
-            return;
+            Debug.LogError($"¦| <ServerGameManager> Error starting game server: {e.Message} ¦|");
         }
 
     }
@@ -99,7 +94,7 @@ public class ServerGameManager : IDisposable
         // Event subs + return Payload matchmaking data
             //Store this task in var, (don't run yet)
         Task<MatchmakingResults> matchmakerPayloadTask = 
-            multiplayAllocationService.SubscribeAndAwaitMatchmakerAllocation(); // f12
+            multiplayAllocationService.SubscribeAndAwaitMatchmakerAllocation(); 
 
         // if True matchmakerPayloadTask enter {} , F; return null
         if (await Task.WhenAny(matchmakerPayloadTask, Task.Delay(20000)) == matchmakerPayloadTask)
@@ -107,6 +102,7 @@ public class ServerGameManager : IDisposable
             return matchmakerPayloadTask.Result;
         }
 
+        Debug.LogWarning("¦| <ServerGameManager> Timed out waiting for matchmaker allocation. ¦|");
         return null;
     }
 
@@ -123,7 +119,6 @@ public class ServerGameManager : IDisposable
         if (backfiller.NeedsPlayers())
         {
         await backfiller.BeginBackfilling();
-
         }
 
     }
@@ -181,7 +176,10 @@ public class ServerGameManager : IDisposable
 
     private async void CloseServer()
     {
-        await backfiller.StopBackfill();
+        if (backfiller != null)
+        {
+            await backfiller.StopBackfill();
+        }
         Dispose();
         Application.Quit(); // Server
     }
