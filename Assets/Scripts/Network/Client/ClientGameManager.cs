@@ -100,8 +100,6 @@ public class ClientGameManager : IDisposable
         RelayServerData relayServerData = new RelayServerData(allocation, "dtls");
         transport.SetRelayServerData(relayServerData);
 
-        // Delay before starting the client to ensure proper synchronization
-        await Task.Delay(250); //  ms delay
 
         ConnectClient(); // This is where network traffic starts and syncing happens
 
