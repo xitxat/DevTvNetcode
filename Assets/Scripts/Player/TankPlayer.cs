@@ -72,7 +72,6 @@ public class TankPlayer : NetworkBehaviour
             if (userData != null)
             {
                 PlayerName.Value = userData.userName;
-                OnPlayerNameUpdated(default, userData.userName);  // Manually trigger to simulate synchronization
                 TeamIndex.Value = userData.teamIndex;
                 Debug.LogWarning($"<TankPlayer>[Server] Set PlayerName: {userData.userName} for ClientId: {OwnerClientId}");
             }
@@ -85,12 +84,6 @@ public class TankPlayer : NetworkBehaviour
 
             // Immediately invoke the OnPlayerSpawned event after setting PlayerName and TeamIndex
             OnPlayerSpawned?.Invoke(this);
-        }
-
-        // Register OnValueChanged event on the client side to listen for PlayerName changes
-        if (IsClient)
-        {
-            PlayerName.OnValueChanged += OnPlayerNameUpdated;
         }
 
 
@@ -117,9 +110,5 @@ public class TankPlayer : NetworkBehaviour
         }
     }
 
-    private void OnPlayerNameUpdated(FixedString32Bytes oldName, FixedString32Bytes newName)
-    {
-        Debug.LogWarning($"<color=teal>[Client] PlayerName updated from {oldName} to {newName} for ClientId: {OwnerClientId}</color>");
-        OnPlayerSpawned?.Invoke(this);
-    }
+
 }
