@@ -21,6 +21,8 @@ public class LeaderboardEntityDisplay : MonoBehaviour
     //  Custom Initialise not Unity's InitialiZe
     public void Initialise(ulong clientId, FixedString32Bytes displayName, int coins)
     {
+        Debug.Log($"<color=orange>Initialising Leaderboard Entity Display for ClientId: {clientId}, PlayerName: {displayName}, Coins: {coins}</color>");
+
         ClientId = clientId; // static
         this.displayName = displayName;
 
@@ -50,6 +52,7 @@ public class LeaderboardEntityDisplay : MonoBehaviour
 
     public void UpdateText()
     {
+        Debug.Log($"<color=orange>Updating Leaderboard Text: Rank: {transform.GetSiblingIndex() + 1}, PlayerName: {displayName}, Coins: {Coins}</color>");
         // siblinIndex Array from HandleLeaderboardEntitiesChanged()
         displayText.text = $"{transform.GetSiblingIndex() + 1}: {displayName} [{Coins}]";
         
