@@ -87,7 +87,8 @@ public class Leaderboard : NetworkBehaviour
     private void HandleLeaderboardEntitiesChanged(NetworkListEvent<LeaderboardEntityState> changeEvent)
     {
         // prevent objects spilling over into Memu from Game
-        if (!gameObject.scene.isLoaded) { return; }
+        // POSSIBLE TEXT BLOCKER
+        //if (!gameObject.scene.isLoaded) { return; }
 
         //Debug.Log($"<color=yellow>Leaderboard change event type: {changeEvent.Type}, ClientId: {changeEvent.Value.ClientId}, Coins: {changeEvent.Value.Coins}</color>");        // query changeEvent if vale changed & how;ie: added, removed, updated
         
