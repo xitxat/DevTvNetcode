@@ -99,7 +99,7 @@ public class TankPlayer : NetworkBehaviour
                 crosshair.height / 2),
                 CursorMode.Auto);
 
-            Debug.LogWarning($"<color=teal>[Owner] Player is owner, ClientId: {OwnerClientId}. Camera and crosshair set.</color>");
+            //Debug.LogWarning($"<color=teal>[Owner] Player is owner, ClientId: {OwnerClientId}. Camera and crosshair set.</color>");
         }
     }
     public override void OnNetworkDespawn()

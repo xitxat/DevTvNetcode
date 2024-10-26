@@ -4,6 +4,7 @@ using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
 
+// ON: PlayerTank prefab / PlayerDisplay
 public class PlayerNameDisplay : NetworkBehaviour
 {
 
@@ -14,7 +15,7 @@ public class PlayerNameDisplay : NetworkBehaviour
 
     private IEnumerator WaitForNameUpdate()
     {
-        yield return new WaitForSeconds(2f); // Small delay to ensure server-side synchronization
+        yield return new WaitForSeconds(1f); // Small delay to ensure server-side synchronization
         HandlePlayerNameChanged(string.Empty, player.PlayerName.Value);
     }
 
