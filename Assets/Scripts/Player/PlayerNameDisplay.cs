@@ -19,10 +19,11 @@ public class PlayerNameDisplay : MonoBehaviour
 
     private void HandlePlayerNameChanged(FixedString32Bytes oldName, FixedString32Bytes newName)
     {
-        Debug.Log($"<color=yellow>Player name updated: {newName.ToString()}</color>");
+        Debug.Log($"<color=yellow>Player name updated: {oldName.ToString()}</color>");
 
         // Set name
         playerNameText.text = newName.ToString();
+        Debug.Log($"<color=yellow>Player name updated: {newName.ToString()}</color>");
     }
 
 
