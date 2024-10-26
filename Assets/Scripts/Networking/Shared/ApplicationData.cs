@@ -43,9 +43,10 @@ public class ApplicationData
         SetIP("127.0.0.1");
         SetPort("7777");
         SetQueryPort("7787");
-        m_CommandDictionary["-" + k_IPCmd] = SetIP;
-        m_CommandDictionary["-" + k_PortCmd] = SetPort;
-        m_CommandDictionary["-" + k_QueryPortCmd] = SetQueryPort;
+        m_CommandDictionary["-$$ip$$"] = SetIP;
+        m_CommandDictionary["-$$port$$"] = SetPort;
+        m_CommandDictionary["-$$query_port$$"] = SetQueryPort;
+
         ProcessCommandLinearguments(Environment.GetCommandLineArgs());
     }
 
