@@ -1,3 +1,4 @@
+using System.Collections;
 using TMPro;
 using Unity.Collections;
 using Unity.Netcode;
@@ -11,18 +12,21 @@ public class PlayerNameDisplay : NetworkBehaviour
 
 
 
+    private IEnumerator WaitForNameUpdate()
+    {
+        yield return new WaitForSeconds(2f); // Small delay to ensure server-side synchronization
+        HandlePlayerNameChanged(string.Empty, player.PlayerName.Value);
+    }
+
     public override void OnNetworkSpawn()
     {
-        // Check if it's a client since only clients will show the UI
         if (IsClient)
         {
-            // Subscribe to changes
             player.PlayerName.OnValueChanged += HandlePlayerNameChanged;
-
-            // Handle the initial synchronization
-            HandlePlayerNameChanged(string.Empty, player.PlayerName.Value);
+            StartCoroutine(WaitForNameUpdate());
         }
     }
+
 
     private void HandlePlayerNameChanged(FixedString32Bytes oldName, FixedString32Bytes newName)
     {
