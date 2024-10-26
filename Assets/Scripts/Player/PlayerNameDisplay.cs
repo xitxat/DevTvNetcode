@@ -11,7 +11,8 @@ public class PlayerNameDisplay : MonoBehaviour
     void Start()
     {
         // Once the player name is synced, update the display
-        HandlePlayerNameChanged(string.Empty, player.PlayerName.Value);
+            // HandlePlayerNameChanged(string.Empty, player.PlayerName.Value);
+        HandlePlayerNameChanged("OldName", player.PlayerName.Value);
 
         // Sub to change value event of Name to handle any further updates
         player.PlayerName.OnValueChanged += HandlePlayerNameChanged;
@@ -23,7 +24,7 @@ public class PlayerNameDisplay : MonoBehaviour
 
         // Set name
         playerNameText.text = newName.ToString();
-        Debug.Log($"<color=yellow>Player name updated: {newName.ToString()}</color>");
+        Debug.Log($"<color=yellow>Player name set to: {newName.ToString()}</color>");
     }
 
 
