@@ -17,9 +17,10 @@ public class ApplicationData
     /// </summary>
     Dictionary<string, Action<string>> m_CommandDictionary = new Dictionary<string, Action<string>>();
 
-    const string k_IPCmd = "ip";
-    const string k_PortCmd = "port";
-    const string k_QueryPortCmd = "queryPort";
+    const string k_IPCmd = "$$ip$$";
+    const string k_PortCmd = "$$port$$";
+    const string k_QueryPortCmd = "$$query_port$$";
+
 
     public static string IP()
     {
