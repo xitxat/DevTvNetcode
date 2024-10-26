@@ -9,15 +9,7 @@ public class PlayerNameDisplay : NetworkBehaviour
     [SerializeField] private TankPlayer player;
     [SerializeField] private TMP_Text playerNameText;
 
-    //void Start()
-    //{
-    //    // Once the player name is synced, update the display
-    //        // HandlePlayerNameChanged(string.Empty, player.PlayerName.Value);
-    //    HandlePlayerNameChanged("OldName", player.PlayerName.Value);
 
-    //    // Sub to change value event of Name to handle any further updates
-    //    player.PlayerName.OnValueChanged += HandlePlayerNameChanged;
-    //}
 
     public override void OnNetworkSpawn()
     {
